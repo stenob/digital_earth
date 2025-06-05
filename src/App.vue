@@ -28,6 +28,10 @@
             <i class="fas fa-question-circle"></i>
             地质知识大挑战
           </button>
+          <button class="sidebar-button" @click="openMuseum">
+            <i class="fas fa-university"></i>
+            参观地质博物馆
+          </button>
         </div>
       </div>
 
@@ -43,11 +47,11 @@
             <i class="fas fa-plus-circle"></i>
             {{ showForm ? '隐藏事件表单' : '添加地质事件' }}
           </button>
-          <button class="sidebar-button" @click="startDrawLine">
+          <button class="sidebar-button" @click="startDrawingLine">
             <i class="fas fa-draw-polygon"></i>
             {{ drawingLine ? '点击地图确定起止点' : '添加线要素' }}
           </button>
-          <button class="sidebar-button" @click="startDrawPolygon">
+          <button class="sidebar-button" @click="startDrawingPolygon">
             <i class="fas fa-vector-square"></i>
             {{ drawingPolygon ? '点击地图确定面范围（双击结束）' : '添加面要素' }}
           </button>
@@ -320,16 +324,6 @@ const geoEvents = [
   },
   {
     id: eventIdCounter++,
-    year: 2004,
-    longitude: 95.982,
-    latitude: 3.316,
-    title: "印度洋大地震",
-    description: "2004年印度洋大地震震级达9.1-9.3级，引发的海啸导致14个国家受灾，约23万人死亡。",
-    type: "地震",
-    region: "印度尼西亚苏门答腊"
-  },
-  {
-    id: eventIdCounter++,
     year: 1980,
     longitude: -122.18,
     latitude: 46.20,
@@ -337,6 +331,17 @@ const geoEvents = [
     description: "1980年圣海伦火山喷发是美国历史上最致命的火山事件之一，造成57人死亡，火山灰影响全球气候。",
     type: "火山喷发",
     region: "美国华盛顿州"
+  },
+  {
+   id: eventIdCounter++,
+    year: 2004,
+    longitude: 95.982,
+    latitude: 3.316,
+    title: "印度洋大地震",
+    description: "2004年印度洋大地震震级达9.1-9.3级，引发的海啸导致14个国家受灾，约23万人死亡。",
+    type: "地震",
+    region: "印度尼西亚苏门答腊"
+
   }
 ];
 
@@ -358,6 +363,7 @@ function flyToEvent(event) {
   
   const targetEntity = eventEntities.find(e => e.id === event.id);
   if (targetEntity) {
+    viewer.selectedEntity = targetEntity; // 设置选中的实体以显示信息框
     viewer.flyTo(targetEntity, {
       offset: new Cesium.HeadingPitchRange(0, -0.5, 100000)
     });
@@ -381,11 +387,38 @@ onMounted(async () => {
     geocoder: Cesium.IonGeocodeProviderType.GOOGLE,
     navigationHelpButton: false,
     infoBox: true,
+    selectionIndicator: false,
     terrain: Cesium.Terrain.fromWorldTerrain({
       requestVertexNormals: true,
       requestWaterMask: true,
     }),
   });
+
+  // 设置信息框样式
+  viewer.infoBox.frame.sandbox = "allow-same-origin allow-top-navigation allow-pointer-lock allow-popups allow-forms allow-scripts";
+  
+  // 设置点击事件处理
+  viewer.screenSpaceEventHandler.setInputAction((movement) => {
+    // 如果正在绘制线或面，使用相应的处理函数
+    if (drawingLine.value) {
+      handleMapClick(movement);
+    } else if (drawingPolygon.value) {
+      handlePolygonClick(movement);
+    } else {
+      // 否则处理普通点击，显示信息框
+      const pickedObject = viewer.scene.pick(movement.position);
+      if (Cesium.defined(pickedObject) && pickedObject.id) {
+        viewer.selectedEntity = pickedObject.id;
+      }
+    }
+  }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+  // 设置双击事件处理（用于结束面的绘制）
+  viewer.screenSpaceEventHandler.setInputAction((movement) => {
+    if (drawingPolygon.value) {
+      handlePolygonDoubleClick(movement);
+    }
+  }, Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
 
   const { scene } = viewer;
   
@@ -406,17 +439,7 @@ onMounted(async () => {
   
   // 初始加载事件
   updateEvents();
-
-  viewer.screenSpaceEventHandler.setInputAction(handleUnifiedClick, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-  viewer.screenSpaceEventHandler.setInputAction(handlePolygonDoubleClick, Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
 });
-function handleUnifiedClick(movement) {
-  if (drawingLine.value) {
-    handleMapClick(movement);
-  } else if (drawingPolygon.value) {
-    handlePolygonClick(movement);
-  }
-}
 
 function updateEvents() {
   // 清除之前的事件实体
@@ -435,7 +458,9 @@ function updateEvents() {
         pixelSize: 15,
         color: Cesium.Color.fromCssColorString(getEventColor(event.type)),
         outlineColor: Cesium.Color.WHITE,
-        outlineWidth: 2
+        outlineWidth: 2,
+        heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+        disableDepthTestDistance: Number.POSITIVE_INFINITY
       },
       label: {
         text: event.title,
@@ -451,13 +476,7 @@ function updateEvents() {
         heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
         disableDepthTestDistance: Number.POSITIVE_INFINITY
       },
-      description: `<div class="cesium-infoBox-description">
-        <h2>${event.title}</h2>
-        <p><strong>类型:</strong> ${event.type}</p>
-        <p><strong>年份:</strong> ${event.year}年</p>
-        <p><strong>位置:</strong> ${event.region}</p>
-        <p><strong>描述:</strong> ${event.description}</p>
-      </div>`
+      description: generateEventDescription(event)
     });
     
     eventEntities.push(entity);
@@ -467,6 +486,30 @@ function updateEvents() {
   if (eventEntities.length > 0) {
     viewer.flyTo(eventEntities);
   }
+}
+
+function generateEventDescription(event) {
+  return `
+    <div style="padding: 15px; color: white; font-family: Arial, sans-serif;">
+      <h2 style="color: #4CAF50; margin: 0 0 15px 0; font-size: 18px; border-bottom: 2px solid rgba(76, 175, 80, 0.3); padding-bottom: 8px;">
+        ${event.title}
+      </h2>
+      <div style="margin-bottom: 10px;">
+        <strong style="color: #4CAF50;">类型：</strong>
+        <span style="display: inline-block; padding: 2px 8px; background: ${getEventColor(event.type)}; border-radius: 4px; color: white;">${event.type}</span>
+      </div>
+      <div style="margin-bottom: 10px;">
+        <strong style="color: #4CAF50;">年份：</strong> <span style="color: white;">${event.year}年</span>
+      </div>
+      <div style="margin-bottom: 10px;">
+        <strong style="color: #4CAF50;">位置：</strong> <span style="color: white;">${event.region || '未知'}</span>
+      </div>
+      <div style="margin-top: 15px;">
+        <strong style="color: #4CAF50;">描述：</strong>
+        <p style="margin: 8px 0 0 0; line-height: 1.5; color: white;">${event.description}</p>
+      </div>
+    </div>
+  `;
 }
 
 function addGeoEvent(event) {
@@ -490,31 +533,25 @@ defineExpose({ addGeoEvent });
  * 
  * 线要素相关逻辑
  */
-function startDrawLine() {
-  // 先关闭所有绘制状态
-  drawingLine.value = false;
+function startDrawingLine() {
+  // 确保其他绘制状态被关闭
   drawingPolygon.value = false;
-
-  // 清理所有临时点和实体
+  // 清空所有临时点
   tempLinePoints.value = [];
-  tempPointEntities.forEach(e => viewer.entities.remove(e.entity));
-  tempPointEntities.length = 0;
-
   tempPolygonPoints.value = [];
+  // 移除所有临时实体
+  tempPointEntities.forEach(p => viewer.entities.remove(p.entity));
+  tempPointEntities.length = 0;
   tempPolygonPointEntities.forEach(e => viewer.entities.remove(e));
   tempPolygonPointEntities.length = 0;
-
-  // 延迟激活线绘制状态，确保事件处理函数能感知
-  setTimeout(() => {
-    drawingLine.value = true;
-  }, 0);
+  // 开始绘制线
+  drawingLine.value = true;
 }
-
 
 const tempPointEntities = []; // 临时存储起止点实体
 function handleMapClick(movement) {
   if (!drawingLine.value) return;
-  const cartesian = viewer.scene.pickPosition(movement.position || movement.endPosition);
+  const cartesian = viewer.scene.pickPosition(movement.position);
   if (!cartesian) return;
   const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
   const lon = Cesium.Math.toDegrees(cartographic.longitude);
@@ -522,41 +559,40 @@ function handleMapClick(movement) {
   tempLinePoints.value.push([lon, lat]);
 
   // 添加临时点实体作为反馈
-const pointEntity = viewer.entities.add({
-  id: `line-point-${lineIdCounter}-${tempLinePoints.value.length}`,
-  position: Cesium.Cartesian3.fromDegrees(lon, lat, 30),
-  point: {
-    pixelSize: 14,
-    color: Cesium.Color.YELLOW,
-    outlineColor: Cesium.Color.ORANGE,
-    outlineWidth: 3,
-    heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND // 相对地形表面30米
-  }
-});
-tempPointEntities.push({
-  entity: pointEntity,
-  lineId: lineIdCounter, // 记录将要生成的线的id
-  index: tempLinePoints.value.length // 1或2
-});
+  const pointEntity = viewer.entities.add({
+    position: Cesium.Cartesian3.fromDegrees(lon, lat, 30),
+    point: {
+      pixelSize: 14,
+      color: Cesium.Color.YELLOW,
+      outlineColor: Cesium.Color.ORANGE,
+      outlineWidth: 3,
+      heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND
+    }
+  });
+  tempPointEntities.push({
+    entity: pointEntity,
+    lineId: lineIdCounter,
+    index: tempLinePoints.value.length
+  });
 
-if (tempLinePoints.value.length === 2) {
-  const thisLineId = lineIdCounter++;
-  const length = calculateLineLength(tempLinePoints.value);
-  const newLine = {
-    id: thisLineId,
-    name: '新线要素',
-    type: '未分类',
-    year: currentYear.value,
-    description: '',
-    positions: [...tempLinePoints.value],
-    length // 单位：km
-  };
-  lineFeatures.value.push(newLine);
-  addLineEntity(newLine);
-  drawingLine.value = false;
-  tempLinePoints.value = [];
-  editLine(newLine);
-}
+  if (tempLinePoints.value.length === 2) {
+    const thisLineId = lineIdCounter++;
+    const length = calculateLineLength(tempLinePoints.value);
+    const newLine = {
+      id: thisLineId,
+      name: '新线要素',
+      type: '未分类',
+      year: currentYear.value,
+      description: '',
+      positions: [...tempLinePoints.value],
+      length
+    };
+    lineFeatures.value.push(newLine);
+    addLineEntity(newLine);
+    drawingLine.value = false;
+    tempLinePoints.value = [];
+    editLine(newLine);
+  }
 }
 
 function addLineEntity(line) {
@@ -659,28 +695,23 @@ function deleteLine(line) {
  * 
  * 面要素相关逻辑
  */
-function startDrawPolygon() {
-  // 先关闭所有绘制状态
+function startDrawingPolygon() {
+  // 确保其他绘制状态被关闭
   drawingLine.value = false;
-  drawingPolygon.value = false;
-
-  // 清理所有临时点和实体
+  // 清空所有临时点
   tempLinePoints.value = [];
-  tempPointEntities.forEach(e => viewer.entities.remove(e.entity));
-  tempPointEntities.length = 0;
-
   tempPolygonPoints.value = [];
+  // 移除所有临时实体
+  tempPointEntities.forEach(p => viewer.entities.remove(p.entity));
+  tempPointEntities.length = 0;
   tempPolygonPointEntities.forEach(e => viewer.entities.remove(e));
   tempPolygonPointEntities.length = 0;
-
-  // 延迟激活面绘制状态，确保事件处理函数能感知
-  setTimeout(() => {
-    drawingPolygon.value = true;
-  }, 0);
+  // 开始绘制面
+  drawingPolygon.value = true;
 }
 function handlePolygonClick(movement) {
   if (!drawingPolygon.value) return;
-  const cartesian = viewer.scene.pickPosition(movement.position || movement.endPosition);
+  const cartesian = viewer.scene.pickPosition(movement.position);
   if (!cartesian) return;
   const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
   const lon = Cesium.Math.toDegrees(cartographic.longitude);
@@ -724,17 +755,17 @@ function handlePolygonDoubleClick(movement) {
   polygonFeatures.value.push(newPolygon);
   addPolygonEntity(newPolygon);
 
-  // 彻底清空面临时点和实体（防止点残留到下一次）
+  // 清空临时点和实体
   tempPolygonPoints.value = [];
   tempPolygonPointEntities.forEach(e => viewer.entities.remove(e));
   tempPolygonPointEntities.length = 0;
 
+  // 移除所有临时点实体
+  tempPointEntities.forEach(p => viewer.entities.remove(p.entity));
+  tempPointEntities.length = 0;
+
   editPolygon(newPolygon);
-
-  // 阻止事件冒泡（如果你用的是原生事件）
-  if (movement && movement.stopPropagation) movement.stopPropagation();
 }
-
 
 function addPolygonEntity(polygon) {
   // 先移除旧实体
@@ -821,6 +852,10 @@ function calculatePolygonArea(points) {
 
 function toggleEventsPanel() {
   showEventsPanel.value = !showEventsPanel.value;
+}
+
+function openMuseum() {
+  window.open('http://www.3dxinyuan.top/hfut/spg.html?m=KJ-niSbNLhAyvr', '_blank');
 }
 </script>
 
@@ -1364,5 +1399,66 @@ html, body {
     right: 0;
     left: 0;
   }
+}
+
+/* Cesium InfoBox 样式 */
+:deep(.cesium-infoBox) {
+  background: rgba(42, 42, 42, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  max-width: 360px;
+  transform: none !important;
+}
+
+:deep(.cesium-infoBox-title) {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4CAF50;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  padding: 12px;
+  font-size: 16px;
+}
+
+:deep(.cesium-infoBox-description) {
+  padding: 15px;
+  color: white;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+:deep(.cesium-infoBox-defaultTable) {
+  color: white;
+}
+
+:deep(.cesium-infoBox-defaultTable tr:nth-child(odd)) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+:deep(.cesium-infoBox-defaultTable td) {
+  padding: 8px;
+}
+
+/* 隐藏 infoBox 的关闭按钮 */
+:deep(.cesium-infoBox-close) {
+  display: none;
+}
+
+/* 自定义滚动条样式 */
+:deep(.cesium-infoBox)::-webkit-scrollbar {
+  width: 6px;
+}
+
+:deep(.cesium-infoBox)::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+:deep(.cesium-infoBox)::-webkit-scrollbar-thumb {
+  background: rgba(76, 175, 80, 0.5);
+  border-radius: 3px;
+}
+
+:deep(.cesium-infoBox)::-webkit-scrollbar-thumb:hover {
+  background: rgba(76, 175, 80, 0.7);
 }
 </style>
