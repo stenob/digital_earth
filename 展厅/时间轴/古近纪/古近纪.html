@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>古近纪地质与生物信息探索</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4A6FA5',
+                        secondary: '#E07A5F',
+                        accent: '#81B29A',
+                        neutral: '#F4F1DE',
+                        dark: '#3D405B'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .transition-transform-opacity {
+                transition-property: transform, opacity;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .bg-pattern {
+                background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%239C92AC' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-neutral text-dark antialiased">
+    <!-- 导航栏 -->
+    <header id="navbar" class="fixed w-full z-50 transition-all duration-300">
+        <nav class="bg-primary/90 backdrop-blur-md text-white shadow-lg">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fa fa-dinosaur text-2xl"></i>
+                    <span class="text-xl font-bold tracking-wide">古近纪探索</span>
+                </div>
+                
+                <!-- 桌面导航 -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#overview" class="hover:text-secondary transition-colors">概述</a>
+                    <a href="#geology" class="hover:text-secondary transition-colors">地质特征</a>
+                    <a href="#biology" class="hover:text-secondary transition-colors">生物演化</a>
+                    <a href="#timeline" class="hover:text-secondary transition-colors">时间线</a>
+                    <a href="#interactive" class="hover:text-secondary transition-colors">交互式地图</a>
+                    <a href="#quiz" class="hover:text-secondary transition-colors">知识测验</a>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button id="menu-toggle" class="md:hidden text-white focus:outline-none">
+                    <i class="fa fa-bars text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- 移动端导航菜单 -->
+            <div id="mobile-menu" class="md:hidden hidden bg-primary/95 backdrop-blur-md">
+                <div class="container mx-auto px-4 py-3 flex flex-col space-y-4">
+                    <a href="#overview" class="py-2 hover:text-secondary transition-colors">概述</a>
+                    <a href="#geology" class="py-2 hover:text-secondary transition-colors">地质特征</a>
+                    <a href="#biology" class="py-2 hover:text-secondary transition-colors">生物演化</a>
+                    <a href="#timeline" class="py-2 hover:text-secondary transition-colors">时间线</a>
+                    <a href="#interactive" class="py-2 hover:text-secondary transition-colors">交互式地图</a>
+                    <a href="#quiz" class="py-2 hover:text-secondary transition-colors">知识测验</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 英雄区 -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden bg-pattern">
+        <div class="absolute inset-0 bg-gradient-to-b from-primary/20 to-neutral z-0"></div>
+        <div class="absolute inset-0 bg-dark/10 z-0"></div>
+        
+        <div class="container mx-auto px-4 z-10 text-center">
+            <h1 class="text-[clamp(2.5rem,6vw,5rem)] font-bold text-white mb-6 text-shadow animate-fade-in">
+                古近纪地质与生物探索
+            </h1>
+            <p class="text-[clamp(1rem,2vw,1.5rem)] text-white/90 max-w-3xl mx-auto mb-10">
+                穿越时空，探索约6600万至2300万年前地球上的奇妙生命与地质变迁
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#overview" class="bg-secondary hover:bg-secondary/90 text-white px-8 py-3 rounded-full font-medium transition-all transform hover:scale-105 shadow-lg">
+                    开始探索
+                </a>
+                <a href="#timeline" class="bg-primary/80 hover:bg-primary text-white px-8 py-3 rounded-full font-medium transition-all transform hover:scale-105 shadow-lg">
+                    时间线
+                </a>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
+            <a href="#overview" aria-label="向下滚动">
+                <i class="fa fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- 概述部分 -->
+    <section id="overview" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,4vw,3rem)] font-bold text-dark mb-4">古近纪概述</h2>
+                <div class="w-20 h-1 bg-secondary mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    古近纪是新生代的第一个纪，始于白垩纪-古近纪灭绝事件，终于新近纪开始。
+                    这一时期见证了地球从恐龙灭绝后的恢复到哺乳动物的崛起和多样化。
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-neutral/50 rounded-xl p-8 shadow-lg transform transition-all hover:-translate-y-2 hover:shadow-xl">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="fa fa-clock-o text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 text-center">时间跨度</h3>
+                    <p class="text-gray-600">
+                        古近纪约开始于6600万年前，结束于2303万年前，持续约4300万年。
+                        它分为三个主要时期：古新世、始新世和渐新世。
+                    </p>
+                </div>
+                
+                <div class="bg-neutral/50 rounded-xl p-8 shadow-lg transform transition-all hover:-translate-y-2 hover:shadow-xl">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="fa fa-globe text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 text-center">地质事件</h3>
+                    <p class="text-gray-600">
+                        这一时期地球发生了剧烈的地质变化，包括大陆漂移、山脉形成（如阿尔卑斯山和喜马拉雅山）
+                        以及气候从温暖逐渐变冷的转变。
+                    </p>
+                </div>
+                
+                <div class="bg-neutral/50 rounded-xl p-8 shadow-lg transform transition-all hover:-translate-y-2 hover:shadow-xl">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="fa fa-paw text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 text-center">生物演化</h3>
+                    <p class="text-gray-600">
+                        古近纪是哺乳动物快速演化和多样化的时期。早期出现了原始的哺乳动物，
+                        随后演化出了现代哺乳动物的祖先，同时鸟类也开始多样化。
+                    </p>
+                </div>
+            </div>
+            
+            <div class="mt-16 bg-primary/5 rounded-xl p-8 shadow-md">
+                <h3 class="text-xl font-semibold mb-4 text-center">古近纪的重要性</h3>
+                <p class="text-gray-600 mb-6">
+                    古近纪是地球历史上一个关键的过渡时期，它见证了恐龙灭绝后生态系统的重建和现代生物群的起源。
+                    这一时期的研究对于理解现代生物多样性的形成和气候变化的影响具有重要意义。
+                </p>
+                <div class="flex justify-center">
+                    <a href="#geology" class="inline-flex items-center text-primary hover:text-primary/80 font-medium">
+                        探索更多 <i class="fa fa-long-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 地质特征部分 -->
+    <section id="geology" class="py-20 bg-neutral/30">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,4vw,3rem)] font-bold text-dark mb-4">地质特征</h2>
+                <div class="w-20 h-1 bg-secondary mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    古近纪的地质演化塑造了现代地球的面貌，包括大陆位置、山脉形成和海洋环流模式。
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="order-2 lg:order-1">
+                    <h3 class="text-2xl font-semibold mb-6">大陆漂移与山脉形成</h3>
+                    <p class="text-gray-600 mb-6">
+                        古近纪时期，各大陆继续漂移并逐渐接近现代位置。印度板块与欧亚板块的碰撞
+                        开始形成喜马拉雅山脉，这一过程至今仍在继续。同时，欧洲的阿尔卑斯山脉也在这一时期开始隆起。
+                    </p>
+                    
+                    <div class="mb-6">
+                        <h4 class="font-medium mb-3 flex items-center">
+                            <i class="fa fa-map-marker text-secondary mr-2"></i> 板块运动
+                        </h4>
+                        <p class="text-gray-600">
+                            非洲板块向北移动，与欧亚板块碰撞，形成了地中海和阿尔卑斯山脉。
+                            南美洲与非洲分离，大西洋继续扩张。
+                        </p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h4 class="font-medium mb-3 flex items-center">
+                            <i class="fa fa-mountain text-secondary mr-2"></i> 火山活动
+                        </h4>
+                        <p class="text-gray-600">
+                            古近纪火山活动频繁，特别是在板块边界。火山喷发释放的气体和尘埃对气候产生了重要影响，
+                            可能导致了短期的气候变化。
+                        </p>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-medium mb-3 flex items-center">
+                            <i class="fa fa-tint text-secondary mr-2"></i> 海洋变化
+                        </h4>
+                        <p class="text-gray-600">
+                            随着大陆的移动，海洋环流模式发生了变化。古地中海逐渐缩小，而大西洋和印度洋不断扩张。
+                            这些变化对全球气候和海洋生态系统产生了深远影响。
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="order-1 lg:order-2">
+                    <div class="relative rounded-xl overflow-hidden shadow-2xl transform hover:scale-[1.01] transition-transform duration-500">
+                        <img src="板块.jpg" alt="古近纪地球大陆分布图" class="w-full h-auto">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent flex items-end">
+                            <div class="p-6 text-white">
+                                <h4 class="text-xl font-semibold mb-2">古近纪大陆分布图</h4>
+                                <p class="text-white/80">
+                                    图示为古近纪中期各大陆的相对位置，显示了与现代大陆分布的差异。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-20">
+                <h3 class="text-2xl font-semibold mb-8 text-center">古近纪气候变迁</h3>
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <canvas id="climateChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 生物演化部分 -->
+    <section id="biology" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,4vw,3rem)] font-bold text-dark mb-4">生物演化</h2>
+                <div class="w-20 h-1 bg-secondary mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    古近纪是哺乳动物崛起和多样化的时期，同时见证了现代鸟类、昆虫和植物群的发展。
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 哺乳动物卡片 -->
+                <div class="group relative rounded-xl overflow-hidden shadow-lg h-96">
+                    <img src="冠齿兽.jpg" alt="古近纪哺乳动物复原图" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/50 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 text-white transition-transform duration-500 group-hover:translate-y-0">
+                        <h3 class="text-2xl font-bold mb-2">哺乳动物的崛起</h3>
+                        <p class="text-white/80 mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            恐龙灭绝后，哺乳动物迅速占据了生态位，从原始的小型食虫动物逐渐演化出各种形态和习性的物种，
+                            包括早期的灵长类、有蹄类和肉食类动物。
+                        </p>
+                        <button class="biology-detail-btn bg-secondary hover:bg-secondary/90 text-white px-4 py-2 rounded-full text-sm font-medium transition-all transform hover:scale-105" data-target="mammals">
+                            了解更多
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 鸟类卡片 -->
+                <div class="group relative rounded-xl overflow-hidden shadow-lg h-96">
+                    <img src="冠恐鸟.jpg" alt="古近纪鸟类复原图" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/50 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 text-white transition-transform duration-500 group-hover:translate-y-0">
+                        <h3 class="text-2xl font-bold mb-2">鸟类的多样化</h3>
+                        <p class="text-white/80 mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            古近纪是鸟类快速演化的时期，许多现代鸟类的目在这一时期出现。
+                            早期的鸟类逐渐适应了各种生态环境，发展出不同的觅食和飞行方式。
+                        </p>
+                        <button class="biology-detail-btn bg-secondary hover:bg-secondary/90 text-white px-4 py-2 rounded-full text-sm font-medium transition-all transform hover:scale-105" data-target="birds">
+                            了解更多
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 植物卡片 -->
+                <div class="group relative rounded-xl overflow-hidden shadow-lg h-96">
+                    <img src="蕨类植物.jpg" alt="古近纪植物景观复原图" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/50 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 text-white transition-transform duration-500 group-hover:translate-y-0">
+                        <h3 class="text-2xl font-bold mb-2">植物的演化</h3>
+                        <p class="text-white/80 mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            被子植物在古近纪占据主导地位，森林覆盖了大部分陆地。随着气候的变化，
+                            植物群落也发生了演变，草原开始出现，为食草动物的发展提供了条件。
+                        </p>
+                        <button class="biology-detail-btn bg-secondary hover:bg-secondary/90 text-white px-4 py-2 rounded-full text-sm font-medium transition-all transform hover:scale-105" data-target="plants">
+                            了解更多
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 生物详情模态框 -->
+            <div id="biology-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+                <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+                <div class="relative bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-auto shadow-2xl">
+                    <button id="close-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-10">
+                        <i class="fa fa-times text-xl"></i>
+                    </button>
+                    <div id="modal-content" class="p-8">
+                        <!-- 内容将通过JavaScript动态加载 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 时间线部分 -->
+<section id="timeline" class="py-20 bg-primary/5">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,4vw,3rem)] font-bold text-dark mb-4">古近纪时间线</h2>
+                <div class="w-20 h-1 bg-secondary mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    探索古近纪三个主要时期的关键事件和生物演化里程碑。
+                </p>
+            </div>
+            
+            <div class="relative">
+                <!-- 时间线中心线 -->
+                <div class="absolute left-0 md:left-1/2 top-0 bottom-0 w-1 bg-primary/30 transform md:-translate-x-1/2"></div>
+                
+                <!-- 古新世 -->
+                <div class="timeline-item relative mb-16">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-12 md:text-right order-2 md:order-1 mt-6 md:mt-0">
+                            <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+                                <h3 class="text-xl font-bold text-primary mb-3">古新世 (66-56百万年前)</h3>
+                                <p class="text-gray-600 mb-4">
+                                    古新世是恐龙灭绝后的第一个时期，地球开始从大规模灭绝事件中恢复。
+                                    哺乳动物开始多样化，但体型普遍较小。
+                                </p>
+                                <ul class="space-y-2 text-gray-600">
+                                    <li class="flex items-start">
+                                        <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                                        <span>原始哺乳动物如多瘤齿兽类和踝节目繁荣</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                                        <span>开花植物继续多样化，森林覆盖大部分陆地</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                                        <span>全球气候温暖湿润，极地无冰盖</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="md:w-12 flex justify-center order-1 md:order-2 relative">
+                            <div class="w-8 h-8 rounded-full bg-primary border-4 border-white shadow-lg z-10 flex items-center justify-center">
+                                <i class="fa fa-leaf text-white"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="md:w-1/2 md:pl-12 order-3 hidden md:block"></div>
+                    </div>
+                </div>
+                
+                <!-- 始新世 -->
+                <div class="timeline-item relative mb-16">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-12 order-2 md:order-1 hidden md:block"></div>
+                        
+                        <div class="md:w-12 flex justify-center order-1 md:order-2 relative">
+                            <div class="w-8 h-8 rounded-full bg-secondary border-4 border-white shadow-lg z-10 flex items-center justify-center">
+                                <i class="fa fa-paw text-white"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="md:w-1/2 md:pl-12 order-3 md:order-3 mt-6 md:mt-0">
+                            <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+                                <h3 class="text-xl font-bold text-primary mb-3">始新世 (56-33.9百万年前)</h3>
+                                <p class="text-gray-600 mb-4">
+                                    始新世是古近纪气候最温暖的时期，被称为"始新世极热事件"。
+                                    这一时期哺乳动物快速演化，出现了许多现代哺乳动物的祖先。
+                                </p>
+                                <ul class="space-y-2 text-gray-600">
+                                    <li class="flex items-start">
+                                        <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                                        <span>早期灵长类、马、鲸类和蝙蝠出现</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                                        <span>热带雨林扩展到极地地区</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                                        <span>末期出现显著的降温事件，导致南极冰盖形成</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 渐新世 -->
+                <div class="timeline-item relative">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-12 md:text-right order-2 md:order-1 mt-6 md:mt-0">
+                            <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+                                <h3 class="text-xl font-bold text-primary mb-3">渐新世 (33.9-23.03百万年前)</h3>
+                                <p class="text-gray-600 mb-4">
+                                    渐新世气候逐渐变冷变干，导致森林面积减少，草原开始出现。
+                                    这一时期标志着古近纪向新近纪的过渡。
+                                </p>
+                                <ul class="space-y-2 text-gray-600">
+                                    <li class="flex items-start">
+                                        <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                                        <span>现代哺乳动物目基本形成</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                                        <span>草原生态系统发展，适应啃食的动物如马类演化</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                                        <span>南极冰盖扩大，全球海平面下降</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="md:w-12 flex justify-center order-1 md:order-2 relative">
+                            <div class="w-8 h-8 rounded-full bg-accent border-4 border-white shadow-lg z-10 flex items-center justify-center">
+                                <i class="fa fa-globe text-white"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="md:w-1/2 md:pl-12 order-3 hidden md:block"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- 气候模拟器 -->
+<section id="climate-simulator" class="py-20 bg-neutral/30">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-[clamp(1.8rem,4vw,3rem)] font-bold text-dark mb-4">古近纪气候模拟器</h2>
+            <div class="w-20 h-1 bg-secondary mx-auto mb-6"></div>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                调整参数观察古近纪气候变化对生物的影响
+            </p>
+        </div>
+        
+        <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">气候参数</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block mb-2">温度 (°C)</label>
+                            <input type="range" min="10" max="30" value="22" class="w-full" id="temp-slider">
+                            <div class="flex justify-between text-sm text-gray-500 mt-1">
+                                <span>10°C</span>
+                                <span>30°C</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block mb-2">降水量 (mm/年)</label>
+                            <input type="range" min="200" max="2000" value="1000" class="w-full" id="precip-slider">
+                            <div class="flex justify-between text-sm text-gray-500 mt-1">
+                                <span>200mm</span>
+                                <span>2000mm</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block mb-2">二氧化碳浓度 (ppm)</label>
+                            <input type="range" min="300" max="2000" value="800" class="w-full" id="co2-slider">
+                            <div class="flex justify-between text-sm text-gray-500 mt-1">
+                                <span>300ppm</span>
+                                <span>2000ppm</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">模拟结果</h3>
+                    <div id="climate-result" class="bg-gray-100 rounded-lg p-4 min-h-[200px]">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center mr-4">
+                                <i class="fa fa-thermometer-half text-secondary"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">当前温度</p>
+                                <p class="text-xl font-bold" id="temp-display">22°C</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mr-4">
+                                <i class="fa fa-tint text-primary"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">年降水量</p>
+                                <p class="text-xl font-bold" id="precip-display">1000mm</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center mr-4">
+                                <i class="fa fa-cloud text-accent"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">CO₂浓度</p>
+                                <p class="text-xl font-bold" id="co2-display">800ppm</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="biome-result" class="mt-4 p-4 bg-white border rounded-lg">
+                        <h4 class="font-medium mb-2">预测生态系统:</h4>
+                        <p id="biome-text" class="text-gray-600">温带森林</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+// 气候模拟器交互逻辑
+document.addEventListener('DOMContentLoaded', function() {
+    const tempSlider = document.getElementById('temp-slider');
+    const precipSlider = document.getElementById('precip-slider');
+    const co2Slider = document.getElementById('co2-slider');
+    const tempDisplay = document.getElementById('temp-display');
+    const precipDisplay = document.getElementById('precip-display');
+    const co2Display = document.getElementById('co2-display');
+    const biomeText = document.getElementById('biome-text');
+    
+    // 更新显示值
+    function updateValues() {
+        const temp = tempSlider.value;
+        const precip = precipSlider.value;
+        const co2 = co2Slider.value;
+        
+        tempDisplay.textContent = `${temp}°C`;
+        precipDisplay.textContent = `${precip}mm`;
+        co2Display.textContent = `${co2}ppm`;
+        
+        // 根据气候参数预测生态系统
+        let biome = '';
+        if (temp < 15) {
+            biome = precip < 500 ? '寒漠' : '针叶林';
+        } else if (temp < 25) {
+            biome = precip < 500 ? '草原' : '温带森林';
+        } else {
+            biome = precip < 1000 ? '热带草原' : '热带雨林';
+        }
+        
+        biomeText.textContent = biome;
+    }
+    
+    // 添加事件监听器
+    tempSlider.addEventListener('input', updateValues);
+    precipSlider.addEventListener('input', updateValues);
+    co2Slider.addEventListener('input', updateValues);
+    
+    // 初始化显示
+    updateValues();
+});
+</script>
+
+
+    <!-- 知识测验部分 -->
+    <section id="quiz" class="py-20 bg-primary/5">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,4vw,3rem)] font-bold text-dark mb-4">古近纪知识测验</h2>
+                <div class="w-20 h-1 bg-secondary mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    测试你对古近纪地质和生物演化的了解程度，看看你能答对多少题！
+                </p>
+            </div>
+            
+            <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-lg p-8">
+                <div id="quiz-container">
+                    <div class="mb-8">
+                        <h3 class="text-xl font-semibold mb-4">问题 <span id="current-question">1</span>/<span id="total-questions">5</span></h3>
+                        <p id="question-text" class="text-gray-700 mb-6">
+                            古近纪分为哪三个主要时期？
+                        </p>
+                        
+                        <div id="options-container" class="space-y-3 mb-8">
+                            <div class="option">
+                                <input type="radio" id="option1" name="question" value="A" class="mr-2">
+                                <label for="option1">古新世、始新世、渐新世</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="option2" name="question" value="B" class="mr-2">
+                                <label for="option2">上新世、中新世、渐新世</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="option3" name="question" value="C" class="mr-2">
+                                <label for="option3">白垩世、侏罗世、三叠世</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="option4" name="question" value="D" class="mr-2">
+                                <label for="option4">寒武世、奥陶世、志留世</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <button id="prev-btn" class="bg-gray-300 hover:bg-gray-400 text-dark px-6 py-2 rounded-full font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            上一题
+                        </button>
+                        <button id="next-btn" class="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-full font-medium transition-all">
+                            下一题
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="results-container" class="hidden text-center py-8">
+                    <h3 class="text-2xl font-bold text-primary mb-4">测验完成！</h3>
+                    <p class="text-xl mb-6">你的得分: <span id="score" class="font-bold">0</span>/<span id="total-score">5</span></p>
+                    <div class="mb-8">
+                        <div class="w-full bg-gray-200 rounded-full h-4">
+                            <div id="score-bar" class="bg-secondary h-4 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <button id="restart-quiz" class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-full font-medium transition-all transform hover:scale-105 shadow-lg">
+                        重新测验
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-6">
+                        <i class="fa fa-dinosaur text-2xl"></i>
+                        <span class="text-xl font-bold tracking-wide">古近纪探索</span>
+                    </div>
+                    <p class="text-gray-400 mb-6">
+                        探索约6600万至2300万年前地球上的奇妙生命与地质变迁，了解古近纪时期的地球历史。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-6">快速链接</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#overview" class="text-gray-400 hover:text-white transition-colors">概述</a></li>
+                        <li><a href="#geology" class="text-gray-400 hover:text-white transition-colors">地质特征</a></li>
+                        <li><a href="#biology" class="text-gray-400 hover:text-white transition-colors">生物演化</a></li>
+                        <li><a href="#timeline" class="text-gray-400 hover:text-white transition-colors">时间线</a></li>
+                        <li><a href="#interactive" class="text-gray-400 hover:text-white transition-colors">交互式地图</a></li>
+                        <li><a href="#quiz" class="text-gray-400 hover:text-white transition-colors">知识测验</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-6">相关资源</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">古生物数据库</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">地质研究论文</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">博物馆展览</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">教育资源</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">学术会议</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 导航栏滚动效果
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-primary', 'shadow-md');
+                navbar.classList.remove('bg-transparent');
+            } else {
+                navbar.classList.remove('bg-primary', 'shadow-md');
+                navbar.classList.add('bg-transparent');
+            }
+        });
+        
+        // 移动端菜单切换
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // 关闭移动端菜单
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+        
+        // 气候图表
+        const ctx = document.getElementById('climateChart').getContext('2d');
+        const climateChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['66Ma', '60Ma', '55Ma', '50Ma', '45Ma', '40Ma', '35Ma', '30Ma', '23Ma'],
+                datasets: [{
+                    label: '平均全球温度 (°C)',
+                    data: [18, 20, 24, 23, 22, 20, 18, 16, 14],
+                    backgroundColor: 'rgba(74, 111, 165, 0.2)',
+                    borderColor: 'rgba(74, 111, 165, 1)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: '温度 (°C)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: '时间 (百万年前)'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 生物详情模态框
+        const biologyBtns = document.querySelectorAll('.biology-detail-btn');
+        const biologyModal = document.getElementById('biology-modal');
+        const modalContent = document.getElementById('modal-content');
+        const closeModal = document.getElementById('close-modal');
+        
+        // 生物详情数据
+        const biologyDetails = {
+            mammals: {
+                title: '哺乳动物的崛起',
+                image: '冠齿兽.jpg',
+                content: `
+                    <p class="mb-4">恐龙灭绝后，哺乳动物获得了空前的发展机会，迅速填补了生态位的空缺。古近纪见证了哺乳动物从原始小型形态向多样化、大型化的演化过程。</p>
+                    
+                    <h4 class="font-bold text-lg mb-2 mt-6">关键演化事件</h4>
+                    <ul class="list-disc pl-6 mb-4 space-y-2">
+                        <li><span class="font-medium">古新世</span>: 原始哺乳动物如多瘤齿兽类和踝节目占据主导地位，体型较小，主要为食虫或杂食性。</li>
+                        <li><span class="font-medium">始新世</span>: 出现了早期的灵长类、奇蹄目（如始祖马）和偶蹄目动物。鲸类从陆地哺乳动物演化而来，开始适应海洋生活。</li>
+                        <li><span class="font-medium">渐新世</span>: 哺乳动物进一步多样化，出现了早期的象类、猫科和犬科动物的祖先。食草动物适应了逐渐扩展的草原环境。</li>
+                    </ul>
+                    
+                    <h4 class="font-bold text-lg mb-2 mt-6">代表性哺乳动物</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div class="bg-neutral/30 p-4 rounded-lg">
+                            <h5 class="font-medium mb-2">冠齿兽 (Uintatherium)</h5>
+                            <p class="text-sm">始新世晚期的大型哺乳动物，具有独特的角和獠牙，可能是草食性动物。</p>
+                        </div>
+                        <div class="bg-neutral/30 p-4 rounded-lg">
+                            <h5 class="font-medium mb-2">始祖马 (Hyracotherium)</h5>
+                            <p class="text-sm">始新世早期的小型马类，体型类似狐狸，适应森林环境。</p>
+                        </div>
+                        <div class="bg-neutral/30 p-4 rounded-lg">
+                            <h5 class="font-medium mb-2">尤因它兽 (Uintatherium)</h5>
+                            <p class="text-sm">渐新世的大型草食性动物，具有厚重的头骨和角状突起。</p>
+                        </div>
+                        <div class="bg-neutral/30 p-4 rounded-lg">
+                            <h5 class="font-medium mb-2">原古马 (Protorohippus)</h5>
+                            <p class="text-sm">渐新世的马类，比始祖马稍大，牙齿结构更适应吃草。</p>
+                        </div>
+                    </div>
+                    
+                    <p>哺乳动物在古近纪的演化奠定了现代哺乳动物多样性的基础，为后来的生态系统发展和人类的出现铺平了道路。</p>
+                `
+            },
+            birds: {
+                title: '鸟类的多样化',
+                image: '冠恐鸟.jpg',
+                content: `
+                    <p class="mb-4">古近纪是鸟类演化的重要时期，许多现代鸟类的目在这一时期出现并多样化。恐龙灭绝后，鸟类迅速适应了各种生态环境，发展出不同的觅食和飞行方式。</p>
+                    
+                    <h4 class="font-bold text-lg mb-2 mt-6">演化特点</h4>
+                    <ul class="list-disc pl-6 mb-4 space-y-2">
+                        <li><span class="font-medium">古新世</span>: 鸟类开始从白垩纪-古近纪灭绝事件中恢复，出现了一些大型不会飞的鸟类，如冠恐鸟（Gastornis）。</li>
+                        <li><span class="font-medium">始新世</span>: 鸟类快速多样化，出现了许多现代鸟类目的祖先，如早期的鹰、鸭和啄木鸟。</li>
+                        <li><span class="font-medium">渐新世</span>: 随着气候变干变冷，草原扩展，出现了适应开阔环境的鸟类，如鸵鸟和早期的雀形目鸟类。</li>
+                    </ul>
+                    
+                    <h4 class="font-bold text-lg mb-2 mt-6">代表性鸟类</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div class="bg-neutral/30 p-4 rounded-lg">
+                            <h5 class="font-medium mb-2">冠恐鸟 (Gastornis)</h5>
+                            <p class="text-sm">古新世至始新世的大型不会飞鸟类，可能是顶级捕食者，身高可达2米。</p>
+                        </div>
+                        <div class="bg-neutral/30 p-4 rounded-lg">
+                            <h5 class="font-medium mb-2">黄昏鸟 (Hesperornis)</h5>
+                            <p class="text-sm">始新世的海洋鸟类，不会飞但善于游泳，具有锋利的牙齿。</p>
+                        </div>
+                        <div class="bg-neutral/30 p-4 rounded-lg">
+                            <h5 class="font-medium mb-2">始祖鸟 (Archaeopteryx)</h5>
+                            <p class="text-sm">虽然主要生活在侏罗纪，但在古近纪仍有一些近亲存在，是鸟类与恐龙之间的过渡物种。</p>
+                        </div>
+                        <div class="bg-neutral/30 p-4 rounded-lg">
+                            <h5 class="font-medium mb-2">鱼鸟 (Ichthyornis)</h5>
+                            <p class="text-sm">白垩纪至古近纪的海鸟，具有牙齿，是现代鸟类的近亲。</p>
+                        </div>
+                    </div>
+                    
+                    <p>鸟类在古近纪的演化适应了不断变化的环境，为现代鸟类的多样性奠定了基础。许多古近纪鸟类的特征仍能在今天的鸟类中找到。</p>
+                `
+            },
+            plants: {
+                title: '植物的演化',
+                image: '蕨类植物.jpg',
+                content: `
+                    <p class="mb-4">古近纪见证了植物群从白垩纪末期灭绝事件中恢复并进一步演化的过程。被子植物在这一时期占据主导地位，森林覆盖了大部分陆地，随着气候的变化，植物群落也发生了显著演变。</p>
+                    
+                    <h4 class="font-bold text-lg mb-2 mt-6">演化阶段</h4>
+                    <ul class="list-disc pl-6 mb-4 space-y-2">
+                        <li><span class="font-medium">古新世</span>: 植物群开始从灭绝事件中恢复，被子植物继续多样化，裸子植物如松柏类仍很常见。</li>
+                        <li><span class="font-medium">始新世</span>: 全球气候温暖湿润，热带雨林扩展到极地地区，出现了许多现代植物科的代表。</li>
+                        <li><span class="font-medium">渐新世</span>: 气候变干变冷，森林面积减少，草原开始出现，草本植物和禾本科植物逐渐繁盛。</li>
+                    </ul>
+                    
+                    <h4 class="font-bold text-lg mb-2 mt-6">重要植物类群</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div class="bg-neutral/30 p-4 rounded-lg">
+                            <h5 class="font-medium mb-2">被子植物</h5>
+                            <p class="text-sm">占据主导地位，包括早期的木兰科、樟科和蔷薇科植物，为哺乳动物和昆虫提供了丰富的食物资源。</p>
+                        </div>
+                        <div class="bg-neutral/30 p-4 rounded-lg">
+                            <h5 class="font-medium mb-2">裸子植物</h5>
+                            <p class="text-sm">松柏类、银杏和苏铁等继续存在，但相对被子植物数量减少。</p>
+                        </div>
+                        <div class="bg-neutral/30 p-4 rounded-lg">
+                            <h5 class="font-medium mb-2">蕨类植物</h5>
+                            <p class="text-sm">在湿润环境中仍然常见，特别是在森林下层。</p>
+                        </div>
+                        <div class="bg-neutral/30 p-4 rounded-lg">
+                            <h5 class="font-medium mb-2">草本植物</h5>
+                            <p class="text-sm">渐新世随着草原的出现，草本植物和禾本科植物开始繁盛，为食草动物提供了新的食物来源。</p>
+                        </div>
+                    </div>
+                    
+                    <p>植物在古近纪的演化对整个生态系统产生了深远影响，为动物的演化和多样化提供了基础。同时，植物的演化也反映了当时地球气候和环境的变化。</p>
+                `
+            }
+        };
+        
+        // 打开模态框
+        biologyBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.getAttribute('data-target');
+                const details = biologyDetails[target];
+                
+                if (details) {
+                    modalContent.innerHTML = `
+                        <div class="text-center mb-6">
+                            <h3 class="text-2xl font-bold text-primary">${details.title}</h3>
+                            <div class="w-20 h-1 bg-secondary mx-auto mt-2"></div>
+                        </div>
+                        <img src="${details.image}" alt="${details.title}" class="w-full h-auto rounded-lg mb-6">
+                        ${details.content}
+                    `;
+                    
+                    biologyModal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+        });
+        
+        // 关闭模态框
+        closeModal.addEventListener('click', () => {
+            biologyModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+        
+        // 点击模态框背景关闭
+        biologyModal.addEventListener('click', (e) => {
+            if (e.target === biologyModal) {
+                biologyModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // 知识测验
+        const quizData = [
+            {
+                question: "古近纪分为哪三个主要时期？",
+                options: [
+                    "古新世、始新世、渐新世",
+                    "上新世、中新世、渐新世",
+                    "白垩世、侏罗世、三叠世",
+                    "寒武世、奥陶世、志留世"
+                ],
+                correct: "A"
+            },
+            {
+                question: "以下哪种动物是在古近纪首次出现的？",
+                options: [
+                    "恐龙",
+                    "哺乳动物",
+                    "鸟类",
+                    "爬行动物"
+                ],
+                correct: "B"
+            },
+            {
+                question: "古近纪末期的主要气候趋势是什么？",
+                options: [
+                    "持续变暖",
+                    "逐渐变冷",
+                    "剧烈波动",
+                    "保持稳定"
+                ],
+                correct: "B"
+            },
+            {
+                question: "印度板块与欧亚板块的碰撞导致了什么山脉的形成？",
+                options: [
+                    "阿尔卑斯山脉",
+                    "落基山脉",
+                    "喜马拉雅山脉",
+                    "安第斯山脉"
+                ],
+                correct: "C"
+            },
+            {
+                question: "以下哪类植物在古近纪占据主导地位？",
+                options: [
+                    "裸子植物",
+                    "蕨类植物",
+                    "苔藓植物",
+                    "被子植物"
+                ],
+                correct: "D"
+            }
+        ];
+        
+        const quizContainer = document.getElementById('quiz-container');
+        const resultsContainer = document.getElementById('results-container');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const currentQuestionEl = document.getElementById('current-question');
+        const totalQuestionsEl = document.getElementById('total-questions');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const scoreEl = document.getElementById('score');
+        const totalScoreEl = document.getElementById('total-score');
+        const scoreBar = document.getElementById('score-bar');
+        const restartQuiz = document.getElementById('restart-quiz');
+        
+        let currentQuestion = 0;
+        let userAnswers = [];
+        
+        // 初始化测验
+        function initQuiz() {
+            totalQuestionsEl.textContent = quizData.length;
+            renderQuestion();
+            
+            prevBtn.addEventListener('click', goToPrevQuestion);
+            nextBtn.addEventListener('click', goToNextQuestion);
+            restartQuiz.addEventListener('click', restart);
+        }
+        
+        // 渲染当前问题
+        function renderQuestion() {
+            const question = quizData[currentQuestion];
+            questionText.textContent = question.question;
+            currentQuestionEl.textContent = currentQuestion + 1;
+            
+            // 清空选项容器
+            optionsContainer.innerHTML = '';
+            
+            // 添加选项
+            question.options.forEach((option, index) => {
+                const optionEl = document.createElement('div');
+                optionEl.className = 'option';
+                optionEl.innerHTML = `
+                    <input type="radio" id="option${index + 1}" name="question" value="${String.fromCharCode(65 + index)}" class="mr-2" ${userAnswers[currentQuestion] === String.fromCharCode(65 + index) ? 'checked' : ''}>
+                    <label for="option${index + 1}">${option}</label>
+                `;
+                optionsContainer.appendChild(optionEl);
+            });
+            
+            // 更新按钮状态
+            prevBtn.disabled = currentQuestion === 0;
+            nextBtn.textContent = currentQuestion === quizData.length - 1 ? '完成' : '下一题';
+        }
+        
+        // 上一题
+        function goToPrevQuestion() {
+            if (currentQuestion > 0) {
+                saveAnswer();
+                currentQuestion--;
+                renderQuestion();
+            }
+        }
+        
+        // 下一题
+        function goToNextQuestion() {
+            saveAnswer();
+            
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+        
+        // 保存当前问题的答案
+        function saveAnswer() {
+            const selectedOption = document.querySelector('input[name="question"]:checked');
+            userAnswers[currentQuestion] = selectedOption ? selectedOption.value : null;
+        }
+        
+        // 显示结果
+        function showResults() {
+            saveAnswer();
+            
+            let score = 0;
+            quizData.forEach((question, index) => {
+                if (userAnswers[index] === question.correct) {
+                    score++;
+                }
+            });
+            
+            scoreEl.textContent = score;
+            totalScoreEl.textContent = quizData.length;
+            scoreBar.style.width = `${(score / quizData.length) * 100}%`;
+            
+            quizContainer.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+        }
+        
+        // 重新开始测验
+        function restart() {
+            currentQuestion = 0;
+            userAnswers = [];
+            
+            resultsContainer.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            
+            renderQuestion();
+        }
+        
+        // 初始化测验
+        initQuiz();
+        
+        // 添加动画效果
+        document.addEventListener('DOMContentLoaded', () => {
+            // 添加脉冲动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes pulse {
+                    0% { transform: scale(1); opacity: 1; }
+                    50% { transform: scale(1.2); opacity: 0.7; }
+                    100% { transform: scale(1); opacity: 1; }
+                }
+                .pulse-animation {
+                    animation: pulse 2s infinite;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+
+</body>
+</html>
+    

@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>侏罗纪地质与生物科普</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  <!-- 自定义配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2A4365', // 深蓝色，代表远古感
+            secondary: '#9F7AEA', // 紫色，代表神秘
+            accent: '#ED8936', // 橙色，代表火山和活力
+            neutral: '#F7FAFC', // 浅色背景
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Montserrat', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .parallax {
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+      .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+      .hover-scale {
+        transition: transform 0.3s ease;
+      }
+      .hover-scale:hover {
+        transform: scale(1.05);
+      }
+      .timeline-item {
+        @apply relative pl-8 pb-10 border-l-2 border-primary/30 last:border-0 last:pb-0;
+      }
+      .timeline-dot {
+        @apply absolute w-4 h-4 rounded-full bg-primary left-[-7px] top-0;
+      }
+      .modal {
+        @apply fixed inset-0 z-50 flex items-center justify-center bg-black/70 opacity-0 pointer-events-none transition-opacity duration-300;
+      }
+      .modal.active {
+        @apply opacity-100 pointer-events-auto;
+      }
+      .modal-content {
+        @apply bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-auto transform transition-transform duration-300 scale-95;
+      }
+      .modal.active .modal-content {
+        @apply scale-100;
+      }
+    }
+  </style>
+</head>
+<body class="bg-neutral text-gray-800">
+  <!-- 导航栏 -->
+  <nav id="main-nav" class="fixed w-full z-50 transition-all duration-300 bg-transparent">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="#" class="text-2xl font-bold text-white text-shadow">侏罗纪世界</a>
+      <div class="hidden md:flex space-x-8">
+        <a href="#geology" class="text-white hover:text-accent transition-colors">地质事件</a>
+        <a href="#biology" class="text-white hover:text-accent transition-colors">生物演化</a>
+        <a href="#time" class="text-white hover:text-accent transition-colors">时间线</a>
+        <a href="#extinction" class="text-white hover:text-accent transition-colors">灭绝事件</a>
+      </div>
+      <button class="md:hidden text-white text-xl">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- 英雄区域 -->
+  <header class="relative h-screen flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <div class="absolute inset-0 bg-gradient-to-b from-black/70 to-primary/40 z-10"></div>
+      <img src="https://picsum.photos/id/1015/1920/1080" alt="侏罗纪风景" class="w-full h-full object-cover parallax">
+    </div>
+    <div class="container mx-auto px-4 z-20 text-center">
+      <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-bold text-white mb-6 text-shadow">
+        探索侏罗纪<span class="text-accent">地质</span>与<span class="text-accent">生物</span>的奥秘
+      </h1>
+      <p class="text-[clamp(1rem,2vw,1.5rem)] text-white/90 max-w-3xl mx-auto mb-10 text-shadow">
+        穿越时空，回到1.99亿至1.45亿年前的地球，见证恐龙时代的黄金时期
+      </p>
+      <a href="#geology" class="inline-block bg-accent hover:bg-accent/90 text-white font-bold py-3 px-8 rounded-full transition-all hover:shadow-lg hover:-translate-y-1">
+        开始探索 <i class="fa fa-arrow-down ml-2"></i>
+      </a>
+    </div>
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
+      <i class="fa fa-chevron-down"></i>
+    </div>
+  </header>
+
+  <!-- 地质重大事件部分 -->
+  <section id="geology" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-primary mb-4">地质重大事件</h2>
+        <p class="text-gray-600 max-w-3xl mx-auto">侏罗纪时期，地球经历了剧烈的地质变化，塑造了现代地球的基本面貌</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-10">
+        <!-- 盘古大陆裂解 -->
+        <div class="bg-gray-50 rounded-xl p-8 shadow-lg hover-scale">
+          <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+            <i class="fa fa-globe text-primary text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-primary mb-4">盘古大陆的裂解</h3>
+          <p class="text-gray-700 mb-4">
+            侏罗纪见证了盘古大陆的开始分裂，这一过程塑造了现代各大洲的雏形。中大西洋开始形成，南美洲与非洲逐渐分离。
+          </p>
+          <div class="relative h-64 rounded-lg overflow-hidden mb-4">
+            <img src="侏罗纪板块.jpg" alt="盘古大陆裂解示意图" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+              <p class="text-white p-4">盘古大陆在侏罗纪开始分裂</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 火山活动 -->
+        <div class="bg-gray-50 rounded-xl p-8 shadow-lg hover-scale">
+          <div class="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mb-6">
+            <i class="fa fa-fire text-accent text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-primary mb-4">火山活动频繁</h3>
+          <p class="text-gray-700 mb-4">
+            侏罗纪时期火山活动频繁，大量的岩浆喷发释放出二氧化碳，可能导致全球气候变暖，影响了生物的演化。
+          </p>
+          <div class="relative h-64 rounded-lg overflow-hidden mb-4">
+            <img src="侏罗纪火山.jpg" alt="火山活动示意图" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+              <p class="text-white p-4">侏罗纪时期火山活动频繁</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 海平面变化 -->
+        <div class="bg-gray-50 rounded-xl p-8 shadow-lg hover-scale">
+          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
+            <i class="fa fa-tint text-blue-500 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-primary mb-4">海平面变化</h3>
+          <p class="text-gray-700 mb-4">
+            侏罗纪时期海平面上升，形成了广泛的浅海环境，为海洋生物的繁荣提供了条件，同时也淹没了大片陆地。
+          </p>
+          <div class="relative h-64 rounded-lg overflow-hidden mb-4">
+            <img src="浅海.jpg" alt="海平面变化示意图" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+              <p class="text-white p-4">海平面上升形成了广阔的浅海</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 沉积环境 -->
+        <div class="bg-gray-50 rounded-xl p-8 shadow-lg hover-scale">
+          <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mb-6">
+            <i class="fa fa-diamond text-amber-500 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-primary mb-4">沉积环境</h3>
+          <p class="text-gray-700 mb-4">
+            侏罗纪的沉积环境多样，形成了丰富的化石记录，包括海相沉积、陆相沉积和火山沉积等多种类型。
+          </p>
+          <div class="relative h-64 rounded-lg overflow-hidden mb-4">
+            <img src="化石.jpg" alt="沉积环境示意图" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+              <p class="text-white p-4">侏罗纪沉积层保存了丰富的化石</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 生物发展情况部分 -->
+  <section id="biology" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-primary mb-4">生物发展情况</h2>
+        <p class="text-gray-600 max-w-3xl mx-auto">侏罗纪是恐龙的黄金时代，同时海洋生物和植物也经历了显著的演化</p>
+      </div>
+
+      <!-- 恐龙3D模型展示 -->
+      <div class="mb-20 relative h-[500px] rounded-xl overflow-hidden shadow-2xl">
+        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70 z-10"></div>
+        <img src="https://picsum.photos/id/1037/1920/1080" alt="恐龙背景" class="absolute inset-0 w-full h-full object-cover">
+        <div class="relative z-20 h-full flex items-center justify-center">
+          <div class="text-center text-white p-8 max-w-2xl">
+            <h3 class="text-3xl font-bold mb-6">侏罗纪的霸主 - 恐龙</h3>
+            <p class="mb-8">
+              侏罗纪是恐龙的黄金时代，大型蜥脚类恐龙如梁龙、腕龙占据了陆地生态系统的主导地位。兽脚类恐龙如异特龙则是顶级掠食者。
+            </p>
+            <div class="flex justify-center space-x-4">
+              <button id="dino-1" class="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors active">
+                梁龙
+              </button>
+              <button id="dino-2" class="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors">
+                异特龙
+              </button>
+              <button id="dino-3" class="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors">
+                剑龙
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- 恐龙3D模型（这里用动画替代） -->
+        <div id="dino-model" class="absolute bottom-0 right-0 w-1/2 h-full flex items-end justify-end">
+          <img src="梁龙.jpg" alt="梁龙模型" class="max-h-full object-contain animate-pulse">
+        </div>
+      </div>
+
+      <!-- 生物数据可视化 -->
+      <div class="grid md:grid-cols-2 gap-10 mb-16">
+        <div class="bg-white rounded-xl p-8 shadow-lg">
+          <h3 class="text-xl font-bold text-primary mb-6">侏罗纪主要恐龙种类占比</h3>
+          <div class="h-80">
+            <canvas id="dinoChart"></canvas>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-8 shadow-lg">
+          <h3 class="text-xl font-bold text-primary mb-6">恐龙体型对比</h3>
+          <div class="h-80">
+            <canvas id="sizeChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- 生物卡片 -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg hover-scale">
+          <div class="relative h-64">
+            <img src="蜥脚类恐龙.jpg" alt="蜥脚类恐龙" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+            <h3 class="absolute bottom-4 left-4 text-white text-xl font-bold">蜥脚类恐龙</h3>
+          </div>
+          <div class="p-6">
+            <p class="text-gray-700 mb-4">
+              蜥脚类恐龙是地球上出现过的最大陆地动物，具有长脖子、长尾巴和庞大的身体。梁龙和腕龙是其典型代表。
+            </p>
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-500">生存年代: 侏罗纪晚期</span>
+              <button data-dino="sauropod" class="text-primary hover:text-accent transition-colors open-dino-modal">
+                <i class="fa fa-expand"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg hover-scale">
+          <div class="relative h-64">
+            <img src="兽脚类恐龙.jpg" alt="兽脚类恐龙" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+            <h3 class="absolute bottom-4 left-4 text-white text-xl font-bold">兽脚类恐龙</h3>
+          </div>
+          <div class="p-6">
+            <p class="text-gray-700 mb-4">
+              兽脚类恐龙是两足肉食性恐龙，拥有锋利的牙齿和爪子。异特龙是侏罗纪时期最强大的掠食者之一。
+            </p>
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-500">生存年代: 侏罗纪中期至晚期</span>
+              <button data-dino="theropod" class="text-primary hover:text-accent transition-colors open-dino-modal">
+                <i class="fa fa-expand"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg hover-scale">
+          <div class="relative h-64">
+            <img src="鸟脚类恐龙.jpg" alt="鸟脚类恐龙" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+            <h3 class="absolute bottom-4 left-4 text-white text-xl font-bold">鸟脚类恐龙</h3>
+          </div>
+          <div class="p-6">
+            <p class="text-gray-700 mb-4">
+              鸟脚类恐龙是草食性恐龙，后肢发达，适合快速奔跑。它们是侏罗纪陆地生态系统中的重要组成部分。
+            </p>
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-500">生存年代: 侏罗纪早期至晚期</span>
+              <button data-dino="ornithopod" class="text-primary hover:text-accent transition-colors open-dino-modal">
+                <i class="fa fa-expand"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 时间线部分 -->
+  <section id="time" class="py-20 bg-white relative overflow-hidden">
+    <div class="absolute inset-0 opacity-5">
+      <div class="h-full w-full" style="background-image: url('https://picsum.photos/id/1045/1920/1080'); background-size: cover;"></div>
+    </div>
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-primary mb-4">侏罗纪时间线</h2>
+        <p class="text-gray-600 max-w-3xl mx-auto">探索侏罗纪时期的关键事件和地质年代</p>
+      </div>
+
+      <div class="max-w-4xl mx-auto">
+        <div class="timeline">
+          <!-- 早侏罗世 -->
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="ml-4">
+              <span class="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
+                早侏罗世 (2.01-1.74亿年前)
+              </span>
+              <h3 class="text-xl font-bold text-primary mb-2">盘古大陆开始分裂</h3>
+              <p class="text-gray-700 mb-4">
+                早侏罗世是三叠纪末大灭绝后的恢复期。盘古大陆开始分裂，中大西洋开始形成。恐龙开始多样化，早期的蜥脚类恐龙出现。海洋中菊石重新繁荣，成为重要的标准化石。
+              </p>
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="bg-gray-50 rounded-lg p-4">
+                  <h4 class="font-bold text-gray-800 mb-2">主要生物</h4>
+                  <ul class="text-gray-600 space-y-1">
+                    <li>• 早期蜥脚类恐龙</li>
+                    <li>• 鱼龙</li>
+                    <li>• 蛇颈龙</li>
+                    <li>• 海洋菊石</li>
+                  </ul>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                  <h4 class="font-bold text-gray-800 mb-2">地质事件</h4>
+                  <ul class="text-gray-600 space-y-1">
+                    <li>• 盘古大陆开始分裂</li>
+                    <li>• 大西洋开始形成</li>
+                    <li>• 火山活动频繁</li>
+                  </ul>
+                </div>
+              </div>
+              <img src="早期侏罗纪.jpg" alt="早侏罗世景观" class="w-full h-48 object-cover rounded-lg">
+            </div>
+          </div>
+
+          <!-- 中侏罗世 -->
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="ml-4">
+              <span class="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
+                中侏罗世 (1.74-1.64亿年前)
+              </span>
+              <h3 class="text-xl font-bold text-primary mb-2">恐龙多样化的高峰期</h3>
+              <p class="text-gray-700 mb-4">
+                中侏罗世是恐龙多样化的重要时期。蜥脚类恐龙如腕龙和梁龙达到了巨大的体型。兽脚类恐龙如异特龙成为顶级掠食者。鸟类的祖先始祖鸟可能在这个时期出现。海洋中鱼龙和蛇颈龙继续繁荣。
+              </p>
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="bg-gray-50 rounded-lg p-4">
+                  <h4 class="font-bold text-gray-800 mb-2">主要生物</h4>
+                  <ul class="text-gray-600 space-y-1">
+                    <li>• 腕龙、梁龙</li>
+                    <li>• 异特龙</li>
+                    <li>• 始祖鸟</li>
+                    <li>• 鱼龙、蛇颈龙</li>
+                  </ul>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                  <h4 class="font-bold text-gray-800 mb-2">地质事件</h4>
+                  <ul class="text-gray-600 space-y-1">
+                    <li>• 大西洋继续扩张</li>
+                    <li>• 海平面上升</li>
+                    <li>• 广泛的浅海沉积</li>
+                  </ul>
+                </div>
+              </div>
+              <img src="中期侏罗纪.jpg" alt="中侏罗世景观" class="w-full h-48 object-cover rounded-lg">
+            </div>
+          </div>
+
+          <!-- 晚侏罗世 -->
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="ml-4">
+              <span class="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
+                晚侏罗世 (1.64-1.45亿年前)
+              </span>
+              <h3 class="text-xl font-bold text-primary mb-2">恐龙统治的巅峰</h3>
+              <p class="text-gray-700 mb-4">
+                晚侏罗世是恐龙统治的巅峰时期。大型蜥脚类恐龙如迷惑龙和腕龙遍布全球。装甲恐龙如剑龙和角龙类开始出现。兽脚类恐龙继续演化，变得更加多样化和专业化。海洋中沧龙类开始崛起。
+              </p>
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="bg-gray-50 rounded-lg p-4">
+                  <h4 class="font-bold text-gray-800 mb-2">主要生物</h4>
+                  <ul class="text-gray-600 space-y-1">
+                    <li>• 迷惑龙、腕龙</li>
+                    <li>• 剑龙</li>
+                    <li>• 异特龙、角鼻龙</li>
+                    <li>• 沧龙类</li>
+                  </ul>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                  <h4 class="font-bold text-gray-800 mb-2">地质事件</h4>
+                  <ul class="text-gray-600 space-y-1">
+                    <li>• 盘古大陆进一步分裂</li>
+                    <li>• 大规模火山活动</li>
+                    <li>• 海侵事件</li>
+                  </ul>
+                </div>
+              </div>
+              <img src="晚期侏罗纪.jpg" alt="晚侏罗世景观" class="w-full h-48 object-cover rounded-lg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 侏罗纪末生物事件部分 -->
+  <section id="extinction" class="py-20 bg-gray-900 text-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">侏罗纪末的生物事件</h2>
+        <p class="text-gray-300 max-w-3xl mx-auto">侏罗纪末期发生了一次小规模的灭绝事件，为白垩纪的生物演化铺平了道路</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-10 items-center">
+        <div>
+          <h3 class="text-2xl font-bold mb-6">灭绝事件的影响</h3>
+          <p class="text-gray-300 mb-6">
+            侏罗纪末期发生了一次小规模的生物灭绝事件，约19%的科和70%的物种灭绝。这次事件主要影响了海洋生物，尤其是菊石和双壳类动物。在陆地上，一些大型恐龙如梁龙和剑龙也灭绝了，但兽脚类恐龙和蜥脚类恐龙的其他分支得以幸存，并在白垩纪继续繁荣。
+          </p>
+          <div class="space-y-4 mb-8">
+            <div class="flex items-start">
+              <div class="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                <i class="fa fa-check text-accent"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-lg mb-1">海洋生物受创</h4>
+                <p class="text-gray-400">菊石、双壳类和一些海洋爬行动物遭受重创</p>
+              </div>
+            </div>
+            <div class="flex items-start">
+              <div class="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                <i class="fa fa-check text-accent"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-lg mb-1">陆地生态系统变化</h4>
+                <p class="text-gray-400">大型蜥脚类和剑龙类恐龙灭绝，为新物种的演化腾出空间</p>
+              </div>
+            </div>
+            <div class="flex items-start">
+              <div class="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                <i class="fa fa-check text-accent"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-lg mb-1">为白垩纪铺平道路</h4>
+                <p class="text-gray-400">灭绝事件后，恐龙家族中的鸟脚类和角龙类开始多样化</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="bg-gray-800/50 rounded-xl p-8 backdrop-blur-sm">
+            <h3 class="text-xl font-bold mb-6">灭绝事件原因分析</h3>
+            <div class="space-y-6">
+              <div class="flex items-center">
+                <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mr-4">
+                  <i class="fa fa-volcano text-blue-400 text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-lg mb-1">火山活动</h4>
+                  <p class="text-gray-400">大规模火山喷发可能导致气候变化和环境恶化</p>
+                </div>
+              </div>
+              <div class="flex items-center">
+                <div class="w-12 h-12 rounded-full bg-orange-500/20 flex items-center justify-center mr-4">
+                  <i class="fa fa-meteor text-orange-400 text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-lg mb-1">小行星撞击</h4>
+                  <p class="text-gray-400">虽然证据较弱，但不能排除小行星撞击的可能性</p>
+                </div>
+              </div>
+              <div class="flex items-center">
+                <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mr-4">
+                  <i class="fa fa-globe text-green-400 text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-lg mb-1">气候变化</h4>
+                  <p class="text-gray-400">全球气候变冷或变干可能影响了生物的生存</p>
+                </div>
+              </div>
+              <div class="flex items-center">
+                <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mr-4">
+                  <i class="fa fa-tint text-purple-400 text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-lg mb-1">海平面变化</h4>
+                  <p class="text-gray-400">海平面下降可能破坏了沿海生态系统</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 背景装饰 -->
+          <div class="absolute -z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-accent/20 rounded-full blur-3xl"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 恐龙详情模态框 -->
+  <div id="dino-modal" class="modal">
+    <div class="modal-content">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h3 id="modal-title" class="text-2xl font-bold text-primary"></h3>
+          <button id="close-modal" class="text-gray-500 hover:text-gray-700">
+            <i class="fa fa-times text-xl"></i>
+          </button>
+        </div>
+        <div id="modal-content" class="prose max-w-none">
+          <!-- 模态框内容将通过JavaScript动态填充 -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 页脚 -->
+  <footer class="bg-gray-900 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4">侏罗纪世界</h3>
+          <p class="text-gray-400 mb-4">
+            探索侏罗纪时期的地质与生物奥秘，穿越时空，回到恐龙统治的年代。
+          </p>
+          <div class="flex space-x-4">
+                      </div>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold mb-4">快速链接</h3>
+          <ul class="space-y-2">
+            <li><a href="#geology" class="text-gray-400 hover:text-white transition-colors">地质事件</a></li>
+            <li><a href="#biology" class="text-gray-400 hover:text-white transition-colors">生物演化</a></li>
+            <li><a href="#time" class="text-gray-400 hover:text-white transition-colors">时间线</a></li>
+            <li><a href="#extinction" class="text-gray-400 hover:text-white transition-colors">灭绝事件</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold mb-4">资源</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">古生物数据库</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">研究论文</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">博物馆指南</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">教育资源</a></li>
+          </ul>
+        </div>
+    
+      </div>
+    
+    </div>
+  </footer>
+
+  <script>
+    // 恐龙详情数据
+    const dinoData = {
+      sauropod: {
+        title: "蜥脚类恐龙",
+        content: `
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <img src="蜥脚类恐龙.jpg" alt="蜥脚类恐龙" class="w-full h-auto rounded-lg mb-4">
+              <div class="grid grid-cols-2 gap-4">
+                <div class="bg-gray-100 p-3 rounded-lg">
+                  <h4 class="font-bold text-primary">体长</h4>
+                  <p>20-30米</p>
+                </div>
+                <div class="bg-gray-100 p-3 rounded-lg">
+                  <h4 class="font-bold text-primary">体重</h4>
+                  <p>20-80吨</p>
+                </div>
+                <div class="bg-gray-100 p-3 rounded-lg">
+                  <h4 class="font-bold text-primary">食性</h4>
+                  <p>植食性</p>
+                </div>
+                <div class="bg-gray-100 p-3 rounded-lg">
+                  <h4 class="font-bold text-primary">生存年代</h4>
+                  <p>侏罗纪至白垩纪</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4 class="text-xl font-bold mb-4">特征与生活习性</h4>
+              <p class="mb-4">
+                蜥脚类恐龙是地球上出现过的最大陆地动物，它们具有以下显著特征：
+              </p>
+              <ul class="list-disc pl-5 mb-4 space-y-2">
+                <li>超长的脖子和尾巴，用于取食和平衡身体</li>
+                <li>巨大的身躯，需要大量食物维持能量</li>
+                <li>四肢粗壮，呈柱状，支撑体重</li>
+                <li>小头部和简单的牙齿，适合切割和吞咽植物</li>
+              </ul>
+              <p class="mb-4">
+                蜥脚类恐龙主要生活在平原和森林地区，以树叶、嫩枝和高草为食。它们可能是群居动物，成年个体的巨大体型可以有效抵御掠食者的攻击。
+              </p>
+              <h4 class="text-xl font-bold mb-4">著名代表</h4>
+              <ul class="list-disc pl-5 space-y-2">
+                <li><strong>梁龙（Diplodocus）</strong> - 体长可达27米，尾巴特别长</li>
+                <li><strong>腕龙（Brachiosaurus）</strong> - 前肢比后肢长，颈部垂直向上</li>
+                <li><strong>迷惑龙（Apatosaurus）</strong> - 曾被称为雷龙，体型庞大</li>
+              </ul>
+            </div>
+          </div>
+        `
+      },
+      theropod: {
+        title: "兽脚类恐龙",
+        content: `
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <img src="兽脚类恐龙.jpg" alt="兽脚类恐龙" class="w-full h-auto rounded-lg mb-4">
+              <div class="grid grid-cols-2 gap-4">
+                <div class="bg-gray-100 p-3 rounded-lg">
+                  <h4 class="font-bold text-primary">体长</h4>
+                  <p>1-15米</p>
+                </div>
+                <div class="bg-gray-100 p-3 rounded-lg">
+                  <h4 class="font-bold text-primary">体重</h4>
+                  <p>50公斤-8吨</p>
+                </div>
+                <div class="bg-gray-100 p-3 rounded-lg">
+                  <h4 class="font-bold text-primary">食性</h4>
+                  <p>肉食性</p>
+                </div>
+                <div class="bg-gray-100 p-3 rounded-lg">
+                  <h4 class="font-bold text-primary">生存年代</h4>
+                  <p>三叠纪至白垩纪末</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4 class="text-xl font-bold mb-4">特征与生活习性</h4>
+              <p class="mb-4">
+                兽脚类恐龙是两足肉食性恐龙，它们具有以下特征：
+              </p>
+              <ul class="list-disc pl-5 mb-4 space-y-2">
+                <li>锋利的牙齿和爪子，用于捕杀和撕裂猎物</li>
+                <li>强壮的后肢，适合快速奔跑和追捕猎物</li>
+                <li>前肢通常较小，但有些种类（如霸王龙）的前肢极度退化</li>
+                <li>大脑相对发达，可能具有较高的智力和复杂的行为</li>
+              </ul>
+              <p class="mb-4">
+                兽脚类恐龙是中生代最顶级的掠食者，它们可能采用单独或群体捕猎策略。一些小型兽脚类恐龙可能是敏捷的猎手，而大型兽脚类则可以猎杀体型巨大的植食性恐龙。
+              </p>
+              <h4 class="text-xl font-bold mb-4">著名代表</h4>
+              <ul class="list-disc pl-5 space-y-2">
+                <li><strong>异特龙（Allosaurus）</strong> - 侏罗纪晚期的顶级掠食者</li>
+                <li><strong>霸王龙（Tyrannosaurus rex）</strong> - 白垩纪末期最大的掠食者</li>
+                <li><strong>迅猛龙（Velociraptor）</strong> - 小型但敏捷的猎手，有镰刀状爪子</li>
+              </ul>
+            </div>
+          </div>
+        `
+      },
+      ornithopod: {
+        title: "鸟脚类恐龙",
+        content: `
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <img src="鸟脚类恐龙.jpg" alt="鸟脚类恐龙" class="w-full h-auto rounded-lg mb-4">
+              <div class="grid grid-cols-2 gap-4">
+                <div class="bg-gray-100 p-3 rounded-lg">
+                  <h4 class="font-bold text-primary">体长</h4>
+                  <p>1-12米</p>
+                </div>
+                <div class="bg-gray-100 p-3 rounded-lg">
+                  <h4 class="font-bold text-primary">体重</h4>
+                  <p>30公斤-10吨</p>
+                </div>
+                <div class="bg-gray-100 p-3 rounded-lg">
+                  <h4 class="font-bold text-primary">食性</h4>
+                  <p>植食性</p>
+                </div>
+                <div class="bg-gray-100 p-3 rounded-lg">
+                  <h4 class="font-bold text-primary">生存年代</h4>
+                  <p>侏罗纪至白垩纪末</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4 class="text-xl font-bold mb-4">特征与生活习性</h4>
+              <p class="mb-4">
+                鸟脚类恐龙是一类多样化的植食性恐龙，它们具有以下特征：
+              </p>
+              <ul class="list-disc pl-5 mb-4 space-y-2">
+                <li>后肢发达，适合快速奔跑，通常用两足行走</li>
+                <li>喙状嘴部，适合切割植物</li>
+                <li>复杂的咀嚼系统，牙齿不断替换</li>
+                <li>可能具有群居行为，以抵御掠食者</li>
+              </ul>
+              <p class="mb-4">
+                鸟脚类恐龙是中生代陆地生态系统中的重要组成部分，它们的适应性很强，能够在各种环境中生存。一些种类可能具有季节性迁徙的习性。
+              </p>
+              <h4 class="text-xl font-bold mb-4">著名代表</h4>
+              <ul class="list-disc pl-5 space-y-2">
+                <li><strong>棱齿龙（Hypsilophodon）</strong> - 小型敏捷的鸟脚类恐龙</li>
+                <li><strong>禽龙（Iguanodon）</strong> - 中等体型，拇指有尖刺</li>
+                <li><strong>鸭嘴龙（Hadrosaurus）</strong> - 大型，头部有特殊的冠饰</li>
+              </ul>
+            </div>
+          </div>
+        `
+      }
+    };
+
+    // 导航栏滚动效果
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 100) {
+        nav.classList.add('bg-primary/95', 'shadow-md');
+        nav.classList.remove('bg-transparent');
+      } else {
+        nav.classList.remove('bg-primary/95', 'shadow-md');
+        nav.classList.add('bg-transparent');
+      }
+    });
+
+    // 恐龙模型切换
+    const dinoButtons = document.querySelectorAll('#dino-1, #dino-2, #dino-3');
+    const dinoModel = document.getElementById('dino-model');
+    const dinoImages = [
+      '梁龙.jpg',
+      '异特龙.jpg',
+      '剑龙.jpg'
+    ];
+    const dinoNames = ['梁龙', '异特龙', '剑龙'];
+
+    dinoButtons.forEach((button, index) => {
+      button.addEventListener('click', () => {
+        dinoModel.innerHTML = `<img src="${dinoImages[index]}" alt="${dinoNames[index]}模型" class="max-h-full object-contain animate-pulse">`;
+        dinoButtons.forEach(btn => btn.classList.remove('bg-white/40'));
+        button.classList.add('bg-white/40');
+      });
+    });
+
+    // 恐龙详情模态框
+    const modal = document.getElementById('dino-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalContent = document.getElementById('modal-content');
+    const closeModal = document.getElementById('close-modal');
+    const openModalButtons = document.querySelectorAll('.open-dino-modal');
+
+    openModalButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const dinoType = button.getAttribute('data-dino');
+        const dino = dinoData[dinoType];
+        
+        if (dino) {
+          modalTitle.textContent = dino.title;
+          modalContent.innerHTML = dino.content;
+          modal.classList.add('active');
+          document.body.style.overflow = 'hidden'; // 防止背景滚动
+        }
+      });
+    });
+
+    closeModal.addEventListener('click', () => {
+      modal.classList.remove('active');
+      document.body.style.overflow = ''; // 恢复背景滚动
+    });
+
+    // 点击模态框背景关闭
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+
+    // 按ESC键关闭模态框
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+
+    // 初始化图表
+    document.addEventListener('DOMContentLoaded', function() {
+      // 恐龙种类占比图表
+      const dinoCtx = document.getElementById('dinoChart').getContext('2d');
+      new Chart(dinoCtx, {
+        type: 'pie',
+        data: {
+          labels: ['蜥脚类', '兽脚类', '鸟脚类', '装甲类', '角龙类'],
+          datasets: [{
+            data: [35, 25, 20, 15, 5],
+            backgroundColor: [
+              '#2A4365', // primary
+              '#9F7AEA', // secondary
+              '#ED8936', // accent
+              '#48BB78', // green
+              '#4299E1', // blue
+            ],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                padding: 20,
+                font: {
+                  size: 12
+                }
+              }
+            },
+            title: {
+              display: true,
+              text: '侏罗纪主要恐龙种类占比',
+              font: {
+                size: 16,
+                weight: 'bold'
+              }
+            }
+          },
+          animation: {
+            animateScale: true,
+            animateRotate: true
+          }
+        }
+      });
+
+      // 恐龙体型对比图表
+      const sizeCtx = document.getElementById('sizeChart').getContext('2d');
+      new Chart(sizeCtx, {
+        type: 'bar',
+        data: {
+          labels: ['梁龙', '腕龙', '异特龙', '剑龙', '三角龙'],
+          datasets: [{
+            label: '体长 (米)',
+            data: [27, 30, 9, 9, 9],
+            backgroundColor: '#2A4365',
+            borderRadius: 6
+          }, {
+            label: '体重 (吨)',
+            data: [12, 33, 2.5, 7, 12],
+            backgroundColor: '#ED8936',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                display: true,
+                drawBorder: false
+              }
+            },
+            x: {
+              grid: {
+                display: false,
+                drawBorder: false
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                padding: 20,
+                font: {
+                  size: 12
+                }
+              }
+            },
+            title: {
+              display: true,
+              text: '侏罗纪主要恐龙体型对比',
+              font: {
+                size: 16,
+                weight: 'bold'
+              }
+            }
+          }
+        }
+      });
+    });
+
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

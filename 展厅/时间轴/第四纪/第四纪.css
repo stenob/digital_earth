@@ -1,0 +1,185 @@
+/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Microsoft YaHei", sans-serif;
+    background: #000;
+    color: #fff;
+    overflow: hidden;
+}
+
+/* 信息面板样式 */
+#info {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 25px;
+    border-radius: 15px;
+    max-width: 450px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+#info h2 {
+    color: #4CAF50;
+    margin-bottom: 15px;
+    font-size: 26px;
+    border-bottom: 2px solid rgba(76, 175, 80, 0.3);
+    padding-bottom: 10px;
+}
+
+#info h3 {
+    color: #81C784;
+    margin: 20px 0 15px;
+    font-size: 20px;
+    padding-left: 10px;
+    border-left: 4px solid #4CAF50;
+}
+
+#info p {
+    line-height: 1.8;
+    font-size: 16px;
+    color: #e0e0e0;
+    margin-bottom: 12px;
+    padding-left: 15px;
+}
+
+#info p strong {
+    color: #81C784;
+    font-weight: 600;
+}
+
+.period-info {
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.period-info p {
+    margin-bottom: 10px;
+}
+
+.period-info p:last-child {
+    margin-bottom: 0;
+}
+
+/* 时间轴样式 */
+#timeline {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    padding: 15px 30px;
+    border-radius: 50px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+}
+
+.timeline-item {
+    display: inline-block;
+    margin: 0 15px;
+    padding: 10px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-weight: 500;
+}
+
+.timeline-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+.timeline-item.active {
+    background: #4CAF50;
+    border-color: #4CAF50;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+/* 加载界面样式 */
+#loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+/* 滚动条样式 */
+#info::-webkit-scrollbar {
+    width: 8px;
+}
+
+#info::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+#info::-webkit-scrollbar-thumb {
+    background: rgba(76, 175, 80, 0.5);
+    border-radius: 4px;
+}
+
+#info::-webkit-scrollbar-thumb:hover {
+    background: rgba(76, 175, 80, 0.7);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    #info {
+        max-width: 90%;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 10px;
+        max-height: 40vh;
+        padding: 15px;
+    }
+    
+    #info h2 {
+        font-size: 22px;
+    }
+    
+    #info h3 {
+        font-size: 18px;
+    }
+    
+    #info p {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    
+    #timeline {
+        width: 90%;
+        padding: 10px;
+    }
+    
+    .timeline-item {
+        margin: 5px;
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+} 

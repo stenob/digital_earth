@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三叠纪地质与生物演化 | 远古地球探秘</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    
+    <!-- Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4C81', // 深蓝主色 - 代表远古海洋和岩石
+                        secondary: '#E67E22', // 橙色辅助色 - 代表火山活动和温暖气候
+                        accent: '#27AE60', // 绿色强调色 - 代表生命和植物
+                        dark: '#2C3E50', // 深色背景
+                        light: '#ECF0F1', // 浅色背景
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            }
+            .animate-fade-in {
+                animation: fadeIn 0.8s ease-in-out;
+            }
+            .animate-slide-up {
+                animation: slideUp 0.8s ease-out;
+            }
+            .animate-pulse-slow {
+                animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .timeline-item {
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-item:hover {
+            transform: scale(1.03);
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #E67E22;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .scroll-indicator {
+            height: 3px;
+            background-color: #E67E22;
+            width: 0%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            transition: width 0.2s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-inter text-gray-800">
+    <!-- 滚动指示器 -->
+    <div class="scroll-indicator" id="scrollIndicator"></div>
+    
+    <!-- 导航栏 -->
+    <nav class="fixed w-full bg-dark/90 text-white z-50 transition-all duration-300" id="mainNav">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <i class="fa fa-globe text-secondary text-2xl mr-2"></i>
+                <span class="text-xl font-bold">远古地球探秘</span>
+            </div>
+            
+            <!-- 桌面导航 -->
+            <div class="hidden md:flex space-x-8">
+                <a href="#geological-events" class="nav-link hover:text-secondary transition-colors">地质事件</a>
+                <a href="#biological-development" class="nav-link hover:text-secondary transition-colors">生物演化</a>
+                <a href="#end-triassic-extinction" class="nav-link hover:text-secondary transition-colors">灭绝事件</a>
+                <a href="#timeline" class="nav-link hover:text-secondary transition-colors">时间线</a>
+                <a href="#biological-timeline" class="nav-link hover:text-secondary transition-colors">三叠纪生物演化时间轴</a>
+            </div>
+            
+            <!-- 移动端菜单按钮 -->
+            <button class="md:hidden text-white focus:outline-none" id="menuBtn">
+                <i class="fa fa-bars text-xl"></i>
+            </button>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div class="md:hidden bg-dark/95 hidden" id="mobileMenu">
+            <div class="container mx-auto px-4 py-2 flex flex-col space-y-3">
+                <a href="#geological-events" class="py-2 hover:text-secondary transition-colors">地质事件</a>
+                <a href="#biological-development" class="py-2 hover:text-secondary transition-colors">生物演化</a>
+                <a href="#end-triassic-extinction" class="py-2 hover:text-secondary transition-colors">灭绝事件</a>
+                <a href="#timeline" class="py-2 hover:text-secondary transition-colors">时间线</a>
+                <a href="#biological-timeline" class="py-2 hover:text-secondary transition-colors">三叠纪生物演化时间轴</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 英雄区域 -->
+    <header class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://picsum.photos/id/1036/1920/1080'); filter: brightness(0.5); z-index: -1;"></div>
+        <div class="container mx-auto px-4 text-center z-10">
+            <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-bold text-white mb-6 text-shadow animate-fade-in">三叠纪地质与生物演化</h1>
+            <p class="text-[clamp(1rem,3vw,1.5rem)] text-gray-100 max-w-3xl mx-auto mb-10 animate-slide-up">探索2.52亿至2.01亿年前地球历史上的关键时期，见证生命的复苏与恐龙时代的前奏</p>
+            <a href="#geological-events" class="inline-block bg-secondary hover:bg-secondary/90 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 transform hover:-translate-y-1 animate-pulse-slow">
+                开始探索 <i class="fa fa-arrow-down ml-2"></i>
+            </a>
+        </div>
+        <div class="absolute bottom-10 left-0 right-0 text-center">
+            <a href="#geological-events" class="text-white opacity-70 hover:opacity-100 transition-opacity">
+                <i class="fa fa-chevron-down text-2xl animate-bounce"></i>
+            </a>
+        </div>
+    </header>
+    
+    <main class="container mx-auto px-4 py-16">
+        <!-- 地质事件部分 -->
+        <section id="geological-events" class="py-16 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-primary mb-4">地质重大事件</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">三叠纪是地球历史上一个关键的过渡时期，见证了超大陆的解体和生命的重新繁荣</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- 板块运动 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                    <div class="h-48 overflow-hidden">
+                        <img src="三叠纪末.jpg" alt="三叠纪板块运动示意图" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-primary mb-3">板块运动与超大陆格局变化</h3>
+                        <p class="text-gray-700 mb-4">三叠纪延续了二叠纪晚期形成的盘古大陆这一超大陆格局。盘古大陆形似英文字母 “C”，赤道贯穿其中，将地球的海洋分为特提斯海与广袤的泛大洋。然而，从三叠纪晚期开始，板块运动启动，北美洲东部与非洲西北部率先分离，大西洋中段逐渐形成。超级大陆的解体伴随着频繁的地震和火山喷发，对地球的气候、海洋环境以及生物演化产生了深远影响。</p>
+                        <button class="geology-toggle bg-primary/10 hover:bg-primary/20 text-primary font-medium py-2 px-4 rounded-lg transition-colors" data-target="plate-movement-details">
+                            了解更多 <i class="fa fa-angle-down ml-1"></i>
+                        </button>
+                        <div id="plate-movement-details" class="hidden mt-4 pt-4 border-t border-gray-200">
+                            <p class="text-gray-700 mb-3">板块运动的驱动力来自地幔对流，导致盘古大陆开始分裂。这一过程持续了数百万年，最终形成了现代的大陆分布格局。</p>
+                            <div class="mt-4">
+                                <h4 class="font-bold text-gray-800 mb-2">盘古大陆分裂的关键阶段：</h4>
+                                <ul class="list-disc pl-5 text-gray-700 space-y-1">
+                                    <li>早三叠世：盘古大陆基本保持完整</li>
+                                    <li>中三叠世：初步张裂开始，出现裂谷</li>
+                                    <li>晚三叠世：北大西洋开始形成</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 海平面变化 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                    <div class="h-48 overflow-hidden">
+                        <img src="三叠纪地下水.jpg" alt="三叠纪海平面变化示意图" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-primary mb-3">海平面变化与海洋环境变迁</h3>
+                        <p class="text-gray-700 mb-4">三叠纪的海平面变化复杂。早期海平面较低，中三叠世拉丁期出现多次海退和海进事件。海退破坏海洋生物栖息地，海进重塑沿海生态系统，还影响海洋沉积环境。</p>
+                        <button class="geology-toggle bg-primary/10 hover:bg-primary/20 text-primary font-medium py-2 px-4 rounded-lg transition-colors" data-target="sea-level-details">
+                            了解更多 <i class="fa fa-angle-down ml-1"></i>
+                        </button>
+                        <div id="sea-level-details" class="hidden mt-4 pt-4 border-t border-gray-200">
+                            <p class="text-gray-700 mb-3">海平面变化的原因包括构造活动、冰川作用和洋中脊体积变化等。三叠纪的海平面波动对海洋生态系统产生了深远影响。</p>
+                            <div class="mt-4">
+                                <h4 class="font-bold text-gray-800 mb-2">海平面变化的影响：</h4>
+                                <ul class="list-disc pl-5 text-gray-700 space-y-1">
+                                    <li>浅海生态系统的扩张和收缩</li>
+                                    <li>沉积环境的变化，形成不同类型的岩石</li>
+                                    <li>海洋生物的迁徙和灭绝事件</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 火山活动 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                    <div class="h-48 overflow-hidden">
+                        <img src="火山.jpg" alt="三叠纪火山活动示意图" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-primary mb-3">火山活动与环境影响</h3>
+                        <p class="text-gray-700 mb-4">三叠纪火山活动频繁且规模巨大，中大西洋岩浆省是典型代表。其喷发释放大量火山气体，导致全球温室效应增强和“火山冬天”效应，对生态系统造成毁灭性打击。</p>
+                        <button class="geology-toggle bg-primary/10 hover:bg-primary/20 text-primary font-medium py-2 px-4 rounded-lg transition-colors" data-target="volcanic-details">
+                            了解更多 <i class="fa fa-angle-down ml-1"></i>
+                        </button>
+                        <div id="volcanic-details" class="hidden mt-4 pt-4 border-t border-gray-200">
+                            <p class="text-gray-700 mb-3">中大西洋岩浆省的火山活动持续了数百万年，释放的二氧化碳和二氧化硫等气体改变了地球的气候系统。</p>
+                            <div class="mt-4">
+                                <h4 class="font-bold text-gray-800 mb-2">火山活动的环境影响：</h4>
+                                <ul class="list-disc pl-5 text-gray-700 space-y-1">
+                                    <li>全球气温升高，导致海洋酸化</li>
+                                    <li>酸雨频发，破坏陆地植被</li>
+                                    <li>海洋缺氧事件，导致大量海洋生物灭绝</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 沉积环境 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                    <div class="h-48 overflow-hidden">
+                        <img src="三叠纪底层.jpg" alt="三叠纪沉积环境示意图" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-primary mb-3">沉积环境与地层特征</h3>
+                        <p class="text-gray-700 mb-4">三叠纪沉积环境多样。海洋中浅海发育生物礁，深海以细粒沉积物为主；陆地沙漠扩大，风成沉积显著，河流和湖泊周边形成三角洲和湖相沉积。三叠系地层在全球差异较大。</p>
+                        <button class="geology-toggle bg-primary/10 hover:bg-primary/20 text-primary font-medium py-2 px-4 rounded-lg transition-colors" data-target="sedimentary-details">
+                            了解更多 <i class="fa fa-angle-down ml-1"></i>
+                        </button>
+                        <div id="sedimentary-details" class="hidden mt-4 pt-4 border-t border-gray-200">
+                            <p class="text-gray-700 mb-3">三叠纪的沉积环境记录了当时的气候和地理条件，为我们了解古生态系统提供了重要线索。</p>
+                            <div class="mt-4">
+                                <h4 class="font-bold text-gray-800 mb-2">主要沉积类型：</h4>
+                                <ul class="list-disc pl-5 text-gray-700 space-y-1">
+                                    <li>海相沉积：石灰岩、页岩和砂岩</li>
+                                    <li>陆相沉积：红层、风成砂岩和煤系地层</li>
+                                    <li>火山沉积：凝灰岩和火山岩</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 生物演化部分 -->
+        <section id="biological-development" class="py-16 scroll-mt-20 bg-gray-100">
+            <div class="text-center mb-12">
+                <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-primary mb-4">生物发展情况</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">三叠纪见证了生命从二叠纪末大灭绝中的复苏，以及恐龙时代的前奏</p>
+            </div>
+            
+            <div class="grid md:grid-cols-12 gap-8">
+                <!-- 海洋生物 -->
+                <div class="md:col-span-7 bg-white rounded-xl shadow-lg p-6 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-xl">
+                    <h3 class="text-xl font-bold text-primary mb-4 flex items-center">
+                        <i class="fa fa-tint text-blue-500 mr-2"></i> 海洋生物的复苏与演变
+                    </h3>
+                    <div class="relative h-80 mb-6 overflow-hidden rounded-lg">
+                        <img src="三叠纪海洋.jpg" alt="三叠纪海洋生物复原图" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                            <p class="text-white p-4 text-lg font-medium">三叠纪海洋生物复原图</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 mb-4">海洋生物在三叠纪艰难复苏。三叶虫灭绝，双壳类、腹足类重新繁盛。海洋两栖动物短暂繁荣后衰落，海洋爬行动物崛起，如鱼龙和蛇颈龙。</p>
+                    
+                    <!-- 交互式图表 -->
+                    <div class="mb-6">
+                        <h4 class="font-bold text-gray-800 mb-3">三叠纪海洋生物多样性变化</h4>
+                        <div class="h-64">
+                            <canvas id="marineDiversityChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h5 class="font-bold text-blue-700 mb-2">鱼龙</h5>
+                            <p class="text-gray-700 text-sm">鱼龙是三叠纪最成功的海洋爬行动物之一，身体呈流线型，适合快速游泳，是顶级捕食者。</p>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h5 class="font-bold text-blue-700 mb-2">蛇颈龙</h5>
+                            <p class="text-gray-700 text-sm">蛇颈龙拥有长脖子和桨状四肢，适应浅海环境，以鱼类和无脊椎动物为食。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 陆地生物 -->
+                <div class="md:col-span-5 bg-white rounded-xl shadow-lg p-6 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-xl">
+                    <h3 class="text-xl font-bold text-primary mb-4 flex items-center">
+                        <i class="fa fa-pagelines text-green-600 mr-2"></i> 陆地生物的新变革
+                    </h3>
+                    <div class="relative h-60 mb-6 overflow-hidden rounded-lg">
+                        <img src="三叠纪陆地.jpg" alt="三叠纪陆地生态系统复原图" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                            <p class="text-white p-4 text-lg font-medium">三叠纪陆地生态系统复原图</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 mb-4">爬行动物在三叠纪崛起，主龙类成为重要力量，伪鳄类成为陆地霸主，恐龙在晚期崭露头角。裸子植物占据主导，昆虫继续发展。</p>
+                    
+                    <!-- 交互式时间轴 -->
+                    <div class="mb-6">
+                        <h4 class="font-bold text-gray-800 mb-3">三叠纪陆地生物演化关键事件</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center mr-3">
+                                    <i class="fa fa-circle text-white text-xs"></i>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded-lg flex-1">
+                                    <h5 class="font-medium text-gray-800">早三叠世</h5>
+                                    <p class="text-gray-600 text-sm">兽孔目动物仍是优势陆地动物</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center mr-3">
+                                    <i class="fa fa-circle text-white text-xs"></i>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded-lg flex-1">
+                                    <h5 class="font-medium text-gray-800">中三叠世</h5>
+                                    <p class="text-gray-600 text-sm">主龙类开始多样化，伪鳄类崛起</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center mr-3">
+                                    <i class="fa fa-circle text-white text-xs"></i>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded-lg flex-1">
+                                    <h5 class="font-medium text-gray-800">晚三叠世</h5>
+                                    <p class="text-gray-600 text-sm">最早的恐龙出现，如始盗龙和埃雷拉龙</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 恐龙互动卡片 -->
+                    <div class="bg-green-50 p-4 rounded-lg border border-green-100">
+                        <h5 class="font-bold text-green-700 mb-2 flex items-center">
+                            <i class="fa fa-info-circle mr-2"></i> 三叠纪恐龙小知识
+                        </h5>
+                        <p class="text-gray-700 text-sm mb-3">三叠纪晚期出现的恐龙体型较小，通常不超过3米，以两足行走为主，主要捕食小型动物。</p>
+                        <button id="dinoFactBtn" class="text-green-600 hover:text-green-800 text-sm font-medium flex items-center">
+                            获取更多恐龙知识 <i class="fa fa-arrow-right ml-1"></i>
+                        </button>
+                        <div id="dinoFact" class="hidden mt-3 p-3 bg-white rounded border border-green-200 text-sm text-gray-700">
+                            最早的恐龙化石发现于南美洲，包括始盗龙（Eoraptor）和南十字龙（Staurikosaurus）等。这些恐龙体型较小，可能是杂食性或肉食性动物。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 灭绝事件部分 -->
+        <section id="end-triassic-extinction" class="py-16 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-primary mb-4">三叠纪末生物灭绝事件</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">约2.01亿年前的三叠纪末大灭绝为恐龙时代铺平了道路</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="bg-white rounded-xl shadow-lg p-6 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-xl">
+                    <h3 class="text-xl font-bold text-primary mb-4">灭绝事件概述</h3>
+                    <p class="text-gray-700 mb-4">三叠纪末发生显生宙第四次生物大灭绝事件，约 22% 的科、52% 的属、76% 的种灭绝。中大西洋岩浆省的大规模火山活动被认为是主要诱因。恐龙幸运躲过一劫，为其后续崛起扫清障碍。</p>
+                    
+                    <div class="space-y-4 mb-6">
+                        <div class="bg-red-50 p-4 rounded-lg">
+                            <h4 class="font-bold text-red-700 mb-2 flex items-center">
+                                <i class="fa fa-exclamation-triangle mr-2"></i> 灭绝事件的影响
+                            </h4>
+                            <ul class="list-disc pl-5 text-gray-700 space-y-1">
+                                <li>海洋中：大量珊瑚、菊石和双壳类灭绝</li>
+                                <li>陆地上：伪鳄类和大多数兽孔目动物消失</li>
+                                <li>生态系统重组：恐龙在侏罗纪成为陆地霸主</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-yellow-50 p-4 rounded-lg">
+                            <h4 class="font-bold text-yellow-700 mb-2 flex items-center">
+                                <i class="fa fa-lightbulb-o mr-2"></i> 可能的灭绝原因
+                            </h4>
+                            <ul class="list-disc pl-5 text-gray-700 space-y-1">
+                                <li>大规模火山活动释放温室气体，导致全球变暖和海洋酸化</li>
+                                <li>小行星撞击事件（有争议）</li>
+                                <li>海平面变化和海洋缺氧</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="relative h-64 rounded-lg overflow-hidden">
+                        <img src="三叠纪灭绝.jpg" alt="三叠纪末大灭绝想象图" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                            <p class="text-white p-4 text-lg font-medium">三叠纪末大灭绝想象图</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 灭绝事件统计图表 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-xl">
+                    <h3 class="text-xl font-bold text-primary mb-4">灭绝事件数据可视化</h3>
+                    <div class="h-80 mb-6">
+                        <canvas id="extinctionChart"></canvas>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center mr-3">
+                                <i class="fa fa-globe text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">全球影响</h4>
+                                <p class="text-gray-600 text-sm">陆地和海洋生态系统均遭受重创，恢复时间长达数百万年</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center mr-3">
+                                <i class="fa fa-clock-o text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">持续时间</h4>
+                                <p class="text-gray-600 text-sm">灭绝事件可能持续了约100万年，但主要灭绝阶段发生在较短时间内</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-yellow-500 flex items-center justify-center mr-3">
+                                <i class="fa fa-refresh text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">生态系统恢复</h4>
+                                <p class="text-gray-600 text-sm">侏罗纪早期，新的生态系统逐渐形成，恐龙开始占据主导地位</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 地质时间线 -->
+        <section id="timeline" class="py-16 scroll-mt-20 bg-gray-100">
+            <div class="text-center mb-12">
+                <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-primary mb-4">三叠纪地质时间线</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">探索三叠纪各阶段的关键事件和生物演化</p>
+            </div>
+            
+            <div class="relative">
+                <!-- 时间线SVG -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-8 overflow-x-auto">
+                    <svg viewBox="0 0 1000 200" class="w-full h-auto">
+                        <!-- 时间线 -->
+                        <line x1="50" y1="100" x2="950" y2="100" stroke="#0F4C81" stroke-width="4" />
+                        
+                        <!-- 早三叠世 -->
+                        <g class="timeline-item" data-period="early-triassic">
+                            <circle cx="150" cy="100" r="10" fill="#E67E22" stroke="#fff" stroke-width="2" />
+                            <line x1="150" y1="110" x2="150" y2="150" stroke="#0F4C81" stroke-width="2" />
+                            <rect x="100" y="150" width="100" height="40" rx="5" fill="#0F4C81" />
+                            <text x="150" y="175" fill="white" text-anchor="middle" font-size="14">早三叠世</text>
+                            <text x="150" y="195" fill="white" text-anchor="middle" font-size="12">252-247 Ma</text>
+                            <line x1="150" y1="90" x2="150" y2="50" stroke="#0F4C81" stroke-width="2" />
+                            <text x="150" y="40" fill="#0F4C81" text-anchor="middle" font-size="14" font-weight="bold">生物复苏</text>
+                        </g>
+                        
+                        <!-- 中三叠世 -->
+                        <g class="timeline-item" data-period="middle-triassic">
+                            <circle cx="400" cy="100" r="10" fill="#E67E22" stroke="#fff" stroke-width="2" />
+                            <line x1="400" y1="110" x2="400" y2="150" stroke="#0F4C81" stroke-width="2" />
+                            <rect x="350" y="150" width="100" height="40" rx="5" fill="#0F4C81" />
+                            <text x="400" y="175" fill="white" text-anchor="middle" font-size="14">中三叠世</text>
+                            <text x="400" y="195" fill="white" text-anchor="middle" font-size="12">247-237 Ma</text>
+                            <line x1="400" y1="90" x2="400" y2="50" stroke="#0F4C81" stroke-width="2" />
+                            <text x="400" y="40" fill="#0F4C81" text-anchor="middle" font-size="14" font-weight="bold">主龙类崛起</text>
+                        </g>
+                        
+                        <!-- 晚三叠世 -->
+                        <g class="timeline-item" data-period="late-triassic">
+                            
+                            <circle cx="650" cy="100" r="10" fill="#E67E22" stroke="#fff" stroke-width="2" />
+                            <line x1="650" y1="110" x2="650" y2="150" stroke="#0F4C81" stroke-width="2" />
+                            <rect x="600" y="150" width="100" height="40" rx="5" fill="#0F4C81" />
+                            <text x="650" y="175" fill="white" text-anchor="middle" font-size="14">晚三叠世</text>
+                            <text x="650" y="195" fill="white" text-anchor="middle" font-size="12">237-201 Ma</text>
+                            <line x1="650" y1="90" x2="650" y2="50" stroke="#0F4C81" stroke-width="2" />
+                            <text x="650" y="40" fill="#0F4C81" text-anchor="middle" font-size="14" font-weight="bold">恐龙出现</text>
+                        </g>
+                        
+                        <!-- 三叠纪末 -->
+                        <g class="timeline-item" data-period="end-triassic">
+                            <circle cx="850" cy="100" r="10" fill="#E67E22" stroke="#fff" stroke-width="2" />
+                            <line x1="850" y1="110" x2="850" y2="150" stroke="#0F4C81" stroke-width="2" />
+                            <rect x="800" y="150" width="100" height="40" rx="5" fill="#E67E22" />
+                            <text x="850" y="175" fill="white" text-anchor="middle" font-size="14">三叠纪末</text>
+                            <text x="850" y="195" fill="white" text-anchor="middle" font-size="12">201 Ma</text>
+                            <line x1="850" y1="90" x2="850" y2="50" stroke="#E67E22" stroke-width="2" />
+                            <text x="850" y="40" fill="#E67E22" text-anchor="middle" font-size="14" font-weight="bold">大灭绝</text>
+                        </g>
+                    </svg>
+                </div>
+                
+                <!-- 时间线详情卡片 -->
+                <div class="grid md:grid-cols-3 gap-6" id="timelineDetails">
+                    <div class="bg-white rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                        <h3 class="text-xl font-bold text-primary mb-3">早三叠世 (252-247 Ma)</h3>
+                        <div class="relative h-48 mb-4 overflow-hidden rounded-lg">
+                            <img src="早三叠纪.jpg" alt="早三叠世生态系统" class="w-full h-full object-cover">
+                        </div>
+                        <p class="text-gray-700 mb-4">早三叠世是二叠纪末大灭绝后的恢复期，陆地和海洋生态系统遭受重创，生物多样性极低。幸存的生物逐渐适应新环境，为后续的生物复苏奠定基础。</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full">生物复苏</span>
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full">气候干旱</span>
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full">火山活动</span>
+                        </div>
+                        <a href="#" class="inline-flex items-center text-primary font-medium hover:text-primary/80 transition-colors">
+                            了解更多 <i class="fa fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                        <h3 class="text-xl font-bold text-primary mb-3">中三叠世 (247-237 Ma)</h3>
+                        <div class="relative h-48 mb-4 overflow-hidden rounded-lg">
+                            <img src="中三叠纪.jpg" alt="中三叠世生态系统" class="w-full h-full object-cover">
+                        </div>
+                        <p class="text-gray-700 mb-4">中三叠世见证了生物多样性的显著增加，特别是海洋生物的复苏。爬行动物开始多样化，主龙类逐渐成为陆地生态系统的主导者，为恐龙的崛起铺平了道路。</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-green-100 text-green-800 text-xs font-medium px-3 py-1 rounded-full">生物多样化</span>
+                            <span class="bg-green-100 text-green-800 text-xs font-medium px-3 py-1 rounded-full">主龙类崛起</span>
+                            <span class="bg-green-100 text-green-800 text-xs font-medium px-3 py-1 rounded-full">海洋复苏</span>
+                        </div>
+                        <a href="#" class="inline-flex items-center text-primary font-medium hover:text-primary/80 transition-colors">
+                            了解更多 <i class="fa fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                        <h3 class="text-xl font-bold text-primary mb-3">晚三叠世 (237-201 Ma)</h3>
+                        <div class="relative h-48 mb-4 overflow-hidden rounded-lg">
+                            <img src="晚三叠纪.jpg" alt="晚三叠世生态系统" class="w-full h-full object-cover">
+                        </div>
+                        <p class="text-gray-700 mb-4">晚三叠世是恐龙出现和初步辐射的时期，尽管此时它们还不是陆地生态系统的主导者。同时，这一时期也发生了多次小规模的灭绝事件，为三叠纪末的大灭绝事件埋下了伏笔。</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-orange-100 text-orange-800 text-xs font-medium px-3 py-1 rounded-full">恐龙出现</span>
+                            <span class="bg-orange-100 text-orange-800 text-xs font-medium px-3 py-1 rounded-full">裸子植物繁盛</span>
+                            <span class="bg-orange-100 text-orange-800 text-xs font-medium px-3 py-1 rounded-full">环境波动</span>
+                        </div>
+                        <a href="#" class="inline-flex items-center text-primary font-medium hover:text-primary/80 transition-colors">
+                            了解更多 <i class="fa fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 互动地图 -->
+        <!-- 在原文件中找到id="interactive-map"的section，替换为以下内容 -->
+
+<section id="biological-timeline" class="py-16 scroll-mt-20">
+    <div class="text-center mb-12">
+        <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-primary mb-4">三叠纪生物演化时间轴</h2>
+        <p class="text-gray-600 max-w-3xl mx-auto">探索三叠纪时期生物演化的关键阶段和代表性物种</p>
+    </div>
+    
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="p-6">
+            <div class="relative">
+                <!-- 时间轴 -->
+         <!-- 时间轴 -->
+                <div class="flex items-center justify-between h-12 relative">
+                    <div class="absolute left-0 right-0 h-1 bg-gray-200 rounded"></div>
+                        <div class="absolute h-1 bg-primary rounded" id="timelineProgress" style="width: 0%"></div>
+    
+                <!-- 时间点标记 -->
+                     <div class="timeline-point absolute top-1/2 -translate-y-1/2 -translate-x-1/2 cursor-pointer" data-time="252" style="left: 0%">
+                     <div class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">252</div>
+                     <div class="mt-8 bg-white rounded-lg shadow-lg p-3 w-40 text-center hidden timeline-tooltip">
+                        <div class="font-bold text-primary">二叠纪末</div>
+                        <div class="text-xs text-gray-600">大灭绝事件</div>
+                        </div>
+                        </div>
+                    
+                    <div class="timeline-point absolute top-1/2 -translate-y-1/2 -translate-x-1/2 cursor-pointer" data-time="247" style="left: 25%">
+                        <div class="w-6 h-6 rounded-full bg-gray-300 text-white flex items-center justify-center text-xs font-bold">247</div>
+                        <div class="mt-8 bg-white rounded-lg shadow-lg p-3 w-40 text-center hidden timeline-tooltip">
+                            <div class="font-bold text-primary">早三叠世</div>
+                            <div class="text-xs text-gray-600">生物复苏期</div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-point absolute top-1/2 -translate-y-1/2 -translate-x-1/2 cursor-pointer" data-time="242" style="left: 40%">
+                        <div class="w-6 h-6 rounded-full bg-gray-300 text-white flex items-center justify-center text-xs font-bold">242</div>
+                        <div class="mt-8 bg-white rounded-lg shadow-lg p-3 w-40 text-center hidden timeline-tooltip">
+                            <div class="font-bold text-primary">中三叠世早期</div>
+                            <div class="text-xs text-gray-600">海洋生物复苏</div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-point absolute top-1/2 -translate-y-1/2 -translate-x-1/2 cursor-pointer" data-time="237" style="left: 55%">
+                        <div class="w-6 h-6 rounded-full bg-gray-300 text-white flex items-center justify-center text-xs font-bold">237</div>
+                        <div class="mt-8 bg-white rounded-lg shadow-lg p-3 w-40 text-center hidden timeline-tooltip">
+                            <div class="font-bold text-primary">中三叠世晚期</div>
+                            <div class="text-xs text-gray-600">主龙类崛起</div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-point absolute top-1/2 -translate-y-1/2 -translate-x-1/2 cursor-pointer" data-time="230" style="left: 70%">
+                        <div class="w-6 h-6 rounded-full bg-gray-300 text-white flex items-center justify-center text-xs font-bold">230</div>
+                        <div class="mt-8 bg-white rounded-lg shadow-lg p-3 w-40 text-center hidden timeline-tooltip">
+                            <div class="font-bold text-primary">晚三叠世早期</div>
+                            <div class="text-xs text-gray-600">恐龙出现</div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-point absolute top-1/2 -translate-y-1/2 -translate-x-1/2 cursor-pointer" data-time="201" style="left: 100%">
+                        <div class="w-6 h-6 rounded-full bg-gray-300 text-white flex items-center justify-center text-xs font-bold">201</div>
+                        <div class="mt-8 bg-white rounded-lg shadow-lg p-3 w-40 text-center hidden timeline-tooltip">
+                            <div class="font-bold text-primary">三叠纪末</div>
+                            <div class="text-xs text-gray-600">大灭绝事件</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 时间滑块 -->
+                            <div class="absolute top-1/2 -translate-y-1/2 cursor-pointer" id="timelineSlider" style="left: 0%; opacity: 0;">
+                                    <div class="w-8 h-8 rounded-full bg-secondary border-2 border-white shadow-lg"></div>
+                            </div>
+                </div>
+                
+                <!-- 当前时间显示 -->
+                <div class="text-center mt-6 mb-10">
+                    <div class="text-2xl font-bold text-primary" id="currentEra">二叠纪末 (252 Ma)</div>
+                    <div class="text-gray-600" id="eraDescription">大灭绝事件后，地球生物开始缓慢复苏</div>
+                </div>
+                
+                <!-- 生物展示区 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="creatureDisplay">
+                    <!-- 主要生物 -->
+                    <div class="md:col-span-2">
+                        <div class="bg-gray-50 rounded-xl shadow-md p-6 relative overflow-hidden group">
+                            <div class="absolute top-0 right-0 bg-primary/10 rounded-bl-xl p-2">
+                                <span class="text-primary font-bold text-sm">代表性生物</span>
+                            </div>
+                            
+                            <div class="flex flex-col md:flex-row gap-6">
+                                <div class="md:w-1/2 relative h-64 overflow-hidden rounded-lg">
+                                    <img src="水龙兽.jpg" alt="水龙兽" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                                        <div class="p-4">
+                                            <h3 class="text-white font-bold text-xl">水龙兽</h3>
+                                            <p class="text-white/80 text-sm">Lystrosaurus</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="md:w-1/2">
+                                    <h4 class="font-bold text-gray-800 mb-3">生物特征</h4>
+                                    <ul class="list-disc pl-5 text-gray-700 space-y-1 mb-4">
+                                        <li>类似现代哺乳动物的爬行动物</li>
+                                        <li>体长约1米，体重可达100公斤</li>
+                                        <li>主要以植物为食</li>
+                                        <li>二叠纪末大灭绝事件后的优势物种</li>
+                                        <li>被认为是哺乳动物的远亲</li>
+                                    </ul>
+                                    
+                                    <h4 class="font-bold text-gray-800 mb-3">生存环境</h4>
+                                    <p class="text-gray-700 mb-4">水龙兽生活在早三叠世的河流和湖泊边缘，适应了当时极端的环境条件。它们的化石在全球多个大陆都有发现，表明它们在大灭绝事件后广泛分布。</p>
+                                    
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full">陆地生物</span>
+                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full">草食动物</span>
+                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full">幸存者</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 环境和气候 -->
+                    <div>
+                        <div class="bg-gray-50 rounded-xl shadow-md p-6">
+                            <h3 class="font-bold text-primary mb-4 flex items-center">
+                                <i class="fa fa-globe mr-2"></i> 环境与气候
+                            </h3>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">全球气候</h4>
+                                    <div class="flex items-center">
+                                        <div class="w-full bg-gray-200 rounded-full h-2.5 mr-2">
+                                            <div class="bg-red-500 h-2.5 rounded-full" style="width: 90%"></div>
+                                        </div>
+                                        <span class="text-gray-600 text-sm">极端高温</span>
+                                    </div>
+                                    <p class="text-gray-600 text-sm mt-1">全球平均温度比现代高约8-10°C</p>
+                                </div>
+                                
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">大气成分</h4>
+                                    <ul class="list-disc pl-5 text-gray-700 space-y-1 text-sm">
+                                        <li>二氧化碳浓度: 约2000-3000 ppm</li>
+                                        <li>氧气含量: 约15-18% (现代为21%)</li>
+                                        <li>甲烷浓度升高</li>
+                                    </ul>
+                                </div>
+                                
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">海洋条件</h4>
+                                    <ul class="list-disc pl-5 text-gray-700 space-y-1 text-sm">
+                                        <li>海洋酸化严重</li>
+                                        <li>全球海平面较低</li>
+                                        <li>海洋缺氧事件频发</li>
+                                    </ul>
+                                </div>
+                                
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">陆地环境</h4>
+                                    <ul class="list-disc pl-5 text-gray-700 space-y-1 text-sm">
+                                        <li>盘古大陆形成，内陆干旱</li>
+                                        <li>植被以蕨类和石松类为主</li>
+                                        <li>河流和湖泊生态系统逐渐恢复</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 其他生物 -->
+                <div class="mt-8">
+                    <h3 class="font-bold text-primary mb-4">同时期其他生物</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="otherCreatures">
+                        <div class="bg-gray-50 rounded-lg shadow-md p-3 hover:shadow-lg transition-shadow cursor-pointer">
+                            <div class="h-32 overflow-hidden rounded-lg mb-2">
+                                <img src="犬颚兽.jpg" alt="犬颌兽" class="w-full h-full object-cover">
+                            </div>
+                            <h4 class="font-bold text-gray-800 text-sm">犬颌兽</h4>
+                            <p class="text-gray-600 text-xs">Cynognathus</p>
+                        </div>
+                        
+                        <div class="bg-gray-50 rounded-lg shadow-md p-3 hover:shadow-lg transition-shadow cursor-pointer">
+                            <div class="h-32 overflow-hidden rounded-lg mb-2">
+                                <img src="杯椎鱼龙.jpg" alt="杯椎鱼龙" class="w-full h-full object-cover">
+                            </div>
+                            <h4 class="font-bold text-gray-800 text-sm">杯椎鱼龙</h4>
+                            <p class="text-gray-600 text-xs">Cymbospondylus</p>
+                        </div>
+                        
+                        <div class="bg-gray-50 rounded-lg shadow-md p-3 hover:shadow-lg transition-shadow cursor-pointer">
+                            <div class="h-32 overflow-hidden rounded-lg mb-2">
+                                <img src="始盗龙.jpg" alt="始盗龙" class="w-full h-full object-cover">
+                            </div>
+                            <h4 class="font-bold text-gray-800 text-sm">始盗龙</h4>
+                            <p class="text-gray-600 text-xs">Eoraptor</p>
+                        </div>
+                        
+                        <div class="bg-gray-50 rounded-lg shadow-md p-3 hover:shadow-lg transition-shadow cursor-pointer">
+                            <div class="h-32 overflow-hidden rounded-lg mb-2">
+                                <img src="幻龙.jpg" alt="幻龙" class="w-full h-full object-cover">
+                            </div>
+                            <h4 class="font-bold text-gray-800 text-sm">幻龙</h4>
+                            <p class="text-gray-600 text-xs">Nothosaurus</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 在原JavaScript代码中添加以下内容 -->
+
+<script>
+    // 生物演化时间轴数据
+    const timelineData = [
+        {
+            time: 252,
+            era: "二叠纪末",
+            description: "大灭绝事件后，地球生物开始缓慢复苏",
+            mainCreature: {
+                name: "水龙兽",
+                scientificName: "Lystrosaurus",
+                image: "水龙兽.jpg",
+                features: [
+                    "类似现代哺乳动物的爬行动物",
+                    "体长约1米，体重可达100公斤",
+                    "主要以植物为食",
+                    "二叠纪末大灭绝事件后的优势物种",
+                    "被认为是哺乳动物的远亲"
+                ],
+                environment: "水龙兽生活在早三叠世的河流和湖泊边缘，适应了当时极端的环境条件。它们的化石在全球多个大陆都有发现，表明它们在大灭绝事件后广泛分布。",
+                tags: ["陆地生物", "草食动物", "幸存者"]
+            },
+            climate: {
+                temperature: 90,
+                co2: "2000-3000 ppm",
+                oxygen: "15-18%",
+                ocean: ["海洋酸化严重", "全球海平面较低", "海洋缺氧事件频发"],
+                land: ["盘古大陆形成，内陆干旱", "植被以蕨类和石松类为主", "河流和湖泊生态系统逐渐恢复"]
+            },
+            otherCreatures: [
+                {name: "犬颌兽", scientificName: "Cynognathus", image: "犬颚兽.jpg"},
+                {name: "杯椎鱼龙", scientificName: "Cymbospondylus", image: "杯椎鱼龙.jpg"},
+                {name: "始盗龙", scientificName: "Eoraptor", image: "始盗龙.jpg"},
+                {name: "幻龙", scientificName: "Nothosaurus", image: "幻龙.jpg"}
+            ]
+        },
+        {
+            time: 247,
+            era: "早三叠世",
+            description: "生物开始从大灭绝中恢复，陆地和海洋生态系统逐渐重建",
+            mainCreature: {
+                name: "原鳄",
+                scientificName: "Proterosuchus",
+                image: "原鳄.jpg",
+                features: [
+                    "早期的主龙形类爬行动物",
+                    "体长可达3米，是当时的顶级掠食者",
+                    "四肢健壮，适合陆地生活",
+                    "可能具有半水生习性",
+                    "与恐龙和鳄鱼的祖先关系密切"
+                ],
+                environment: "原鳄生活在早三叠世的河流和湖泊附近，利用其强壮的身体和锋利的牙齿捕食鱼类和其他小型爬行动物。它们是大灭绝事件后最早出现的大型掠食者之一。",
+                tags: ["陆地生物", "肉食动物", "主龙形类"]
+            },
+            climate: {
+                temperature: 85,
+                co2: "1500-2500 ppm",
+                oxygen: "16-19%",
+                ocean: ["海洋生态系统开始恢复", "珊瑚礁逐渐重建", "海洋爬行动物多样化"],
+                land: ["盘古大陆大部分地区干旱", "裸子植物开始取代蕨类植物", "昆虫多样性增加"]
+            },
+            otherCreatures: [
+                {name: "加斯马吐龙", scientificName: "Chasmatosaurus", image: "加斯马吐龙.jpg"},
+                {name: "肯氏兽", scientificName: "Kannemeyeria", image: "肯氏兽.jpg"},
+                {name: "蛇颈龙", scientificName: "Plesiosaurus", image: "蛇颈龙.jpg"},
+                {name: "鱼龙", scientificName: "Ichthyosaurus", image: "鱼龙.jpg"}
+            ]
+        },
+        {
+            time: 242,
+            era: "中三叠世早期",
+            description: "海洋生物快速复苏，陆地生态系统变得更加复杂",
+            mainCreature: {
+                name: "幻龙",
+                scientificName: "Nothosaurus",
+                image: "幻龙.jpg",
+                features: [
+                    "中等体型的海洋爬行动物",
+                    "体长约2-4米",
+                    "长颈部和锋利的牙齿，适合捕鱼",
+                    "可能在陆地产卵",
+                    "蛇颈龙类的近亲"
+                ],
+                environment: "幻龙生活在浅海环境中，是中三叠世海洋生态系统中的重要掠食者。它们的四肢已经演化成鳍状，但仍保留了一些陆地生活的特征。",
+                tags: ["海洋生物", "肉食动物", "爬行动物"]
+            },
+            climate: {
+                temperature: 80,
+                co2: "1000-2000 ppm",
+                oxygen: "18-20%",
+                ocean: ["海洋生物多样性显著增加", "珊瑚礁生态系统繁荣", "海洋爬行动物占据主导地位"],
+                land: ["气候变得更加湿润", "裸子植物和蕨类植物广泛分布", "主龙类开始多样化"]
+            },
+            otherCreatures: [
+                {name: "盾齿龙", scientificName: "Placodus", image: "盾齿龙.jpg"},
+                {name: "长颈龙", scientificName: "Tanystropheus", image: "长颈龙.jpg"},
+                {name: "波斯特鳄", scientificName: "Postosuchus", image: "波斯特鳄.jpg"},
+                {name: "布拉塞龙", scientificName: "Placerias", image: "布拉塞龙.jpg"}
+            ]
+        },
+        {
+            time: 237,
+            era: "中三叠世晚期",
+            description: "主龙类开始分化，恐龙的祖先出现",
+            mainCreature: {
+                name: "真双型齿翼龙",
+                scientificName: "Eudimorphodon",
+                image: "真双齿翼龙.jpg",
+                features: [
+                    "早期的翼龙类",
+                    "翼展约1米",
+                    "可能是杂食性动物",
+                    "已知最早的有飞行能力的脊椎动物之一",
+                    "具有独特的牙齿结构"
+                ],
+                environment: "真双型齿翼龙生活在中三叠世的海岸地区，利用其翅膀在天空中捕食昆虫和小型动物。它们的出现标志着脊椎动物征服天空的开始。",
+                tags: ["飞行生物", "杂食动物", "翼龙类"]
+            },
+            climate: {
+                temperature: 75,
+                co2: "800-1500 ppm",
+                oxygen: "19-21%",
+                ocean: ["海洋生态系统成熟", "大型海洋爬行动物如鱼龙和蛇颈龙繁盛", "菊石类多样化"],
+                land: ["盘古大陆开始出现裂痕", "气候分区更加明显", "恐龙的祖先开始出现"]
+            },
+            otherCreatures: [
+                {name: "理理恩龙", scientificName: "Liliensternus", image: "理理恩龙.jpg"},
+                {name: "黑瑞龙", scientificName: "Herrerasaurus", image: "黑瑞龙.jpg"},
+                {name: "板龙", scientificName: "Plateosaurus", image: "板龙.jpg"},
+                {name: "跳龙", scientificName: "Saltopus", image: "跳龙.jpg"}
+            ]
+        },
+        {
+            time: 230,
+            era: "晚三叠世早期",
+            description: "恐龙正式出现并开始辐射演化",
+            mainCreature: {
+                name: "始盗龙",
+                scientificName: "Eoraptor",
+                image: "始盗龙.jpg",
+                features: [
+                    "已知最早的恐龙之一",
+                    "体长约1米，体重约10公斤",
+                    "可能是杂食性动物",
+                    "保留了许多原始特征",
+                    "恐龙演化的关键环节"
+                ],
+                environment: "始盗龙生活在晚三叠世的南美洲，是当时生态系统中的小型掠食者。它们的发现为研究恐龙的起源和早期演化提供了重要线索。",
+                tags: ["陆地生物", "肉食动物", "恐龙"]
+            },
+            climate: {
+                temperature: 70,
+                co2: "600-1200 ppm",
+                oxygen: "20-22%",
+                ocean: ["海洋生态系统稳定", "大型海洋爬行动物继续占据主导", "双壳类和腹足类繁盛"],
+                land: ["盘古大陆进一步分裂", "气候变得更加多样化", "恐龙开始在陆地生态系统中占据一席之地"]
+            },
+            otherCreatures: [
+                {name: "南十字龙", scientificName: "Staurikosaurus", image: "南十字龙.jpg"},
+                {name: "里约龙", scientificName: "Riojasaurus", image: "里约龙.jpg"},
+                {name: "腔骨龙", scientificName: "Coelophysis", image: "腔骨龙.jpg"},
+                {name: "植龙", scientificName: "Phytosaurus", image: "植龙.jpg"}
+            ]
+        },
+        {
+            time: 201,
+            era: "三叠纪末",
+            description: "发生了显生宙第四次大灭绝事件，恐龙开始成为陆地生态系统的主导",
+            mainCreature: {
+                name: "板龙",
+                scientificName: "Plateosaurus",
+                image: "板龙.jpg",
+                features: [
+                    "早期的蜥脚形亚目恐龙",
+                    "体长可达8-10米",
+                    "四足行走，但可以用后肢站立取食",
+                    "主要以植物为食",
+                    "晚三叠世最常见的恐龙之一"
+                ],
+                environment: "板龙生活在晚三叠世的欧洲和北美洲，是三叠纪末大灭绝事件前最成功的恐龙之一。它们的化石数量众多，为研究早期恐龙的生物学提供了丰富资料。",
+                tags: ["陆地生物", "草食动物", "恐龙"]
+            },
+            climate: {
+                temperature: 75,
+                co2: "1000-2000 ppm",
+                oxygen: "19-21%",
+                ocean: ["海洋生物遭受重创", "约20%的海洋科灭绝", "珊瑚礁生态系统崩溃"],
+                land: ["大规模火山活动", "气候变化剧烈", "约50%的陆地生物灭绝，恐龙成为优势类群"]
+            },
+            otherCreatures: [
+                {name: "理理恩龙", scientificName: "Liliensternus", image: "理理恩龙.jpg"},
+                {name: "虚骨龙", scientificName: "Coelurus", image: "虚骨龙.jpg"},
+                {name: "黑瑞龙", scientificName: "Herrerasaurus", image: "黑瑞龙.jpg"},
+                {name: "肯氏兽", scientificName: "Kannemeyeria", image: "肯氏兽.jpg"}
+            ]
+        }
+    ];
+
+    // 初始化生物演化时间轴
+    function initBiologicalTimeline() {
+
+        const slider = document.getElementById('timelineSlider');
+        const progress = document.getElementById('timelineProgress');
+        const currentEra = document.getElementById('currentEra');
+        const eraDescription = document.getElementById('eraDescription');
+        const creatureDisplay = document.getElementById('creatureDisplay');
+        const otherCreatures = document.getElementById('otherCreatures');
+        const timelinePoints = document.querySelectorAll('.timeline-point');
+        
+        // 拖动滑块更新时间
+        let isDragging = false;
+        
+        slider.addEventListener('mousedown', function(e) {
+            isDragging = true;
+            updateTimeline(e.clientX);
+        });
+        
+        document.addEventListener('mousemove', function(e) {
+            if (isDragging) {
+                updateTimeline(e.clientX);
+            }
+        });
+        
+        document.addEventListener('mouseup', function() {
+            isDragging = false;
+        });
+        
+        // 点击时间点
+        timelinePoints.forEach(point => {
+            point.addEventListener('click', function() {
+                const time = parseInt(this.getAttribute('data-time'));
+                updateTimelineByTime(time);
+            });
+            
+            point.addEventListener('mouseover', function() {
+                this.querySelector('.timeline-tooltip').classList.remove('hidden');
+            });
+            
+            point.addEventListener('mouseout', function() {
+                this.querySelector('.timeline-tooltip').classList.add('hidden');
+            });
+        });
+        
+        // 根据鼠标位置更新时间轴
+        function updateTimeline(clientX) {
+            const timeline = slider.parentElement;
+            const rect = timeline.getBoundingClientRect();
+            let position = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+            
+            // 找到最近的时间点
+            const closestTimePoint = timelineData.reduce((closest, point) => {
+                const pointPosition = (point.time - 201) / (252 - 201);
+                return Math.abs(pointPosition - position) < Math.abs(closest.position - position) 
+                    ? {time: point.time, position: pointPosition} 
+                    : closest;
+            }, {time: 252, position: 0});
+            
+            position = closestTimePoint.position;
+
+            slider.style.transition = 'left 0.2s ease';
+            progress.style.transition = 'width 0.2s ease';
+            updateTimelineDisplay(position, closestTimePoint.time);
+        }
+        
+        // 根据时间更新时间轴显示
+        function updateTimelineByTime(time) {
+            const position = (time - 201) / (252 - 201);
+            updateTimelineDisplay(position, time);
+        }
+        
+        // 更新时间轴显示
+        function updateTimelineDisplay(position, time) {
+            // 更新滑块位置和进度条
+            slider.style.left = `${position * 100}%`;
+            progress.style.width = `${position * 100}%`;
+            
+            // 找到对应时间点的数据
+            const data = timelineData.find(item => item.time === time);
+            
+            if (data) {
+                // 更新时代信息
+                currentEra.textContent = `${data.era} (${data.time} Ma)`;
+                eraDescription.textContent = data.description;
+                
+                // 更新主要生物
+                const mainCreatureHTML = `
+                    <div class="md:col-span-2">
+                        <div class="bg-gray-50 rounded-xl shadow-md p-6 relative overflow-hidden group">
+                            <div class="absolute top-0 right-0 bg-primary/10 rounded-bl-xl p-2">
+                                <span class="text-primary font-bold text-sm">代表性生物</span>
+                            </div>
+                            
+                            <div class="flex flex-col md:flex-row gap-6">
+                                <div class="md:w-1/2 relative h-64 overflow-hidden rounded-lg">
+                                    <img src="${data.mainCreature.image}" alt="${data.mainCreature.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                                        <div class="p-4">
+                                            <h3 class="text-white font-bold text-xl">${data.mainCreature.name}</h3>
+                                            <p class="text-white/80 text-sm">${data.mainCreature.scientificName}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="md:w-1/2">
+                                    <h4 class="font-bold text-gray-800 mb-3">生物特征</h4>
+                                    <ul class="list-disc pl-5 text-gray-700 space-y-1 mb-4">
+                                        ${data.mainCreature.features.map(feature => `<li>${feature}</li>`).join('')}
+                                    </ul>
+                                    
+                                    <h4 class="font-bold text-gray-800 mb-3">生存环境</h4>
+                                    <p class="text-gray-700 mb-4">${data.mainCreature.environment}</p>
+                                    
+                                    <div class="flex flex-wrap gap-2">
+                                        ${data.mainCreature.tags.map(tag => `<span class="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full">${tag}</span>`).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // 更新环境和气候
+                const climateHTML = `
+                    <div>
+                        <div class="bg-gray-50 rounded-xl shadow-md p-6">
+                            <h3 class="font-bold text-primary mb-4 flex items-center">
+                                <i class="fa fa-globe mr-2"></i> 环境与气候
+                            </h3>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">全球气候</h4>
+                                    <div class="flex items-center">
+                                        <div class="w-full bg-gray-200 rounded-full h-2.5 mr-2">
+                                            <div class="bg-red-500 h-2.5 rounded-full" style="width: ${data.climate.temperature}%"></div>
+                                        </div>
+                                        <span class="text-gray-600 text-sm">${data.climate.temperature >= 85 ? '极端高温' : data.climate.temperature >= 75 ? '高温' : '温暖'}</span>
+                                    </div>
+                                    <p class="text-gray-600 text-sm mt-1">全球平均温度比现代高约${Math.round(data.climate.temperature * 0.1)}°C</p>
+                                </div>
+                                
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">大气成分</h4>
+                                    <ul class="list-disc pl-5 text-gray-700 space-y-1 text-sm">
+                                        <li>二氧化碳浓度: ${data.climate.co2}</li>
+                                        <li>氧气含量: ${data.climate.oxygen} (现代为21%)</li>
+                                        <li>甲烷浓度升高</li>
+                                    </ul>
+                                </div>
+                                
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">海洋条件</h4>
+                                    <ul class="list-disc pl-5 text-gray-700 space-y-1 text-sm">
+                                        ${data.climate.ocean.map(condition => `<li>${condition}</li>`).join('')}
+                                    </ul>
+                                </div>
+                                
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">陆地环境</h4>
+                                    <ul class="list-disc pl-5 text-gray-700 space-y-1 text-sm">
+                                        ${data.climate.land.map(condition => `<li>${condition}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // 更新其他生物
+                let otherCreaturesHTML = '';
+                data.otherCreatures.forEach(creature => {
+                    otherCreaturesHTML += `
+                        <div class="bg-gray-50 rounded-lg shadow-md p-3 hover:shadow-lg transition-shadow cursor-pointer">
+                            <div class="h-32 overflow-hidden rounded-lg mb-2">
+                                <img src="${creature.image}" alt="${creature.name}" class="w-full h-full object-cover">
+                            </div>
+                            <h4 class="font-bold text-gray-800 text-sm">${creature.name}</h4>
+                            <p class="text-gray-600 text-xs">${creature.scientificName}</p>
+                        </div>
+                    `;
+                });
+                
+                // 更新DOM
+                creatureDisplay.innerHTML = mainCreatureHTML + climateHTML;
+                otherCreatures.innerHTML = otherCreaturesHTML;
+                
+                // 更新时间点样式
+                timelinePoints.forEach(point => {
+                    const pointTime = parseInt(point.getAttribute('data-time'));
+                    const pointCircle = point.querySelector('div');
+                    
+                    if (pointTime === time) {
+                        pointCircle.classList.remove('bg-gray-300');
+                        pointCircle.classList.add('bg-primary');
+                    } else {
+                        pointCircle.classList.remove('bg-primary');
+                        pointCircle.classList.add('bg-gray-300');
+                    }
+                });
+            }
+        }
+        
+        // 初始化显示第一个时间点
+        updateTimelineByTime(252);
+    }
+
+    // 在DOM加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function() {
+        // 初始化生物演化时间轴
+        initBiologicalTimeline();
+    });
+</script>
+    
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fa fa-globe text-secondary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">远古地球探秘</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">探索地球历史上的关键时期，了解生命演化与地质变迁的奥秘。</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">快速链接</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#geological-events" class="text-gray-400 hover:text-white transition-colors">地质事件</a></li>
+                        <li><a href="#biological-development" class="text-gray-400 hover:text-white transition-colors">生物演化</a></li>
+                        <li><a href="#end-triassic-extinction" class="text-gray-400 hover:text-white transition-colors">灭绝事件</a></li>
+                        <li><a href="#timeline" class="text-gray-400 hover:text-white transition-colors">时间线</a></li>
+                        <li><a href="#biological-timeline" class="text-gray-400 hover:text-white transition-colors">三叠纪生物演化时间轴</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">相关资源</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">古生物数据库</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">地质年代表</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">科学研究论文</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">教育资源</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">博物馆展览</a></li>
+                    </ul>
+                </div>
+                
+            
+            
+       
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script>
+        // 导航菜单切换
+        document.getElementById('menuBtn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 滚动指示器
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scrollIndicator').style.width = scrolled + '%';
+            
+            // 导航栏样式变化
+            const nav = document.getElementById('mainNav');
+            if (winScroll > 50) {
+                nav.classList.add('py-2');
+                nav.classList.remove('py-3');
+            } else {
+                nav.classList.add('py-3');
+                nav.classList.remove('py-2');
+            }
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // 关闭移动菜单
+                    document.getElementById('mobileMenu').classList.add('hidden');
+                }
+            });
+        });
+        
+        // 地质事件详情切换
+        document.querySelectorAll('.geology-toggle').forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement.classList.contains('hidden')) {
+                    targetElement.classList.remove('hidden');
+                    this.innerHTML = '收起内容 <i class="fa fa-angle-up ml-1"></i>';
+                } else {
+                    targetElement.classList.add('hidden');
+                    this.innerHTML = '了解更多 <i class="fa fa-angle-down ml-1"></i>';
+                }
+            });
+        });
+        
+        // 恐龙小知识按钮
+        document.getElementById('dinoFactBtn').addEventListener('click', function() {
+            const dinoFact = document.getElementById('dinoFact');
+            dinoFact.classList.toggle('hidden');
+        });
+        
+        // 时间线交互
+        document.querySelectorAll('.timeline-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const period = this.getAttribute('data-period');
+                console.log('Selected period:', period);
+                
+                // 高亮选中的时间点
+                document.querySelectorAll('.timeline-item').forEach(i => {
+                    i.querySelector('circle').setAttribute('fill', '#E67E22');
+                });
+                this.querySelector('circle').setAttribute('fill', '#27AE60');
+                
+                // 这里可以添加显示对应时期详情的逻辑
+            });
+        });
+        
+
+
+
+        // 初始化图表
+        window.addEventListener('load', function() {
+            // 海洋生物多样性图表
+            const marineCtx = document.getElementById('marineDiversityChart').getContext('2d');
+            new Chart(marineCtx, {
+                type: 'line',
+                data: {
+                    labels: ['二叠纪末', '早三叠世', '中三叠世', '晚三叠世', '三叠纪末'],
+                    datasets: [
+                        {
+                            label: '海洋无脊椎动物',
+                            data: [10, 3, 7, 12, 5],
+                            borderColor: '#3498db',
+                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: '海洋爬行动物',
+                            data: [0, 2, 8, 15, 10],
+                            borderColor: '#e74c3c',
+                            backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '相对多样性'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // 灭绝事件图表
+            const extinctionCtx = document.getElementById('extinctionChart').getContext('2d');
+            new Chart(extinctionCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['科灭绝率', '属灭绝率', '种灭绝率'],
+                    datasets: [{
+                        label: '灭绝百分比',
+                        data: [22, 52, 76],
+                        backgroundColor: [
+                            'rgba(231, 76, 60, 0.7)',
+                            'rgba(230, 126, 34, 0.7)',
+                            'rgba(243, 156, 18, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgb(231, 76, 60)',
+                            'rgb(230, 126, 34)',
+                            'rgb(243, 156, 18)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: '灭绝百分比 (%)'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+        
+        // 时间滑块交互
+        document.getElementById('timeSlider').addEventListener('input', function() {
+            const value = this.value;
+            document.getElementById('currentTime').textContent = `${value} Ma`;
+            
+            // 这里可以添加更新地图显示的逻辑
+            console.log('Time changed to:', value, 'Ma');
+        });
+    </script>
+
+
+
+
+
+<!-- 模态框容器 -->
+<div id="infoModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[80vh] overflow-y-auto m-4">
+        <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-xl font-bold text-primary" id="modalTitle">详情内容</h3>
+            <button id="closeModal" class="text-gray-400 hover:text-gray-600">
+                <i class="fa fa-times text-xl"></i>
+            </button>
+        </div>
+        <div class="p-6" id="modalContent">
+            <!-- 内容将通过JavaScript动态填充 -->
+        </div>
+        <div class="p-6 border-t border-gray-200 flex justify-end">
+            <button id="closeModalBtn" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                关闭
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 早中晚三叠世详情数据
+    const periodDetails = {
+        'early-triassic': {
+            title: '早三叠世 (252-247 Ma)',
+            content: `
+                <div class="space-y-4">
+                    <p class="text-gray-700">早三叠世是二叠纪末大灭绝后的恢复期，陆地和海洋生态系统遭受重创，生物多样性极低。幸存的生物逐渐适应新环境，为后续的生物复苏奠定基础。</p>
+                    
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-blue-700 mb-2">环境特征</h4>
+                        <ul class="list-disc pl-5 text-gray-700 space-y-1">
+                            <li>极端气候条件，全球气温高，海洋酸化严重</li>
+                            <li>陆地植被稀少，以蕨类和石松类为主</li>
+                            <li>海洋中菊石类开始复苏，但多样性较低</li>
+                            <li>全球海平面较低，大陆架面积减少</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                        <div class="bg-white rounded-lg shadow p-4">
+                            <h4 class="font-bold text-gray-800 mb-2">代表性生物</h4>
+                            <ul class="list-disc pl-5 text-gray-700 space-y-1">
+                                <li>菊石类：Ophiceras, Lytophiceras</li>
+                                <li>双壳类：Claraia</li>
+                                <li>爬行类：Euparkeria, Proterosuchus</li>
+                                <li>两栖类：Metoposaurus</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-4">
+                            <h4 class="font-bold text-gray-800 mb-2">重要地质事件</h4>
+                            <ul class="list-disc pl-5 text-gray-700 space-y-1">
+                                <li>西伯利亚暗色岩火山活动逐渐减弱</li>
+                                <li>全球碳循环开始恢复平衡</li>
+                                <li>海洋缺氧事件逐渐缓解</li>
+                                <li>陆地生态系统开始重建</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <img src="早三叠纪.jpg" alt="早三叠世生态系统" class="w-full h-64 object-cover rounded-lg">
+                        <p class="text-gray-500 text-sm mt-2">早三叠世生态系统重建想象图</p>
+                    </div>
+                </div>
+            `
+        },
+        'middle-triassic': {
+            title: '中三叠世 (247-237 Ma)',
+            content: `
+                <div class="space-y-4">
+                    <p class="text-gray-700">中三叠世见证了生物多样性的显著增加，特别是海洋生物的复苏。爬行动物开始多样化，主龙类逐渐成为陆地生态系统的主导者，为恐龙的崛起铺平了道路。</p>
+                    
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-green-700 mb-2">生物复苏</h4>
+                        <ul class="list-disc pl-5 text-gray-700 space-y-1">
+                            <li>海洋生态系统全面复苏，新的海洋爬行动物类群出现</li>
+                            <li>陆地植被逐渐恢复，裸子植物开始繁盛</li>
+                            <li>爬行类动物快速辐射演化，主龙类开始分化</li>
+                            <li>昆虫类群多样化，为陆地生态系统提供了更多的食物资源</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                        <div class="bg-white rounded-lg shadow p-4">
+                            <h4 class="font-bold text-gray-800 mb-2">代表性生物</h4>
+                            <ul class="list-disc pl-5 text-gray-700 space-y-1">
+                                <li>海洋爬行动物：鱼龙类、蛇颈龙类</li>
+                                <li>菊石类：Ceratites, Gymnites</li>
+                                <li>主龙类：Erythrosuchus, Ticinosuchus</li>
+                                <li>植物：松柏类、苏铁类、蕨类</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-4">
+                            <h4 class="font-bold text-gray-800 mb-2">重要地质事件</h4>
+                            <ul class="list-disc pl-5 text-gray-700 space-y-1">
+                                <li>特提斯洋扩张，盘古大陆开始出现裂痕</li>
+                                <li>气候逐渐变得湿润，季节性变化明显</li>
+                                <li>海洋生物多样性迅速增加</li>
+                                <li>陆地生态系统复杂度提高</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <img src="中三叠纪.jpg" alt="中三叠世生态系统" class="w-full h-64 object-cover rounded-lg">
+                        <p class="text-gray-500 text-sm mt-2">中三叠世海洋生态系统想象图</p>
+                    </div>
+                </div>
+            `
+        },
+        'late-triassic': {
+            title: '晚三叠世 (237-201 Ma)',
+            content: `
+                <div class="space-y-4">
+                    <p class="text-gray-700">晚三叠世是恐龙出现和初步辐射的时期，尽管此时它们还不是陆地生态系统的主导者。同时，这一时期也发生了多次小规模的灭绝事件，为三叠纪末的大灭绝事件埋下了伏笔。</p>
+                    
+                    <div class="bg-orange-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-orange-700 mb-2">恐龙起源</h4>
+                        <ul class="list-disc pl-5 text-gray-700 space-y-1">
+                            <li>最早的恐龙化石发现于晚三叠世，约2.3亿年前</li>
+                            <li>恐龙最初是小型、两足的肉食性动物</li>
+                            <li>恐龙与其他主龙类如鳄形类共同生活在晚三叠世</li>
+                            <li>恐龙在晚三叠世并未占据生态主导地位</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                        <div class="bg-white rounded-lg shadow p-4">
+                            <h4 class="font-bold text-gray-800 mb-2">代表性生物</h4>
+                            <ul class="list-disc pl-5 text-gray-700 space-y-1">
+                                <li>恐龙：始盗龙、南十字龙、板龙</li>
+                                <li>鳄形类：坚蜥类、植龙类</li>
+                                <li>海洋生物：大型鱼龙、幻龙</li>
+                                <li>植物：银杏类、松柏类、苏铁类</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-4">
+                            <h4 class="font-bold text-gray-800 mb-2">重要地质事件</h4>
+                            <ul class="list-disc pl-5 text-gray-700 space-y-1">
+                                <li>中央大西洋岩浆省(CAMP)开始形成</li>
+                                <li>盘古大陆开始分裂，大西洋开始形成</li>
+                                <li>多次小规模灭绝事件影响了陆地和海洋生态系统</li>
+                                <li>气候变干，季节性更加明显</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <img src="晚三叠纪.jpg" alt="晚三叠世生态系统" class="w-full h-64 object-cover rounded-lg">
+                        <p class="text-gray-500 text-sm mt-2">晚三叠世恐龙与其他主龙类共存想象图</p>
+                    </div>
+                </div>
+            `
+        }
+    };
+
+    // 初始化模态框事件
+    document.addEventListener('DOMContentLoaded', function() {
+        // 为早中晚三叠世的"了解更多"按钮添加点击事件
+        document.querySelectorAll('#timelineDetails .bg-white a').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // 确定点击的是哪个时期
+                const periodCard = this.closest('.bg-white');
+                let periodId = '';
+                
+                if (periodCard.querySelector('h3').textContent.includes('早三叠世')) {
+                    periodId = 'early-triassic';
+                } else if (periodCard.querySelector('h3').textContent.includes('中三叠世')) {
+                    periodId = 'middle-triassic';
+                } else if (periodCard.querySelector('h3').textContent.includes('晚三叠世')) {
+                    periodId = 'late-triassic';
+                }
+                
+                // 填充模态框内容
+                if (periodId && periodDetails[periodId]) {
+                    document.getElementById('modalTitle').textContent = periodDetails[periodId].title;
+                    document.getElementById('modalContent').innerHTML = periodDetails[periodId].content;
+                    
+                    // 显示模态框
+                    document.getElementById('infoModal').classList.remove('hidden');
+                }
+            });
+        });
+        
+        // 关闭模态框
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('infoModal').classList.add('hidden');
+        });
+        
+        document.getElementById('closeModalBtn').addEventListener('click', function() {
+            document.getElementById('infoModal').classList.add('hidden');
+        });
+        
+        // 点击模态框外部关闭
+        document.getElementById('infoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.add('hidden');
+            }
+        });
+        
+        // 初始化互动地图
+        initInteractiveMap();
+    });
+
+    // 互动地图初始化
+    function initInteractiveMap() {
+        // 获取地图容器
+        const mapContainer = document.querySelector('#interactive-map .bg-gray-200.rounded-lg');
+        
+        if (mapContainer) {
+            // 清空加载状态
+            mapContainer.innerHTML = '';
+            
+            // 创建SVG地图
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('viewBox', '0 0 800 400');
+            svg.setAttribute('width', '100%');
+            svg.setAttribute('height', '100%');
+            svg.setAttribute('class', 'bg-gray-100 rounded-lg');
+            
+            // 添加盘古大陆轮廓
+            const pangaeaPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            pangaeaPath.setAttribute('d', 'M200,100 Q300,50 400,100 T600,150 Q700,200 650,300 T400,350 Q300,370 200,320 T100,200 Q150,150 200,100');
+            pangaeaPath.setAttribute('fill', '#2ECC71');
+            pangaeaPath.setAttribute('stroke', '#27AE60');
+            pangaeaPath.setAttribute('stroke-width', '2');
+            pangaeaPath.setAttribute('class', 'cursor-pointer');
+            pangaeaPath.setAttribute('id', 'pangea');
+            
+            // 添加海洋
+            const ocean = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            ocean.setAttribute('x', '0');
+            ocean.setAttribute('y', '0');
+            ocean.setAttribute('width', '800');
+            ocean.setAttribute('height', '400');
+            ocean.setAttribute('fill', '#3498DB');
+            ocean.setAttribute('opacity', '0.5');
+            
+            // 添加特提斯海
+            const tethysSea = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            tethysSea.setAttribute('d', 'M300,120 Q400,100 500,150 T600,200 Q550,250 450,230 T300,200 Q250,150 300,120');
+            tethysSea.setAttribute('fill', '#3498DB');
+            tethysSea.setAttribute('stroke', '#2980B9');
+            tethysSea.setAttribute('stroke-width', '1');
+            tethysSea.setAttribute('class', 'cursor-pointer');
+            tethysSea.setAttribute('id', 'tethys');
+            
+            // 添加主要古生物化石发现地点标记
+            const fossilSites = [
+                {x: 300, y: 200, name: "欧洲", period: "中晚三叠世", creatures: "鱼龙、幻龙、坚蜥"},
+                {x: 450, y: 250, name: "北美", period: "晚三叠世", creatures: "板龙、始盗龙、腔骨龙"},
+                {x: 550, y: 300, name: "南美", period: "晚三叠世", creatures: "南十字龙、里约龙"},
+                {x: 250, y: 300, name: "非洲", period: "早中三叠世", creatures: "原鳄、水龙兽"},
+                {x: 350, y: 150, name: "亚洲", period: "中晚三叠世", creatures: "肯氏兽、禄丰龙"}
+            ];
+            
+            // 创建标记组
+            const markers = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            
+            // 添加标记点
+            fossilSites.forEach(site => {
+                const marker = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                marker.setAttribute('cx', site.x);
+                marker.setAttribute('cy', site.y);
+                marker.setAttribute('r', '8');
+                marker.setAttribute('fill', '#E74C3C');
+                marker.setAttribute('stroke', '#fff');
+                marker.setAttribute('stroke-width', '2');
+                marker.setAttribute('class', 'cursor-pointer');
+                marker.setAttribute('data-site', site.name);
+                
+                // 添加标记名称
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', site.x);
+                text.setAttribute('y', site.y - 12);
+                text.setAttribute('fill', '#333');
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('font-size', '12');
+                text.setAttribute('font-weight', 'bold');
+                text.textContent = site.name;
+                
+                // 添加鼠标悬停信息
+                marker.addEventListener('mouseover', function() {
+                    showSiteInfo(site);
+                    this.setAttribute('r', '10');
+                    this.setAttribute('fill', '#C0392B');
+                });
+                
+                marker.addEventListener('mouseout', function() {
+                    hideSiteInfo();
+                    this.setAttribute('r', '8');
+                    this.setAttribute('fill', '#E74C3C');
+                });
+                
+                markers.appendChild(marker);
+                markers.appendChild(text);
+            });
+            
+            // 添加信息显示区域
+            const infoBox = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            infoBox.setAttribute('id', 'siteInfo');
+            infoBox.setAttribute('visibility', 'hidden');
+            
+            const infoBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            infoBg.setAttribute('x', '550');
+            infoBg.setAttribute('y', '50');
+            infoBg.setAttribute('width', '200');
+            infoBg.setAttribute('height', '120');
+            infoBg.setAttribute('rx', '5');
+            infoBg.setAttribute('fill', 'rgba(255, 255, 255, 0.9)');
+            infoBg.setAttribute('stroke', '#333');
+            infoBg.setAttribute('stroke-width', '1');
+            
+            const infoTitle = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            infoTitle.setAttribute('x', '560');
+            infoTitle.setAttribute('y', '75');
+            infoTitle.setAttribute('fill', '#333');
+            infoTitle.setAttribute('font-size', '14');
+            infoTitle.setAttribute('font-weight', 'bold');
+            infoTitle.setAttribute('id', 'infoTitle');
+            
+            const infoPeriod = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            infoPeriod.setAttribute('x', '560');
+            infoPeriod.setAttribute('y', '95');
+            infoPeriod.setAttribute('fill', '#333');
+            infoPeriod.setAttribute('font-size', '12');
+            infoPeriod.setAttribute('id', 'infoPeriod');
+            
+            const infoCreatures = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            infoCreatures.setAttribute('x', '560');
+            infoCreatures.setAttribute('y', '115');
+            infoCreatures.setAttribute('fill', '#333');
+            infoCreatures.setAttribute('font-size', '12');
+            infoCreatures.setAttribute('id', 'infoCreatures');
+            
+            infoBox.appendChild(infoBg);
+            infoBox.appendChild(infoTitle);
+            infoBox.appendChild(infoPeriod);
+            infoBox.appendChild(infoCreatures);
+            
+            // 将所有元素添加到SVG
+            svg.appendChild(ocean);
+            svg.appendChild(pangaeaPath);
+            svg.appendChild(tethysSea);
+            svg.appendChild(markers);
+            svg.appendChild(infoBox);
+            
+            // 将SVG添加到容器
+            mapContainer.appendChild(svg);
+            
+            // 时间滑块交互
+            document.getElementById('timeSlider').addEventListener('input', function() {
+                const time = parseInt(this.value);
+                updateMapByTime(time);
+            });
+            
+            // 根据时间更新地图显示
+            function updateMapByTime(time) {
+                // 更新盘古大陆分裂程度
+                // 这只是一个简化的动画效果，实际的大陆分裂过程要复杂得多
+                let splitFactor = 0;
+                
+                if (time < 220) {
+                    splitFactor = (220 - time) / 20; // 从220Ma开始分裂，到201Ma完全分裂
+                }
+                
+                // 简化的分裂效果
+                const pathData = `M200,100 Q300,${50 + splitFactor*20} 400,100 T600,${150 + splitFactor*30} Q700,${200 + splitFactor*40} 650,${300 + splitFactor*20} T400,${350 - splitFactor*10} Q300,${370 - splitFactor*20} 200,${320 - splitFactor*10} T100,${200 + splitFactor*10} Q150,${150 + splitFactor*5} 200,100`;
+                pangaeaPath.setAttribute('d', pathData);
+                
+                // 更新特提斯海
+                const tethysData = `M300,120 Q400,${100 + splitFactor*10} 500,${150 + splitFactor*15} T600,${200 + splitFactor*20} Q550,${250 + splitFactor*10} 450,${230 + splitFactor*5} T300,${200 + splitFactor*10} Q250,${150 + splitFactor*5} 300,120`;
+                tethysSea.setAttribute('d', tethysData);
+                
+                // 更新地图标题
+                document.getElementById('currentTime').textContent = `${time} Ma`;
+                
+                // 更新海洋颜色表示气候变暖和酸化程度
+                const oceanColor = time > 230 ? '#3498DB' : `rgb(${52}, ${152 - (230 - time) * 2}, ${219 - (230 - time) * 3})`;
+                ocean.setAttribute('fill', oceanColor);
+            }
+            
+            // 显示地点信息
+            function showSiteInfo(site) {
+                document.getElementById('infoTitle').textContent = `化石发现地: ${site.name}`;
+                document.getElementById('infoPeriod').textContent = `地质时期: ${site.period}`;
+                document.getElementById('infoCreatures').textContent = `代表性生物: ${site.creatures}`;
+                document.getElementById('siteInfo').setAttribute('visibility', 'visible');
+            }
+            
+            // 隐藏地点信息
+            function hideSiteInfo() {
+                document.getElementById('siteInfo').setAttribute('visibility', 'hidden');
+            }
+        }
+    }
+</script>
+
+
+</body>
+</html>    

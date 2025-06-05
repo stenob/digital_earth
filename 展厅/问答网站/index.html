@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识问答系统</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>地质知识问答</h1>
+            <div class="score-display">
+                <span id="current-score">当前得分: 0</span>
+                <span id="total-score">总分: 0</span>
+            </div>
+        </header>
+        
+        <main>
+            <div id="quiz-container">
+                <div id="questions-container"></div>
+                
+                <div class="submit-section">
+                    <button id="submit-btn" class="submit-button">提交答案</button>
+                    <button id="reset-btn" class="reset-button" style="display: none;">重新开始</button>
+                </div>
+            </div>
+            
+            <div id="result-container" style="display: none;">
+                <h2>答题结果</h2>
+                <div id="final-score"></div>
+                <div id="detailed-results"></div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

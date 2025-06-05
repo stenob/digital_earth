@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奥陶纪探索：地球的远古变革</title>
+    <link rel="stylesheet" href="奥陶纪.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-globe-americas"></i>
+                <span>奥陶纪探索</span>
+            </div>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#hero" class="nav-link">首页</a></li>
+                <li><a href="#timeline" class="nav-link">时间轴</a></li>
+                <li><a href="#plate-tectonics" class="nav-link">板块运动</a></li>
+                <li><a href="#sea-level" class="nav-link">海平面变化</a></li>
+                <li><a href="#biodiversity" class="nav-link">生物辐射</a></li>
+                <li><a href="#extinction" class="nav-link">大灭绝</a></li>
+                <li><a href="#interactive" class="nav-link">互动探索</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <section id="hero" class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">奥陶纪<span class="accent">探索</span></h1>
+            <h2 class="hero-subtitle">地球历史上的关键变革时期</h2>
+            <p class="hero-description">4.85亿年前至4.43亿年前，地球经历了剧烈的板块运动、海平面变化、生物大辐射与大灭绝</p>
+            <div class="hero-buttons">
+                <button class="primary-button" onclick="scrollToSection('timeline')">
+                    <i class="fas fa-clock"></i> 开始探索
+                </button>
+                
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="earth-model">
+                <div class="earth">
+                    <div class="continent gondwana"></div>
+                    <div class="continent laurentia"></div>
+                    <div class="continent baltica"></div>
+                    <div class="continent siberia"></div>
+                    <div class="continent avalonia"></div>
+                </div>
+                <div class="orbit"></div>
+            </div>
+            <div class="time-display">
+                <span id="time-counter">485,000,000</span> 年前
+            </div>
+        </div>
+    </section>
+
+    <!-- 时间轴 -->
+    <section id="timeline" class="timeline-section">
+        <div class="section-header">
+            <h2>奥陶纪时间轴</h2>
+            <p>探索奥陶纪4200万年间的关键事件</p>
+        </div>
+        <div class="timeline-container">
+            <div class="timeline-controls">
+                <button id="timeline-prev" class="timeline-nav-button"><i class="fas fa-chevron-left"></i></button>
+                <div class="timeline-progress">
+                    <div class="timeline-progress-bar"></div>
+                </div>
+                <button id="timeline-next" class="timeline-nav-button"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="timeline-events">
+                <div class="timeline-event active" data-year="485">
+                    <div class="event-date">485百万年前</div>
+                    <div class="event-content">
+                        <h3>奥陶纪开始</h3>
+                        <p>奥陶纪开始，全球气候温暖湿润，海平面开始上升。三大板块（劳伦、波罗的、冈瓦纳）分布于不同位置。</p>
+                        <div class="event-image" style="background-image: url('https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?q=80&w=800')"></div>
+                    </div>
+                </div>
+                <div class="timeline-event" data-year="470">
+                    <div class="event-date">470百万年前</div>
+                    <div class="event-content">
+                        <h3>生物大辐射开始</h3>
+                        <p>海洋生物多样性开始爆发性增长，三叶虫、腕足类、头足类等生物种类急剧增加。</p>
+                        <div class="event-image" style="background-image: url('https://images.unsplash.com/photo-1478479405421-ce83c92fb3ba?q=80&w=800')"></div>
+                    </div>
+                </div>
+                <div class="timeline-event" data-year="458">
+                    <div class="event-date">458百万年前</div>
+                    <div class="event-content">
+                        <h3>板块运动加剧</h3>
+                        <p>劳伦板块与波罗的板块开始相向移动，古大西洋逐渐变窄。西伯利亚板块东欧北部边缘发生分裂。</p>
+                        <div class="event-image" style="background-image: url('晚奥陶纪.jpg')"></div>
+                    </div>
+                </div>
+                <div class="timeline-event" data-year="450">
+                    <div class="event-date">450百万年前</div>
+                    <div class="event-content">
+                        <h3>生物多样性高峰</h3>
+                        <p>海洋生物多样性达到高峰，分异度几乎是寒武纪的三倍。低纬度大陆架成为生物繁衍的理想家园。</p>
+                        <div class="event-image" style="background-image: url('https://images.unsplash.com/photo-1551244072-5d12893278ab?q=80&w=800')"></div>
+                    </div>
+                </div>
+                <div class="timeline-event" data-year="445">
+                    <div class="event-date">445百万年前</div>
+                    <div class="event-content">
+                        <h3>海平面最高点</h3>
+                        <p>凯迪时期，全球海平面达到前所未有的高度，比寒武纪初期高出300多米。大片陆地被浅海淹没。</p>
+                        <div class="event-image" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800')"></div>
+                    </div>
+                </div>
+                <div class="timeline-event" data-year="444">
+                    <div class="event-date">444百万年前</div>
+                    <div class="event-content">
+                        <h3>第一幕灭绝开始</h3>
+                        <p>赫南特冰期开始，气候急剧变冷，冈瓦纳大陆冰川迅速扩张，海平面下降，第一幕生物灭绝开始。</p>
+                        <div class="event-image" style="background-image: url('https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?q=80&w=800')"></div>
+                    </div>
+                </div>
+                <div class="timeline-event" data-year="443">
+                    <div class="event-date">443百万年前</div>
+                    <div class="event-content">
+                        <h3>第二幕灭绝</h3>
+                        <p>气候快速回暖，冰川融化，海洋缺氧加剧，导致第二幕生物灭绝。约85%的海洋生物物种消失。</p>
+                        <div class="event-image" style="background-image: url('https://images.unsplash.com/photo-1527100673774-cce25eafaf7f?q=80&w=800')"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 板块运动 -->
+    <section id="plate-tectonics" class="plate-section">
+        <div class="section-header">
+            <h2>板块运动与古地理格局</h2>
+            <p>奥陶纪时期，地球板块构造活动极为活跃，重塑了全球地理面貌</p>
+        </div>
+        <div class="plate-container">
+            <div class="plate-map-container">
+                <div class="plate-map" id="plate-map">
+                    <div class="map-controls">
+                        <button class="map-control active" data-time="early" onclick="changeMapTime('early')">早奥陶世(485-470Ma)</button>
+                        <button class="map-control" data-time="middle" onclick="changeMapTime('middle')">中奥陶世(470-458Ma)</button>
+                        <button class="map-control" data-time="late" onclick="changeMapTime('late')">晚奥陶世(458-443Ma)</button>
+                    </div>
+                    <div class="plate-labels">
+                        <span class="plate-label" style="top: 30%; left: 35%;">劳伦板块</span>
+                        <span class="plate-label" style="top: 25%; left: 55%;">波罗的板块</span>
+                        <span class="plate-label" style="top: 60%; left: 45%;">冈瓦纳板块</span>
+                        <span class="plate-label" style="top: 20%; left: 75%;">西伯利亚板块</span>
+                        <span class="plate-label" style="top: 40%; left: 45%;">阿瓦隆尼亚地体</span>
+                    </div>
+                </div>
+            </div>
+            <div class="plate-info">
+                <h3>主要板块活动</h3>
+                <div class="plate-events">
+                    <div class="plate-event">
+                        <h4><i class="fas fa-mountain"></i> 劳伦与波罗的板块碰撞</h4>
+                        <p>奥陶纪末期至志留纪早期，劳伦板块与波罗的板块碰撞，形成加里东期造山带，斯堪的纳维亚山脉便是这一时期的典型产物。</p>
+                    </div>
+                    <div class="plate-event">
+                        <h4><i class="fas fa-water"></i> 通古斯洋闭合</h4>
+                        <p>阿瓦隆尼亚地体与波罗的板块之间的通古斯洋闭合，随后发生碰撞，在奥陶纪末期形成了美国东部的山脉。</p>
+                    </div>
+                    <div class="plate-event">
+                        <h4><i class="fas fa-route"></i> 西伯利亚板块分裂</h4>
+                        <p>西伯利亚板块东欧北部边缘发生分裂，形成了一条长达约3000公里的大陆内部裂谷带，最终发育成乌拉尔古洋。</p>
+                    </div>
+                    <div class="plate-event">
+                        <h4><i class="fas fa-landmark"></i> 中国地区地台形成</h4>
+                        <p>中国地区在寒武纪形成了华北地台、扬子地台、塔里木地台三块稳定的地台核心，奥陶纪时期大部分被陆表浅海覆盖。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="interactive-note">
+            <i class="fas fa-hand-pointer"></i> 点击按钮查看不同时期的板块分布
+        </div>
+    </section>
+
+    <!-- 海平面变化 -->
+    <section id="sea-level" class="sea-level-section">
+        <div class="section-header">
+            <h2>海平面的跌宕起伏</h2>
+            <p>奥陶纪的海平面变化如同一场波澜壮阔的"地质大戏"</p>
+        </div>
+        <div class="sea-level-container">
+            <div class="sea-level-visual">
+                <div class="sea-level-chart">
+                    <div class="chart-axis y-axis">
+                        <span>+300m</span>
+                        <span>+200m</span>
+                        <span>+100m</span>
+                        <span>0m</span>
+                        <span>-100m</span>
+                    </div>
+                    <div class="chart-data">
+                        <div class="data-point" style="left: 10%; bottom: 40%;" data-period="早奥陶世初期" data-level="+100m">
+                            <span class="point-dot"></span>
+                            <div class="point-info">
+                                <h4>早奥陶世初期</h4>
+                                <p>海平面开始上升</p>
+                            </div>
+                        </div>
+                        <div class="data-point" style="left: 30%; bottom: 55%;" data-period="中奥陶世" data-level="+180m">
+                            <span class="point-dot"></span>
+                            <div class="point-info">
+                                <h4>中奥陶世</h4>
+                                <p>海平面持续上升</p>
+                            </div>
+                        </div>
+                        <div class="data-point" style="left: 60%; bottom: 80%;" data-period="凯迪时期" data-level="+300m">
+                            <span class="point-dot"></span>
+                            <div class="point-info">
+                                <h4>凯迪时期</h4>
+                                <p>海平面达到最高点</p>
+                            </div>
+                        </div>
+                        <div class="data-point" style="left: 90%; bottom: 20%;" data-period="赫南特期" data-level="+50m">
+                            <span class="point-dot"></span>
+                            <div class="point-info">
+                                <h4>赫南特期</h4>
+                                <p>海平面急剧下降</p>
+                            </div>
+                        </div>
+                        <div class="chart-line"></div>
+                    </div>
+                    <div class="chart-axis x-axis">
+                        <span>485</span>
+                        <span>470</span>
+                        <span>458</span>
+                        <span>445</span>
+                        <span>443</span>
+                    </div>
+                    <div class="chart-label x-label">百万年前</div>
+                    <div class="chart-label y-label">相对海平面</div>
+                </div>
+                <div class="sea-level-animation">
+                    <div class="landscape">
+                        <div class="mountains"></div>
+                        <div class="land"></div>
+                        <div class="sea">
+                            <div class="wave wave1"></div>
+                            <div class="wave wave2"></div>
+                            <div class="wave wave3"></div>
+                        </div>
+                    </div>
+                    <div class="sea-level-controls">
+                        <button class="sea-control" onclick="animateSeaLevel('early')">早期</button>
+                        <button class="sea-control" onclick="animateSeaLevel('middle')">中期</button>
+                        <button class="sea-control" onclick="animateSeaLevel('late')">晚期</button>
+                        <button class="sea-control" onclick="animateSeaLevel('hirnantian')">赫南特期</button>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-level-info">
+                <h3>海平面变化的影响</h3>
+                <div class="info-cards">
+                    <div class="info-card">
+                        <div class="card-icon"><i class="fas fa-water"></i></div>
+                        <h4>早期海侵</h4>
+                        <p>奥陶纪早期，温暖湿润的气候导致海平面持续上升，大片陆地被浅海覆盖。</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="card-icon"><i class="fas fa-mountain"></i></div>
+                        <h4>最高海平面</h4>
+                        <p>凯迪时期，海平面达到前所未有的高度，比寒武纪初期高出300多米。</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="card-icon"><i class="fas fa-snowflake"></i></div>
+                        <h4>赫南特冰期</h4>
+                        <p>奥陶纪末期，赫南特冰期导致海平面急剧下降，引发广泛的海退现象。</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="card-icon"><i class="fas fa-skull"></i></div>
+                        <h4>生态影响</h4>
+                        <p>海平面的剧烈变化对海洋生态系统造成巨大冲击，是生物大灭绝的重要诱因。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 生物大辐射 -->
+    <section id="biodiversity" class="biodiversity-section">
+        <div class="section-header">
+            <h2>奥陶纪生物大辐射</h2>
+            <p>生命的蓬勃绽放，海洋生物多样性爆发</p>
+        </div>
+        <div class="biodiversity-container">
+            <div class="biodiversity-info">
+                <h3>生物多样性爆发</h3>
+                <p>奥陶纪生物大辐射是地球历史上最重要的生物多样性爆发事件之一。从奥陶纪初期开始，海洋生物的丰度和分异度达到了惊人的高峰，分异度几乎是寒武纪的三倍之多。</p>
+                <div class="biodiversity-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">3×</div>
+                        <div class="stat-label">生物多样性增长</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">85%</div>
+                        <div class="stat-label">海洋生态扩张</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">4000+</div>
+                        <div class="stat-label">新物种出现</div>
+                    </div>
+                </div>
+                <h3>主要成因</h3>
+                <div class="cause-list">
+                    <div class="cause-item">
+                        <div class="cause-icon"><i class="fas fa-puzzle-piece"></i></div>
+                        <div class="cause-content">
+                            <h4>板块运动</h4>
+                            <p>超级大陆的裂解形成众多岛屿和陆块，为生物的成种作用创造有利条件</p>
+                        </div>
+                    </div>
+                    <div class="cause-item">
+                        <div class="cause-icon"><i class="fas fa-water"></i></div>
+                        <div class="cause-content">
+                            <h4>海平面上升</h4>
+                            <p>海平面上升扩大了海洋生态空间，为生物提供更广阔的栖息地</p>
+                        </div>
+                    </div>
+                    <div class="cause-item">
+                        <div class="cause-icon"><i class="fas fa-temperature-high"></i></div>
+                        <div class="cause-content">
+                            <h4>适宜气候</h4>
+                            <p>温暖湿润的气候为生物的繁殖和演化提供了良好条件</p>
+                        </div>
+                    </div>
+                    <div class="cause-item">
+                        <div class="cause-icon"><i class="fas fa-fire"></i></div>
+                        <div class="cause-content">
+                            <h4>火山活动</h4>
+                            <p>岩浆活动和火山喷发为海洋带来丰富的营养物质</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="species-showcase">
+                <h3>代表性生物</h3>
+                <div class="species-carousel">
+                    <div class="species-card active" data-species="trilobite">
+                        <div class="species-image">
+                            <img src="111.jpg" alt="三叶虫">
+                        </div>
+                        <div class="species-info">
+                            <h4>三叶虫</h4>
+                            <p>奥陶纪的霸主，种类达到历史巅峰，拥有复杂的复眼结构</p>
+                        </div>
+                    </div>
+                    <div class="species-card" data-species="brachiopod">
+                        <div class="species-image">
+                            <img src="腕足动物.jpg" alt="腕足动物">
+                        </div>
+                        <div class="species-info">
+                            <h4>腕足动物</h4>
+                            <p>奥陶纪海底的主要居民，双壳结构，固着生活</p>
+                        </div>
+                    </div>
+                    <div class="species-card" data-species="cephalopod">
+                        <div class="species-image">
+                            <img src="头足类.jpg" alt="头足类">
+                        </div>
+                        <div class="species-info">
+                            <h4>头足类</h4>
+                            <p>直角石等巨型头足类是奥陶纪海洋中的顶级捕食者</p>
+                        </div>
+                    </div>
+                    <div class="species-card" data-species="graptolite">
+                        <div class="species-image">
+                            <img src="笔石.jpg" alt="笔石">
+                        </div>
+                        <div class="species-info">
+                            <h4>笔石</h4>
+                            <p>重要的奥陶纪标准化石，群体生活，浮游生活方式</p>
+                        </div>
+                    </div>
+                    <div class="species-card" data-species="coral">
+                        <div class="species-image">
+                            <img src="四射珊瑚.jpg" alt="四射珊瑚">
+                        </div>
+                        <div class="species-info">
+                            <h4>四射珊瑚</h4>
+                            <p>古代珊瑚礁的建造者，固着生活，形成石灰岩礁体</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-controls">
+                    <button class="carousel-control prev" onclick="prevSpecies()"><i class="fas fa-chevron-left"></i></button>
+                    <div class="carousel-indicators">
+                        <span class="indicator active" onclick="showSpecies(0)"></span>
+                        <span class="indicator" onclick="showSpecies(1)"></span>
+                        <span class="indicator" onclick="showSpecies(2)"></span>
+                        <span class="indicator" onclick="showSpecies(3)"></span>
+                        <span class="indicator" onclick="showSpecies(4)"></span>
+                    </div>
+                    <button class="carousel-control next" onclick="nextSpecies()"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 大灭绝 -->
+    <section id="extinction" class="extinction-section">
+        <div class="section-header">
+            <h2>奥陶纪末期生物大灭绝</h2>
+            <p>地球历史上第一次生物大灭绝事件，约85%的海洋生物物种消失</p>
+        </div>
+        <div class="extinction-container">
+            <div class="extinction-visual">
+                <div class="extinction-stages">
+                    <div class="stage" id="stage-normal">
+                        <h3>灭绝前</h3>
+                        <div class="stage-visual normal-stage">
+                            <div class="organisms">
+                                <div class="organism trilobite"></div>
+                                <div class="organism brachiopod"></div>
+                                <div class="organism cephalopod"></div>
+                                <div class="organism graptolite"></div>
+                                <div class="organism coral"></div>
+                                <div class="organism trilobite"></div>
+                                <div class="organism brachiopod"></div>
+                                <div class="organism cephalopod"></div>
+                                <div class="organism graptolite"></div>
+                                <div class="organism coral"></div>
+                                <div class="organism trilobite"></div>
+                                <div class="organism brachiopod"></div>
+                                <div class="organism cephalopod"></div>
+                                <div class="organism graptolite"></div>
+                                <div class="organism coral"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stage" id="stage-first">
+                        <h3>第一幕灭绝</h3>
+                        <div class="stage-visual first-stage">
+                            <div class="organisms">
+                                <div class="organism trilobite"></div>
+                                <div class="organism brachiopod extinct"></div>
+                                <div class="organism cephalopod"></div>
+                                <div class="organism graptolite extinct"></div>
+                                <div class="organism coral extinct"></div>
+                                <div class="organism trilobite extinct"></div>
+                                <div class="organism brachiopod"></div>
+                                <div class="organism cephalopod extinct"></div>
+                                <div class="organism graptolite"></div>
+                                <div class="organism coral extinct"></div>
+                                <div class="organism trilobite"></div>
+                                <div class="organism brachiopod extinct
+                                <div class="organism trilobite"></div>
+                                <div class="organism brachiopod extinct"></div>
+                                <div class="organism cephalopod extinct"></div>
+                                <div class="organism graptolite extinct"></div>
+                                <div class="organism coral"></div>
+                            </div>
+                            <div class="ice-cover"></div>
+                        </div>
+                    </div>
+                    <div class="stage" id="stage-second">
+                        <h3>第二幕灭绝</h3>
+                        <div class="stage-visual second-stage">
+                            <div class="organisms">
+                                <div class="organism trilobite extinct"></div>
+                                <div class="organism brachiopod extinct"></div>
+                                <div class="organism cephalopod extinct"></div>
+                                <div class="organism graptolite extinct"></div>
+                                <div class="organism coral extinct"></div>
+                                <div class="organism trilobite extinct"></div>
+                                <div class="organism brachiopod"></div>
+                                <div class="organism cephalopod extinct"></div>
+                                <div class="organism graptolite extinct"></div>
+                                <div class="organism coral extinct"></div>
+                                <div class="organism trilobite"></div>
+                                <div class="organism brachiopod extinct"></div>
+                                <div class="organism cephalopod extinct"></div>
+                                <div class="organism graptolite extinct"></div>
+                                <div class="organism coral extinct"></div>
+                            </div>
+                            <div class="anoxic-layer"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="extinction-controls">
+                    <button class="extinction-btn" onclick="showExtinctionStage('normal')">灭绝前</button>
+                    <button class="extinction-btn" onclick="showExtinctionStage('first')">第一幕灭绝</button>
+                    <button class="extinction-btn" onclick="showExtinctionStage('second')">第二幕灭绝</button>
+                </div>
+            </div>
+            <div class="extinction-info">
+                <h3>两幕灭绝</h3>
+                <div class="extinction-phases">
+                    <div class="extinction-phase">
+                        <div class="phase-header">
+                            <div class="phase-icon"><i class="fas fa-snowflake"></i></div>
+                            <h4>第一幕灭绝 (LOME-1)</h4>
+                        </div>
+                        <p>发生在凯迪期与赫南特期之交，气候迅速变冷，冈瓦纳大陆冰川快速扩张至低纬度地区，海平面急剧下降，生态环境剧变导致大量生物灭绝。</p>
+                    </div>
+                    <div class="extinction-phase">
+                        <div class="phase-header">
+                            <div class="phase-icon"><i class="fas fa-water"></i></div>
+                            <h4>第二幕灭绝 (LOME-2)</h4>
+                        </div>
+                        <p>出现在赫南特期中晚期，气候快速回暖，冰川融化，冰川融水裹挟大量营养物质涌入海洋，导致海洋初级生产力急剧飙升，浅海区严重缺氧，生物再次遭受灭绝打击。</p>
+                    </div>
+                </div>
+                <h3>灭绝原因</h3>
+                <div class="extinction-causes">
+                    <div class="cause-item">
+                        <div class="cause-icon"><i class="fas fa-globe-americas"></i></div>
+                        <div class="cause-content">
+                            <h4>板块位置变化</h4>
+                            <p>冈瓦纳大陆进入南极地区，影响全球环流</p>
+                        </div>
+                    </div>
+                    <div class="cause-item">
+                        <div class="cause-icon"><i class="fas fa-snowflake"></i></div>
+                        <div class="cause-content">
+                            <h4>全球变冷</h4>
+                            <p>地球进入安第斯-撒哈拉冰河时期</p>
+                        </div>
+                    </div>
+                    <div class="cause-item">
+                        <div class="cause-icon"><i class="fas fa-water"></i></div>
+                        <div class="cause-content">
+                            <h4>海平面变化</h4>
+                            <p>海平面急剧下降后快速上升</p>
+                        </div>
+                    </div>
+                    <div class="cause-item">
+                        <div class="cause-icon"><i class="fas fa-fire"></i></div>
+                        <div class="cause-content">
+                            <h4>火山活动</h4>
+                            <p>英国发生3次大规模8级火山爆发</p>
+                        </div>
+                    </div>
+                    <div class="cause-item">
+                        <div class="cause-icon"><i class="fas fa-radiation"></i></div>
+                        <div class="cause-content">
+                            <h4>伽马射线暴</h4>
+                            <p>可能的伽马射线暴击中地球，破坏臭氧层</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 互动探索区 -->
+    <section id="interactive" class="interactive-section">
+        <div class="section-header">
+            <h2>互动探索</h2>
+            <p>亲自体验奥陶纪的地质与生物演变</p>
+        </div>
+        <div class="interactive-container">
+            <div class="interactive-tabs">
+                <button class="tab-btn active" data-tab="fossil">化石挖掘</button>
+                <button class="tab-btn" data-tab="quiz">知识问答</button>
+                <button class="tab-btn" data-tab="timeline-builder">时间线构建</button>
+            </div>
+            <div class="tab-content">
+                <!-- 化石挖掘 -->
+                <div class="tab-pane active" id="fossil-tab">
+                    <h3>奥陶纪化石挖掘</h3>
+                    <p>点击岩层，发现隐藏的奥陶纪化石</p>
+                    <div class="fossil-game">
+                        <div class="rock-layers">
+                            <div class="rock-layer" onclick="digFossil(this)">
+                                <div class="fossil hidden" data-fossil="trilobite">🦐</div>
+                            </div>
+                            <div class="rock-layer" onclick="digFossil(this)">
+                                <div class="fossil hidden" data-fossil="brachiopod">🐚</div>
+                            </div>
+                            <div class="rock-layer" onclick="digFossil(this)">
+                                <div class="fossil hidden" data-fossil="graptolite">🖋️</div>
+                            </div>
+                            <div class="rock-layer" onclick="digFossil(this)">
+                                <div class="fossil hidden" data-fossil="cephalopod">🦑</div>
+                            </div>
+                            <div class="rock-layer" onclick="digFossil(this)">
+                                <div class="fossil hidden" data-fossil="coral">🪸</div>
+                            </div>
+                        </div>
+                        <div class="fossil-collection">
+                            <h4>已发现化石</h4>
+                            <div class="found-fossils" id="found-fossils">
+                                <div class="empty-collection">点击岩层开始挖掘</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 知识问答 -->
+                <div class="tab-pane" id="quiz-tab">
+                    <h3>奥陶纪知识问答</h3>
+                    <p>测试你对奥陶纪的了解</p>
+                    <div class="quiz-container" id="quiz-container">
+                        <div class="quiz-question" id="question-text">
+                            奥陶纪大约持续了多长时间？
+                        </div>
+                        <div class="quiz-options">
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">约2000万年</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, true)">约4200万年</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">约6000万年</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">约1000万年</button>
+                        </div>
+                        <div id="quiz-result"></div>
+                        <button id="next-question" style="display: none;" onclick="nextQuestion()">下一题</button>
+                    </div>
+                </div>
+                
+                <!-- 时间线构建 -->
+                <div class="tab-pane" id="timeline-builder-tab">
+                    <h3>奥陶纪时间线构建</h3>
+                    <p>拖拽事件到正确的时间位置</p>
+                    <div class="timeline-builder">
+                        <div class="event-pool">
+                            <div class="draggable-event" draggable="true" data-year="485">奥陶纪开始</div>
+                            <div class="draggable-event" draggable="true" data-year="470">生物大辐射开始</div>
+                            <div class="draggable-event" draggable="true" data-year="445">海平面达到最高点</div>
+                            <div class="draggable-event" draggable="true" data-year="444">第一幕灭绝开始</div>
+                            <div class="draggable-event" draggable="true" data-year="443">奥陶纪结束</div>
+                        </div>
+                        <div class="timeline-builder-visual">
+                            <div class="timeline-scale">
+                                <div class="timeline-mark" data-year="485">485</div>
+                                <div class="timeline-mark" data-year="470">470</div>
+                                <div class="timeline-mark" data-year="460">460</div>
+                                <div class="timeline-mark" data-year="450">450</div>
+                                <div class="timeline-mark" data-year="443">443</div>
+                            </div>
+                            <div class="timeline-drop-zone"></div>
+                        </div>
+                        <div class="timeline-feedback" id="timeline-feedback"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 模态框 -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-globe-americas"></i>
+                    <span>奥陶纪探索</span>
+                </div>
+                <p>探索地球历史上的关键变革时期</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速导航</h4>
+                <ul>
+                    <li><a href="#hero">首页</a></li>
+                    <li><a href="#timeline">时间轴</a></li>
+                    <li><a href="#plate-tectonics">板块运动</a></li>
+                    <li><a href="#sea-level">海平面变化</a></li>
+                    <li><a href="#biodiversity">生物辐射</a></li>
+                    <li><a href="#extinction">大灭绝</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>相关资源</h4>
+                <ul>
+                    <li><a href="#">古生物学资料库</a></li>
+                    <li><a href="#">地质时代表</a></li>
+                    <li><a href="#">化石图鉴</a></li>
+                    <li><a href="#">板块构造理论</a></li>
+                </ul>
+            </div>
+       
+            </div>
+        </div>
+  
+    </footer>
+
+    <script src="奥陶纪.js"></script>
+</body>
+</html>

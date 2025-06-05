@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地质年代时间轴</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind CSS自定义颜色 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'precambrian': '#242552',     // 前寒武纪
+                        'cambrian': '#3A4684',        // 寒武纪
+                        'ordovician': '#5562A8',      // 奥陶纪
+                        'silurian': '#7A8AC0',        // 志留纪
+                        'devonian': '#A6ADCF',        // 泥盆纪
+                        'carboniferous': '#D2B48C',   // 石炭纪
+                        'permian': '#D2B48C',         // 二叠纪
+                        'triassic': '#B45F06',        // 三叠纪
+                        'jurassic': '#E67E22',        // 侏罗纪
+                        'cretaceous': '#F39C12',      // 白垩纪
+                        'paleogene': '#D98880',       // 古近纪
+                        'neogene': '#F5B7B1',         // 新近纪
+                        'quaternary': '#FADBD8',      // 第四纪
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .timeline-connector {
+                height: 100%;
+                width: 4px;
+                background-color: #e5e7eb;
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 0;
+            }
+            .period-card {
+                transition: all 0.3s ease;
+            }
+            .period-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+            .period-title {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+    <!-- 页面头部 -->
+    <header class="bg-gradient-to-r from-indigo-900 to-purple-800 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-8">
+            <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold text-center mb-2 period-title">地质年代时间轴</h1>
+            <p class="text-center text-lg opacity-90 max-w-3xl mx-auto">探索地球46亿年的漫长历史，了解各个地质时期的生命演化与重大事件</p>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-12">
+        <!-- 年代过滤器 -->
+        <div class="mb-10 text-center">
+            <div class="inline-flex bg-white rounded-lg shadow-md p-1">
+                <button id="filter-all" class="filter-btn px-6 py-2 rounded-md font-medium transition-all duration-300 bg-indigo-600 text-white">
+                    全部时期
+                </button>
+                <button id="filter-paleozoic" class="filter-btn px-6 py-2 rounded-md font-medium transition-all duration-300 hover:bg-gray-100">
+                    古生代
+                </button>
+                <button id="filter-mesozoic" class="filter-btn px-6 py-2 rounded-md font-medium transition-all duration-300 hover:bg-gray-100">
+                    中生代
+                </button>
+                <button id="filter-cenozoic" class="filter-btn px-6 py-2 rounded-md font-medium transition-all duration-300 hover:bg-gray-100">
+                    新生代
+                </button>
+            </div>
+        </div>
+
+        <!-- 地质时间轴 -->
+        <div class="relative timeline-container mb-16">
+            <!-- 连接线 -->
+            <div class="timeline-connector hidden md:block"></div>
+            
+            <!-- 时间轴项目 -->
+            <div id="timeline-items" class="space-y-10 md:space-y-20 relative z-10">
+                <!-- 前寒武纪 -->
+                <div class="period-card bg-precambrian text-white rounded-xl overflow-hidden shadow-xl" data-era="precambrian">
+                    <div class="md:flex">
+                        <div class="md:w-1/3 p-6 md:p-8 flex items-center justify-center bg-precambrian/90">
+                            <h2 class="text-2xl md:text-3xl font-bold period-title">前寒武纪<br>Pre-Cambrian</h2>
+                        </div>
+                        <div class="md:w-2/3 p-6 md:p-8 bg-white text-gray-800">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="font-bold text-lg">46亿年前 - 5.41亿年前</span>
+                                <span class="bg-precambrian/10 text-precambrian px-3 py-1 rounded-full text-sm font-medium">
+                                    持续约40.59亿年
+                                </span>
+                            </div>
+                            <p class="mb-4">地球形成至显生宙之前的漫长时期，包含冥古宙、太古宙和元古宙。早期生命（如单细胞生物、蓝藻）开始出现，大气氧含量逐渐升高，形成原始海洋。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">冥古宙</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">太古宙</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">元古宙</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">生命起源</span>
+                            </div>
+                            <button class="read-more-btn bg-precambrian hover:bg-precambrian/90 text-white px-4 py-2 rounded-md transition-all duration-300 flex items-center">
+                                <span><a href="前寒武纪/前寒武纪.html" target="_blank">了解更多</a></span>
+                                <i class="fa fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 寒武纪 -->
+                <div class="period-card bg-cambrian text-white rounded-xl overflow-hidden shadow-xl" data-era="paleozoic">
+                    <div class="md:flex">
+                        <div class="md:w-1/3 p-6 md:p-8 flex items-center justify-center bg-cambrian/90">
+                            <h2 class="text-2xl md:text-3xl font-bold period-title">寒武纪<br>Cambrian</h2>
+                        </div>
+                        <div class="md:w-2/3 p-6 md:p-8 bg-white text-gray-800">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="font-bold text-lg">5.41亿年前 - 4.85亿年前</span>
+                                <span class="bg-cambrian/10 text-cambrian px-3 py-1 rounded-full text-sm font-medium">
+                                    持续约0.56亿年
+                                </span>
+                            </div>
+                            <p class="mb-4">显生宙的开端，发生"寒武纪生命大爆发"，大量无脊椎动物（如三叶虫、腕足类）和藻类繁盛，海洋生态系统初步形成。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">生命大爆发</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">三叶虫</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">海洋生物</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">古生代</span>
+                            </div>
+                            <button class="read-more-btn bg-cambrian hover:bg-cambrian/90 text-white px-4 py-2 rounded-md transition-all duration-300 flex items-center">
+                                <span><a href="寒武纪/寒武纪/寒武纪.html" target="_blank">了解更多</a></span>
+                                <i class="fa fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 奥陶纪 -->
+                <div class="period-card bg-ordovician text-white rounded-xl overflow-hidden shadow-xl" data-era="paleozoic">
+                    <div class="md:flex">
+                        <div class="md:w-1/3 p-6 md:p-8 flex items-center justify-center bg-ordovician/90">
+                            <h2 class="text-2xl md:text-3xl font-bold period-title">奥陶纪<br>Ordovician</h2>
+                        </div>
+                        <div class="md:w-2/3 p-6 md:p-8 bg-white text-gray-800">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="font-bold text-lg">4.85亿年前 - 4.43亿年前</span>
+                                <span class="bg-ordovician/10 text-ordovician px-3 py-1 rounded-full text-sm font-medium">
+                                    持续约0.42亿年
+                                </span>
+                            </div>
+                            <p class="mb-4">海洋生物多样性进一步提升，珊瑚、笔石、头足类（如直角石）繁荣，陆地出现最早的植物（裸蕨）。末期发生奥陶纪-志留纪灭绝事件，约85%物种消失。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">海洋生物</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">珊瑚礁</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">裸蕨植物</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">灭绝事件</span>
+                            </div>
+                            <button class="read-more-btn bg-ordovician hover:bg-ordovician/90 text-white px-4 py-2 rounded-md transition-all duration-300 flex items-center">
+                                <span><a href="奥陶纪/奥陶纪.html" target="_blank">了解更多</a></span>
+                                <i class="fa fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 志留纪 -->
+                <div class="period-card bg-silurian text-white rounded-xl overflow-hidden shadow-xl" data-era="paleozoic">
+                    <div class="md:flex">
+                        <div class="md:w-1/3 p-6 md:p-8 flex items-center justify-center bg-silurian/90">
+                            <h2 class="text-2xl md:text-3xl font-bold period-title">志留纪<br>Silurian</h2>
+                        </div>
+                        <div class="md:w-2/3 p-6 md:p-8 bg-white text-gray-800">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="font-bold text-lg">4.43亿年前 - 4.19亿年前</span>
+                                <span class="bg-silurian/10 text-silurian px-3 py-1 rounded-full text-sm font-medium">
+                                    持续约0.24亿年
+                                </span>
+                            </div>
+                            <p class="mb-4">海洋无脊椎动物复苏，珊瑚礁形成，鱼类（甲胄鱼）出现；陆地植物进一步演化（如工蕨），并出现最早的陆生节肢动物（如蛛形纲）。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">鱼类出现</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">陆生植物</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">珊瑚礁</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">节肢动物</span>
+                            </div>
+                            <button class="read-more-btn bg-silurian hover:bg-silurian/90 text-white px-4 py-2 rounded-md transition-all duration-300 flex items-center">
+                                <span><a href="志留纪/志留纪.html" target="_blank">了解更多</a></span>
+                                <i class="fa fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 泥盆纪 -->
+                <div class="period-card bg-devonian text-white rounded-xl overflow-hidden shadow-xl" data-era="paleozoic">
+                    <div class="md:flex">
+                        <div class="md:w-1/3 p-6 md:p-8 flex items-center justify-center bg-devonian/90">
+                            <h2 class="text-2xl md:text-3xl font-bold period-title">泥盆纪<br>Devonian</h2>
+                        </div>
+                        <div class="md:w-2/3 p-6 md:p-8 bg-white text-gray-800">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="font-bold text-lg">4.19亿年前 - 3.59亿年前</span>
+                                <span class="bg-devonian/10 text-devonian px-3 py-1 rounded-full text-sm font-medium">
+                                    持续约0.6亿年
+                                </span>
+                            </div>
+                            <p class="mb-4">被称为"鱼类时代"，盾皮鱼（如邓氏鱼）和软骨鱼繁盛，两栖动物（如鱼石螈）开始登陆，蕨类植物和早期裸子植物出现。末期发生泥盆纪大灭绝，海洋生物受重创。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">鱼类时代</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">两栖动物</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">裸子植物</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">灭绝事件</span>
+                            </div>
+                            <button class="read-more-btn bg-devonian hover:bg-devonian/90 text-white px-4 py-2 rounded-md transition-all duration-300 flex items-center">
+                                <span><a href="泥盆纪/泥盆纪.html" target="_blank">了解更多</a></span>
+                                <i class="fa fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 石炭纪 -->
+                <div class="period-card bg-carboniferous text-white rounded-xl overflow-hidden shadow-xl" data-era="paleozoic">
+                    <div class="md:flex">
+                        <div class="md:w-1/3 p-6 md:p-8 flex items-center justify-center bg-carboniferous/90">
+                            <h2 class="text-2xl md:text-3xl font-bold period-title">石炭纪<br>Carboniferous</h2>
+                        </div>
+                        <div class="md:w-2/3 p-6 md:p-8 bg-white text-gray-800">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="font-bold text-lg">3.59亿年前 - 2.99亿年前</span>
+                                <span class="bg-carboniferous/10 text-carboniferous px-3 py-1 rounded-full text-sm font-medium">
+                                    持续约0.6亿年
+                                </span>
+                            </div>
+                            <p class="mb-4">陆地植被茂密，形成大规模煤田（故又称"煤炭时代"），爬行动物出现，昆虫（如巨脉蜻蜓）体型巨大，两栖动物主宰陆地。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">煤炭形成</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">爬行动物</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">巨型昆虫</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">热带雨林</span>
+                            </div>
+                            <button class="read-more-btn bg-carboniferous hover:bg-carboniferous/90 text-white px-4 py-2 rounded-md transition-all duration-300 flex items-center">
+                                <span><a href="石炭纪/石炭纪.html" target="_blank">了解更多</a></span>
+                                <i class="fa fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 二叠纪 -->
+                <div class="period-card bg-permian text-white rounded-xl overflow-hidden shadow-xl" data-era="paleozoic">
+                    <div class="md:flex">
+                        <div class="md:w-1/3 p-6 md:p-8 flex items-center justify-center bg-permian/90">
+                            <h2 class="text-2xl md:text-3xl font-bold period-title">二叠纪<br>Permian</h2>
+                        </div>
+                        <div class="md:w-2/3 p-6 md:p-8 bg-white text-gray-800">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="font-bold text-lg">2.99亿年前 - 2.52亿年前</span>
+                                <span class="bg-permian/10 text-permian px-3 py-1 rounded-full text-sm font-medium">
+                                    持续约0.47亿年
+                                </span>
+                            </div>
+                            <p class="mb-4">爬行动物多样化（如盘龙类、兽孔类），裸子植物占主导，联合古陆（盘古大陆）形成。末期发生二叠纪-三叠纪灭绝事件，约96%物种灭绝，为地球历史上最严重的生物大灭绝。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">盘古大陆</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">兽孔类</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">最大灭绝</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">裸子植物</span>
+                            </div>
+                            <button class="read-more-btn bg-permian hover:bg-permian/90 text-white px-4 py-2 rounded-md transition-all duration-300 flex items-center">
+                                <span><a href="二叠纪/二叠纪.html" target="_blank">了解更多</a></span>
+                                <i class="fa fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 三叠纪 -->
+                <div class="period-card bg-triassic text-white rounded-xl overflow-hidden shadow-xl" data-era="mesozoic">
+                    <div class="md:flex">
+                        <div class="md:w-1/3 p-6 md:p-8 flex items-center justify-center bg-triassic/90">
+                            <h2 class="text-2xl md:text-3xl font-bold period-title">三叠纪<br>Triassic</h2>
+                        </div>
+                        <div class="md:w-2/3 p-6 md:p-8 bg-white text-gray-800">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="font-bold text-lg">2.52亿年前 - 2.01亿年前</span>
+                                <span class="bg-triassic/10 text-triassic px-3 py-1 rounded-full text-sm font-medium">
+                                    持续约0.51亿年
+                                </span>
+                            </div>
+                            <p class="mb-4">生物从大灭绝中复苏，恐龙和哺乳动物的祖先（似哺乳爬行动物）出现，裸子植物依然繁盛，联合古陆开始分裂。末期发生三叠纪-侏罗纪灭绝事件，恐龙逐渐成为陆地霸主。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">恐龙出现</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">盘古分裂</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">裸子植物</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">灭绝事件</span>
+                            </div>
+                            <button class="read-more-btn bg-triassic hover:bg-triassic/90 text-white px-4 py-2 rounded-md transition-all duration-300 flex items-center">
+                                <span><a href="三叠纪/三叠纪.html" target="_blank">了解更多</a></span>
+                                <i class="fa fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 侏罗纪 -->
+                <div class="period-card bg-jurassic text-white rounded-xl overflow-hidden shadow-xl" data-era="mesozoic">
+                    <div class="md:flex">
+                        <div class="md:w-1/3 p-6 md:p-8 flex items-center justify-center bg-jurassic/90">
+                            <h2 class="text-2xl md:text-3xl font-bold period-title">侏罗纪<br>Jurassic</h2>
+                        </div>
+                        <div class="md:w-2/3 p-6 md:p-8 bg-white text-gray-800">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="font-bold text-lg">2.01亿年前 - 1.45亿年前</span>
+                                <span class="bg-jurassic/10 text-jurassic px-3 py-1 rounded-full text-sm font-medium">
+                                    持续约0.56亿年
+                                </span>
+                            </div>
+                            <p class="mb-4">恐龙（如梁龙、剑龙）极度繁盛，鸟类（如始祖鸟）出现，海洋中菊石和鱼龙活跃，裸子植物（如苏铁、银杏）占主导，气候温暖湿润。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">恐龙盛世</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">鸟类出现</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">裸子植物</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">温暖气候</span>
+                            </div>
+                            <button class="read-more-btn bg-jurassic hover:bg-jurassic/90 text-white px-4 py-2 rounded-md transition-all duration-300 flex items-center">
+                                <span><a href="侏罗纪/侏罗纪.html" target="_blank">了解更多</a></span>
+                                <i class="fa fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 白垩纪 -->
+                <div class="period-card bg-cretaceous text-white rounded-xl overflow-hidden shadow-xl" data-era="mesozoic">
+                    <div class="md:flex">
+                        <div class="md:w-1/3 p-6 md:p-8 flex items-center justify-center bg-cretaceous/90">
+                            <h2 class="text-2xl md:text-3xl font-bold period-title">白垩纪<br>Cretaceous</h2>
+                        </div>
+                        <div class="md:w-2/3 p-6 md:p-8 bg-white text-gray-800">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="font-bold text-lg">1.45亿年前 - 6600万年前</span>
+                                <span class="bg-cretaceous/10 text-cretaceous px-3 py-1 rounded-full text-sm font-medium">
+                                    持续约0.79亿年
+                                </span>
+                            </div>
+                            <p class="mb-4">恐龙种类达到顶峰（如霸王龙、三角龙），开花植物（被子植物）迅速演化，海洋中沧龙和蛇颈龙称霸。末期发生白垩纪-古近纪灭绝事件（K-Pg灭绝），恐龙（除鸟类外）灭绝，小行星撞击被认为是主因。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">恐龙灭绝</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">被子植物</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">沧龙</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">小行星撞击</span>
+                            </div>
+                            <button class="read-more-btn bg-cretaceous hover:bg-cretaceous/90 text-white px-4 py-2 rounded-md transition-all duration-300 flex items-center">
+                                <span><a href="白垩纪/白垩纪.html" target="_blank">了解更多</a></span>
+                                <i class="fa fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 古近纪 -->
+                <div class="period-card bg-paleogene text-white rounded-xl overflow-hidden shadow-xl" data-era="cenozoic">
+                    <div class="md:flex">
+                        <div class="md:w-1/3 p-6 md:p-8 flex items-center justify-center bg-paleogene/90">
+                            <h2 class="text-2xl md:text-3xl font-bold period-title">古近纪<br>Paleogene</h2>
+                        </div>
+                        <div class="md:w-2/3 p-6 md:p-8 bg-white text-gray-800">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="font-bold text-lg">6600万年前 - 2303万年前</span>
+                                <span class="bg-paleogene/10 text-paleogene px-3 py-1 rounded-full text-sm font-medium">
+                                    持续约0.43亿年
+                                </span>
+                            </div>
+                            <p class="mb-4">哺乳动物（如始祖马、恐角兽）和鸟类快速辐射演化，被子植物成为优势植被，板块运动活跃（如印度与欧亚大陆碰撞形成喜马拉雅山脉）。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">哺乳动物</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">被子植物</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">喜马拉雅</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">气候变暖</span>
+                            </div>
+                            <button class="read-more-btn bg-paleogene hover:bg-paleogene/90 text-white px-4 py-2 rounded-md transition-all duration-300 flex items-center">
+                                <span><a href="古近纪/古近纪.html" target="_blank">了解更多</a></span>
+                                <i class="fa fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 新近纪 -->
+                <div class="period-card bg-neogene text-white rounded-xl overflow-hidden shadow-xl" data-era="cenozoic">
+                    <div class="md:flex">
+                        <div class="md:w-1/3 p-6 md:p-8 flex items-center justify-center bg-neogene/90">
+                            <h2 class="text-2xl md:text-3xl font-bold period-title">新近纪<br>Neogene</h2>
+                        </div>
+                        <div class="md:w-2/3 p-6 md:p-8 bg-white text-gray-800">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="font-bold text-lg">2303万年前 - 260万年前</span>
+                                <span class="bg-neogene/10 text-neogene px-3 py-1 rounded-full text-sm font-medium">
+                                    持续约0.2亿年
+                                </span>
+                            </div>
+                            <p class="mb-4">哺乳动物进一步多样化（如长颈鹿、象类），人类祖先（如南方古猿）开始出现，草原生态系统扩展，冰川期逐渐来临。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">哺乳动物</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">人类祖先</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">草原</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">冰川期</span>
+                            </div>
+                            <button class="read-more-btn bg-neogene hover:bg-neogene/90 text-white px-4 py-2 rounded-md transition-all duration-300 flex items-center">
+                                <span><a href="新近纪/新近纪.html" target="_blank">了解更多</a></span>
+                                <i class="fa fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 第四纪 -->
+                <div class="period-card bg-quaternary text-white rounded-xl overflow-hidden shadow-xl" data-era="cenozoic">
+                    <div class="md:flex">
+                        <div class="md:w-1/3 p-6 md:p-8 flex items-center justify-center bg-quaternary/90">
+                            <h2 class="text-2xl md:text-3xl font-bold period-title">第四纪<br>Quaternary</h2>
+                        </div>
+                        <div class="md:w-2/3 p-6 md:p-8 bg-white text-gray-800">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="font-bold text-lg">260万年前 - 至今</span>
+                                <span class="bg-quaternary/10 text-quaternary px-3 py-1 rounded-full text-sm font-medium">
+                                    持续约0.026亿年
+                                </span>
+                            </div>
+                            <p class="mb-4">频繁的冰川期与间冰期交替，现代人类（智人）出现并扩散，农业文明兴起，目前处于全新世（约1.17万年前至今），人类活动对地球环境影响显著。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">人类演化</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">冰川作用</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">全新世</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">人类世</span>
+                            </div>
+                            <button class="read-more-btn bg-quaternary hover:bg-quaternary/90 text-white px-4 py-2 rounded-md transition-all duration-300 flex items-center">
+                                <span><a href="第四纪/第四纪.html" target="_blank">了解更多</a></span>
+                                <i class="fa fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 回到顶部按钮 -->
+        <button id="back-to-top" class="fixed bottom-6 right-6 bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-full shadow-lg transition-all duration-300 opacity-0 invisible">
+            <i class="fa fa-arrow-up"></i>
+        </button>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <h2 class="text-2xl font-bold mb-2">地质年代时间轴</h2>
+                    <p class="text-gray-400">探索地球46亿年的漫长历史</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+                        <i class="fa fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+                        <i class="fa fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+                        <i class="fa fa-envelope text-xl"></i>
+                    </a>
+                </div>
+            </div>
+       
+        </div>
+    </footer>
+
+
+
+    <!-- JavaScript -->
+    <script>
+        // 地质年代数据
+        
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', () => {
+            // 过滤器按钮事件
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // 移除所有按钮的活动状态
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('bg-indigo-600', 'text-white');
+                        btn.classList.add('hover:bg-gray-100');
+                    });
+                    
+                    // 添加当前按钮的活动状态
+                    button.classList.add('bg-indigo-600', 'text-white');
+                    button.classList.remove('hover:bg-gray-100');
+                    
+                    // 获取过滤值
+                    const filterValue = button.id.split('-')[1];
+                    
+                    // 过滤时间轴项目
+                    filterTimelineItems(filterValue);
+                });
+            });
+            
+
+            
+            // 关闭弹窗按钮事件
+            document.getElementById('close-modal').addEventListener('click', () => {
+                closeModal();
+            });
+            
+            // 点击弹窗外部关闭弹窗
+            document.getElementById('detail-modal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('detail-modal')) {
+                    closeModal();
+                }
+            });
+            
+            // 键盘ESC关闭弹窗
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+            
+            // 回到顶部按钮
+            const backToTopButton = document.getElementById('back-to-top');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopButton.classList.remove('opacity-0', 'invisible');
+                    backToTopButton.classList.add('opacity-100', 'visible');
+                } else {
+                    backToTopButton.classList.add('opacity-0', 'invisible');
+                    backToTopButton.classList.remove('opacity-100', 'visible');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // 过滤时间轴项目
+        function filterTimelineItems(filterValue) {
+            const timelineItems = document.querySelectorAll('.period-card');
+            
+            timelineItems.forEach(item => {
+                const era = item.dataset.era;
+                
+                if (filterValue === 'all') {
+                    item.style.display = 'block';
+                } else if (filterValue === 'paleozoic' && era === 'paleozoic' ) {
+                    item.style.display = 'block';
+                } else if (filterValue === 'mesozoic' && era === 'mesozoic') {
+                    item.style.display = 'block';
+                } else if (filterValue === 'cenozoic' && era === 'cenozoic') {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+
+    </script>
+</body>
+</html>
+    

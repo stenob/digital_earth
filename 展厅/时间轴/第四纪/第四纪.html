@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第四纪地质时代 - 交互式展示</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <link rel="stylesheet" href="第四纪.css">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            z-index: 100;
+        }
+        #timeline {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            z-index: 100;
+        }
+        .timeline-item {
+            display: inline-block;
+            margin: 0 10px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .timeline-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h2>第四纪地质时代</h2>
+        <p>第四纪是地质年代中最新的一个纪，开始于约258万年前，一直持续到现在。这一时期以冰期-间冰期循环为特征，见证了现代人类的演化和发展。</p>
+        <div class="period-info">
+            <h3>更新世（258万年前 - 1.17万年前）</h3>
+            <p>• 多次冰期-间冰期循环</p>
+            <p>• 大型哺乳动物繁盛</p>
+            <p>• 人类开始出现并演化</p>
+        </div>
+        <div class="period-info">
+            <h3>全新世（1.17万年前 - 现在）</h3>
+            <p>• 气候相对稳定</p>
+            <p>• 人类文明快速发展</p>
+            <p>• 现代生态系统形成</p>
+        </div>
+    </div>
+    <div id="timeline">
+        <div class="timeline-item" data-period="pleistocene">更新世</div>
+        <div class="timeline-item" data-period="holocene">全新世</div>
+    </div>
+    <div id="loading">加载中...</div>
+    <script src="第四纪.js"></script>
+</body>
+</html>

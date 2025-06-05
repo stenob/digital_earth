@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>泥盆纪 - 地质年代探索</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B4513', // 泥土色调
+                        secondary: '#1E3A8A', // 海洋蓝
+                        accent: '#D97706', // 珊瑚橙
+                        dark: '#1F2937',
+                        light: '#F9FAFB'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .text-shadow-lg {
+                text-shadow: 0 4px 8px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.08);
+            }
+            .animate-float {
+                animation: float 6s ease-in-out infinite;
+            }
+            .animate-float-slow {
+                animation: float 8s ease-in-out infinite;
+            }
+            .animate-float-fast {
+                animation: float 4s ease-in-out infinite;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-light text-dark antialiased">
+    <!-- 导航栏 -->
+    <header id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-transparent">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <a href="#" class="flex items-center space-x-2">
+                    <span class="text-2xl font-bold text-primary">泥盆纪探索</span>
+                </a>
+                
+                <!-- 桌面导航 -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#overview" class="text-dark hover:text-primary transition-colors font-medium">概述</a>
+                    <a href="#geology" class="text-dark hover:text-primary transition-colors font-medium">地质特征</a>
+                    <a href="#life" class="text-dark hover:text-primary transition-colors font-medium">生物演化</a>
+                    <a href="#timeline" class="text-dark hover:text-primary transition-colors font-medium">年代划分</a>
+                    <a href="#interactive" class="text-dark hover:text-primary transition-colors font-medium">互动探索</a>
+                </nav>
+                
+                <!-- 移动端菜单按钮 -->
+                <button id="menu-toggle" class="md:hidden text-dark hover:text-primary focus:outline-none">
+                    <i class="fa fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div id="mobile-menu" class="md:hidden bg-white shadow-lg absolute w-full left-0 top-full transform -translate-y-full opacity-0 transition-all duration-300 pointer-events-none">
+            <div class="container mx-auto px-4 py-3">
+                <nav class="flex flex-col space-y-3">
+                    <a href="#overview" class="text-dark hover:text-primary py-2 transition-colors">概述</a>
+                    <a href="#geology" class="text-dark hover:text-primary py-2 transition-colors">地质特征</a>
+                    <a href="#life" class="text-dark hover:text-primary py-2 transition-colors">生物演化</a>
+                    <a href="#timeline" class="text-dark hover:text-primary py-2 transition-colors">年代划分</a>
+                    <a href="#interactive" class="text-dark hover:text-primary py-2 transition-colors">互动探索</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-gradient-to-b from-secondary/80 to-primary/80 mix-blend-overlay"></div>
+            <img src="鱼类.jpg" alt="泥盆纪时期的地球景观" class="w-full h-full object-cover">
+        </div>
+        
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <h1 class="text-[clamp(2.5rem,6vw,5rem)] font-bold text-white mb-6 leading-tight text-shadow-lg">
+                泥盆纪<span class="text-accent"> - 鱼类的时代</span>
+            </h1>
+            <p class="text-[clamp(1rem,2vw,1.5rem)] text-white/90 max-w-3xl mx-auto mb-10 text-shadow">
+                探索距今4.19亿至3.59亿年前的古生代地质时期，见证地球历史上最重要的生物演化事件之一
+            </p>
+            <a href="#overview" class="inline-block bg-accent hover:bg-accent/90 text-white font-semibold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300">
+                开始探索 <i class="fa fa-arrow-down ml-2"></i>
+            </a>
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#overview" class="text-white/80 hover:text-white">
+                <i class="fa fa-angle-down text-3xl"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- 概述部分 -->
+    <section id="overview" class="py-24 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,4vw,3rem)] font-bold text-dark mb-4">泥盆纪概述</h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">泥盆纪是地球历史上的一个重要时期，以丰富的鱼类化石而闻名，也是陆生植物和脊椎动物登陆的关键时期。</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-semibold text-primary">地质年代位置</h3>
+                    <p class="text-gray-700">泥盆纪属于古生代，约开始于4.19亿年前，结束于3.59亿年前，持续约6000万年。它分为早、中、晚三个世，是古生代的第四个纪，前为志留纪，后为石炭纪。</p>
+                    
+                    <h3 class="text-2xl font-semibold text-primary">命名由来</h3>
+                    <p class="text-gray-700">泥盆纪的名称来源于英国德文郡（Devon），1839年，地质学家亚当·塞奇威克和罗德里克·默奇森在德文郡发现了该时期的典型地层，并以该地区命名。</p>
+                    
+                    <h3 class="text-2xl font-semibold text-primary">关键事件</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fa fa-circle text-accent mt-1 mr-3 text-sm"></i>
+                            <span>鱼类的多样化发展，被称为"鱼类的时代"</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-circle text-accent mt-1 mr-3 text-sm"></i>
+                            <span>陆生植物的大规模扩张和森林的形成</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-circle text-accent mt-1 mr-3 text-sm"></i>
+                            <span>最早的两栖动物出现，标志着脊椎动物登陆</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-circle text-accent mt-1 mr-3 text-sm"></i>
+                            <span>末期发生了大规模灭绝事件，影响了海洋生物</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="relative">
+                    <div class="absolute -top-6 -left-6 w-24 h-24 bg-accent/20 rounded-lg z-0"></div>
+                    <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-primary/20 rounded-lg z-0"></div>
+                    <img src="板块.jpg" alt="泥盆纪地球模拟图" class="rounded-lg shadow-xl relative z-10 w-full object-cover h-[500px]">
+                    <div class="absolute top-1/2 right-0 transform translate-x-1/4 -translate-y-1/2 bg-white p-4 rounded-lg shadow-lg z-20 max-w-[200px] animate-float">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <i class="fa fa-globe text-secondary text-xl"></i>
+                            <span class="font-semibold">超级大陆</span>
+                        </div>
+                        <p class="text-sm text-gray-600">泥盆纪时期，劳亚大陆和冈瓦纳大陆逐渐靠近，形成了未来的盘古大陆。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 地质特征部分 -->
+    <section id="geology" class="py-24 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,4vw,3rem)] font-bold text-dark mb-4">地质特征</h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">泥盆纪时期的地球经历了显著的地质变化，形成了独特的岩石记录和地貌特征。</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- 大陆与海洋 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <div class="h-48 overflow-hidden">
+                        <img src="分布.jpg" alt="泥盆纪大陆与海洋分布" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3 text-primary">大陆与海洋分布</h3>
+                        <p class="text-gray-700 mb-4">泥盆纪时期，地球上的大陆主要分为两个超级大陆：北半球的劳亚大陆和南半球的冈瓦纳大陆。海洋占据了地球表面的大部分，包括古特提斯洋和古太平洋。</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="fa fa-map-marker text-secondary mr-2"></i>
+                            <span>主要大陆：劳伦西亚、波罗的海、西伯利亚、冈瓦纳</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 地层与化石 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <div class="h-48 overflow-hidden">
+                        <img src="化石.jpg" alt="泥盆纪地层与化石" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3 text-primary">地层与化石记录</h3>
+                        <p class="text-gray-700 mb-4">泥盆纪的地层以砂岩、页岩和石灰岩为主，富含鱼类化石，尤其是盾皮鱼和硬骨鱼。此外，珊瑚礁、腕足动物和三叶虫的化石也很常见。</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="fa fa-database text-secondary mr-2"></i>
+                            <span>典型岩石：老红砂岩、泥盆纪石灰岩</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 气候与环境 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <div class="h-48 overflow-hidden">
+                        <img src="环境.jpg" alt="泥盆纪气候与环境" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3 text-primary">气候与环境</h3>
+                        <p class="text-gray-700 mb-4">泥盆纪早期气候温暖湿润，有利于陆生植物的发展。晚期气候逐渐变冷，可能与大陆漂移和冰川作用有关。海洋环境多样，珊瑚礁生态系统繁荣。</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="fa fa-thermometer-half text-secondary mr-2"></i>
+                            <span>平均温度：约20-25°C（早期）</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 地质事件时间线 -->
+            <div class="mt-20">
+                <h3 class="text-2xl font-semibold text-center mb-12">重要地质事件时间线</h3>
+                
+                <div class="relative">
+                    <!-- 中央线 -->
+                    <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-primary/30 z-0"></div>
+                    
+                    <!-- 事件1 -->
+                    <div class="relative z-10 mb-16 flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-12 md:text-right mb-8 md:mb-0">
+                            <h4 class="text-xl font-semibold text-primary mb-2">劳伦西亚与波罗的海大陆碰撞</h4>
+                            <p class="text-gray-700">形成了阿巴拉契亚山脉和加里东山脉，这一过程被称为加里东造山运动。</p>
+                        </div>
+                        <div class="bg-primary w-8 h-8 rounded-full border-4 border-white shadow-lg flex items-center justify-center z-20">
+                            
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 md:text-left mt-8 md:mt-0"></div>
+                    </div>
+                    
+                    <!-- 事件2 -->
+                    <div class="relative z-10 mb-16 flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-12 md:text-right mb-8 md:mb-0 order-2 md:order-1"></div>
+                        <div class="bg-primary w-8 h-8 rounded-full border-4 border-white shadow-lg flex items-center justify-center z-20 order-2 md:order-1">
+                            
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 md:text-left mt-8 md:mt-0 order-3 md:order-3">
+                            <h4 class="text-xl font-semibold text-primary mb-2">陆生植物大发展</h4>
+                            <p class="text-gray-700">早期维管植物逐渐演化出根系和叶片，形成了最早的森林，改变了地球的面貌。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 事件3 -->
+                    <div class="relative z-10 mb-16 flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-12 md:text-right mb-8 md:mb-0">
+                            <h4 class="text-xl font-semibold text-primary mb-2">巨型鱼的出现</h4>
+                            <p class="text-gray-700">如邓氏鱼等大型掠食性鱼类成为海洋中的顶级捕食者，体长可达10米以上。</p>
+                        </div>
+                        <div class="bg-primary w-8 h-8 rounded-full border-4 border-white shadow-lg flex items-center justify-center z-20">
+                            
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 md:text-left mt-8 md:mt-0"></div>
+                    </div>
+                    
+                    <!-- 事件4 -->
+                    <div class="relative z-10 flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-12 md:text-right mb-8 md:mb-0 order-2 md:order-1"></div>
+                        <div class="bg-primary w-8 h-8 rounded-full border-4 border-white shadow-lg flex items-center justify-center z-20 order-2 md:order-1">
+                            
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 md:text-left mt-8 md:mt-0 order-3 md:order-3">
+                            <h4 class="text-xl font-semibold text-primary mb-2">泥盆纪末灭绝事件</h4>
+                            <p class="text-gray-700">约75%的海洋物种灭绝，可能与全球变冷、海洋酸化或小行星撞击有关。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 生物演化部分 -->
+    <section id="life" class="py-24 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,4vw,3rem)] font-bold text-dark mb-4">生物演化</h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">泥盆纪是生物多样性爆发的时期，尤其是鱼类的多样化发展，同时见证了陆生植物和脊椎动物的重要演化。</p>
+            </div>
+            
+            <!-- 海洋生物 -->
+            <div class="mb-20">
+                <h3 class="text-2xl font-semibold text-primary mb-8">海洋生物</h3>
+                
+                <div class="grid md:grid-cols-2 gap-10 items-center">
+                    <div class="relative">
+                        <div class="absolute -top-4 -left-4 w-20 h-20 bg-accent/10 rounded-lg z-0"></div>
+                        <img src="海洋.jpg" alt="泥盆纪海洋生物复原图" class="rounded-lg shadow-lg relative z-10 w-full">
+                        
+                        <div class="absolute top-10 left-10 bg-white/90 p-3 rounded-lg shadow-md z-20 max-w-[150px] animate-float-slow">
+                            <div class="flex items-center space-x-1 mb-1">
+                                <i class="fa fa-fish text-secondary"></i>
+                                <span class="font-medium">盾皮鱼</span>
+                            </div>
+                            <p class="text-xs text-gray-600">如邓氏鱼，是当时顶级掠食者</p>
+                        </div>
+                        
+                        <div class="absolute bottom-10 right-10 bg-white/90 p-3 rounded-lg shadow-md z-20 max-w-[150px] animate-float-fast">
+                            <div class="flex items-center space-x-1 mb-1">
+                                <i class="fa fa-star text-secondary"></i>
+                                <span class="font-medium">海星</span>
+                            </div>
+                            <p class="text-xs text-gray-600">已演化出多种形态</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <p class="text-gray-700">泥盆纪海洋生物极其丰富多样，尤其是鱼类的演化达到了一个高峰，因此被称为"鱼类的时代"。主要的鱼类包括盾皮鱼、棘鱼、软骨鱼和硬骨鱼。</p>
+                        
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h4 class="font-semibold text-lg mb-3 flex items-center">
+                                <i class="fa fa-fish text-secondary mr-3"></i>
+                                主要海洋生物类群
+                            </h4>
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <i class="fa fa-circle text-accent mt-1 mr-3 text-sm"></i>
+                                    <span><strong>盾皮鱼</strong>：有甲胄的鱼类，如邓氏鱼，是当时最大的海洋掠食者</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa fa-circle text-accent mt-1 mr-3 text-sm"></i>
+                                    <span><strong>硬骨鱼</strong>：包括肉鳍鱼和辐鳍鱼，是现代鱼类的祖先</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa fa-circle text-accent mt-1 mr-3 text-sm"></i>
+                                    <span><strong>三叶虫</strong>：继续繁荣，但种类逐渐减少</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa fa-circle text-accent mt-1 mr-3 text-sm"></i>
+                                    <span><strong>珊瑚</strong>：形成了广泛的珊瑚礁，为其他生物提供栖息地</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa fa-circle text-accent mt-1 mr-3 text-sm"></i>
+                                    <span><strong>头足类</strong>：菊石开始多样化发展</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="flex items-center justify-center mt-8">
+                            <button id="show-fish-info" class="bg-secondary hover:bg-secondary/90 text-white font-medium py-2 px-6 rounded-full shadow transition-all duration-300">
+                                了解更多海洋生物 <i class="fa fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 陆生生物 -->
+            <div>
+                <h3 class="text-2xl font-semibold text-primary mb-8">陆生生物</h3>
+                
+                <div class="grid md:grid-cols-2 gap-10 items-center">
+                    <div class="space-y-6">
+                        <p class="text-gray-700">泥盆纪见证了陆生植物和动物的重要演化。早期维管植物逐渐演化出根系和叶片，形成了最早的森林。昆虫和蛛形类动物开始在陆地上定居，而鱼类则逐渐演化出能够在陆地上生存的特征，最终导致了两栖动物的出现。</p>
+                        
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h4 class="font-semibold text-lg mb-3 flex items-center">
+                                <i class="fa fa-pagelines text-secondary mr-3"></i>
+                                陆生植物演化
+                            </h4>
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <i class="fa fa-circle text-accent mt-1 mr-3 text-sm"></i>
+                                    <span><strong>裸蕨植物</strong>：如莱尼蕨，是最早的陆生维管植物</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa fa-circle text-accent mt-1 mr-3 text-sm"></i>
+                                    <span><strong>石松类</strong>：开始出现，是现代石松和卷柏的祖先</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa fa-circle text-accent mt-1 mr-3 text-sm"></i>
+                                    <span><strong>蕨类植物</strong>：逐渐多样化，成为森林的重要组成部分</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa fa-circle text-accent mt-1 mr-3 text-sm"></i>
+                                    <span><strong>种子植物</strong>：最早的种子植物在泥盆纪晚期出现</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h4 class="font-semibold text-lg mb-3 flex items-center">
+                                <i class="fa fa-paw text-secondary mr-3"></i>
+                                陆生动物演化
+                            </h4>
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <i class="fa fa-circle text-accent mt-1 mr-3 text-sm"></i>
+                                    <span><strong>节肢动物</strong>：昆虫和蛛形类开始在陆地上生活</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa fa-circle text-accent mt-1 mr-3 text-sm"></i>
+                                    <span><strong>四足动物</strong>：肉鳍鱼逐渐演化出四肢，成为最早的两栖动物</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa fa-circle text-accent mt-1 mr-3 text-sm"></i>
+                                    <span><strong>鱼石螈</strong>：泥盆纪晚期的四足动物，具有鱼类和两栖动物的特征</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="relative">
+                        <div class="absolute -bottom-4 -right-4 w-20 h-20 bg-accent/10 rounded-lg z-0"></div>
+                        <img src="陆地.jpg" alt="泥盆纪陆生生态系统复原图" class="rounded-lg shadow-lg relative z-10 w-full">
+                        
+                        <div class="absolute top-10 right-10 bg-white/90 p-3 rounded-lg shadow-md z-20 max-w-[150px] animate-float-slow">
+                            <div class="flex items-center space-x-1 mb-1">
+                                <i class="fa fa-tree text-secondary"></i>
+                                <span class="font-medium">裸蕨植物</span>
+                            </div>
+                            <p class="text-xs text-gray-600">最早的陆生维管植物</p>
+                        </div>
+                        
+                        <div class="absolute bottom-10 left-10 bg-white/90 p-3 rounded-lg shadow-md z-20 max-w-[150px] animate-float-fast">
+                            <div class="flex items-center space-x-1 mb-1">
+                                <i class="fa fa-paw text-secondary"></i>
+                                <span class="font-medium">鱼石螈</span>
+                            </div>
+                            <p class="text-xs text-gray-600">早期四足动物</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 年代划分部分 -->
+    <section id="timeline" class="py-24 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,4vw,3rem)] font-bold text-dark mb-4">年代划分</h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">泥盆纪分为三个世和多个阶，每个阶段都有其独特的地质和生物特征。</p>
+            </div>
+            
+            <!-- 泥盆纪世阶图表 -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-12">
+                <h3 class="text-xl font-semibold mb-6 text-primary">泥盆纪地层划分</h3>
+                <div class="h-[400px]">
+                    <canvas id="devonianTimelineChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- 详细划分 -->
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- 早泥盆世 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="h-40 bg-primary/10 flex items-center justify-center">
+                        <h3 class="text-2xl font-bold text-primary">早泥盆世</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-700 mb-4">约4.19亿至3.93亿年前，持续约2600万年。这一时期的特征是陆生植物的出现和海洋生物的复苏。</p>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-semibold mb-2">主要阶</h4>
+                            <ul class="space-y-2">
+                                <li class="flex items-center">
+                                    <span class="w-3 h-3 bg-accent rounded-full mr-2"></span>
+                                    <span>洛赫科夫阶 (4.19-4.10亿年前)</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <span class="w-3 h-3 bg-accent rounded-full mr-2"></span>
+                                    <span>布拉格阶 (4.10-4.07亿年前)</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <span class="w-3 h-3 bg-accent rounded-full mr-2"></span>
+                                    <span>埃姆斯阶 (4.07-3.93亿年前)</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-semibold mb-2 flex items-center">
+                                <i class="fa fa-info-circle text-secondary mr-2"></i>
+                                重要事件
+                            </h4>
+                            <p class="text-sm text-gray-700">最早的陆生植物出现，海洋中盾皮鱼和棘鱼开始多样化。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 中泥盆世 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="h-40 bg-primary/20 flex items-center justify-center">
+                        <h3 class="text-2xl font-bold text-primary">中泥盆世</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-700 mb-4">约3.93亿至3.83亿年前，持续约1000万年。这一时期的特征是陆生植物的繁荣和鱼类的进一步演化。</p>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-semibold mb-2">主要阶</h4>
+                            <ul class="space-y-2">
+                                <li class="flex items-center">
+                                    <span class="w-3 h-3 bg-accent rounded-full mr-2"></span>
+                                    <span>埃费尔阶 (3.93-3.88亿年前)</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <span class="w-3 h-3 bg-accent rounded-full mr-2"></span>
+                                    <span>吉维特阶 (3.88-3.83亿年前)</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-semibold mb-2 flex items-center">
+                                <i class="fa fa-info-circle text-secondary mr-2"></i>
+                                重要事件
+                            </h4>
+                            <p class="text-sm text-gray-700">森林开始形成，肉鳍鱼和辐鳍鱼分化，珊瑚礁广泛发育。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 晚泥盆世 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="h-40 bg-primary/30 flex items-center justify-center">
+                        <h3 class="text-2xl font-bold text-primary">晚泥盆世</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-700 mb-4">约3.83亿至3.59亿年前，持续约2400万年。这一时期的特征是鱼类的鼎盛和末期的大规模灭绝事件。</p>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-semibold mb-2">主要阶</h4>
+                            <ul class="space-y-2">
+                                <li class="flex items-center">
+                                    <span class="w-3 h-3 bg-accent rounded-full mr-2"></span>
+                                    <span>弗拉斯阶 (3.83-3.72亿年前)</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <span class="w-3 h-3 bg-accent rounded-full mr-2"></span>
+                                    <span>法门阶 (3.72-3.59亿年前)</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-semibold mb-2 flex items-center">
+                                <i class="fa fa-info-circle text-secondary mr-2"></i>
+                                重要事件
+                            </h4>
+                            <p class="text-sm text-gray-700">巨型鱼类如邓氏鱼出现，最早的两栖动物出现，末期发生大规模灭绝事件。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 互动探索部分 -->
+    <section id="interactive" class="py-24 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,4vw,3rem)] font-bold text-dark mb-4">互动探索</h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">通过这些互动工具，深入了解泥盆纪的生物多样性和地质特征。</p>
+            </div>
+            
+            <!-- 泥盆纪生物图鉴 -->
+            <div class="mb-20">
+                <h3 class="text-2xl font-semibold text-primary mb-8">泥盆纪生物图鉴</h3>
+                
+                <div class="grid md:grid-cols-4 gap-6">
+                    <!-- 生物1 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer">
+                        <div class="h-48 overflow-hidden relative">
+                            <img src="邓氏鱼.jpg" alt="邓氏鱼" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                                <h4 class="text-white font-semibold p-4">邓氏鱼</h4>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-sm text-gray-700">盾皮鱼纲，生存于约3.8亿至3.6亿年前，体长可达10米，是泥盆纪最大的海洋掠食者。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 生物2 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer">
+                        <div class="h-48 overflow-hidden relative">
+                            <img src="沟鳞鱼.jpg" alt="沟鳞鱼" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                                <h4 class="text-white font-semibold p-4">沟鳞鱼</h4>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-sm text-gray-700">盾皮鱼纲，生存于约3.8亿年前，身体覆盖着厚重的骨甲，是泥盆纪常见的底栖鱼类。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 生物3 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer">
+                        <div class="h-48 overflow-hidden relative">
+                            <img src="真掌鳍鱼.jpg" alt="真掌鳍鱼" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                                <h4 class="text-white font-semibold p-4">真掌鳍鱼</h4>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-sm text-gray-700">肉鳍鱼纲，生存于约3.8亿年前，具有类似四肢的鳍结构，被认为是四足动物的祖先。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 生物4 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer">
+                        <div class="h-48 overflow-hidden relative">
+                            <img src="鱼石螈.jpg" alt="鱼石螈" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                                <h4 class="text-white font-semibold p-4">鱼石螈</h4>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-sm text-gray-700">四足形亚纲，生存于约3.65亿年前，是最早的两栖动物之一，具有鱼类和两栖动物的混合特征。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-8">
+                    <button id="load-more-species" class="bg-accent hover:bg-accent/90 text-white font-medium py-2 px-6 rounded-full shadow transition-all duration-300">
+                        加载更多物种 <i class="fa fa-refresh ml-2"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 生物演化时间线 -->
+            <div>
+                <h3 class="text-2xl font-semibold text-primary mb-8">生物演化时间线（生物演化关键节点）</h3>
+                
+                <div class="bg-gray-50 rounded-xl shadow-lg p-6">
+                    <div class="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
+                        <div class="md:w-1/4">
+                            <div class="bg-white rounded-lg shadow p-4 h-full">
+                                <h4 class="font-semibold mb-4">演化类别</h4>
+                                <div class="space-y-3">
+                                    <button class="timeline-filter w-full text-left py-2 px-3 rounded-lg hover:bg-gray-100 transition-colors" data-category="all">
+                                        <i class="fa fa-check-square-o text-secondary mr-2"></i> 全部
+                                    </button>
+                                    <button class="timeline-filter w-full text-left py-2 px-3 rounded-lg hover:bg-gray-100 transition-colors" data-category="fish">
+                                        <i class="fa fa-fish text-secondary mr-2"></i> 鱼类
+                                    </button>
+                                    <button class="timeline-filter w-full text-left py-2 px-3 rounded-lg hover:bg-gray-100 transition-colors" data-category="plant">
+                                        <i class="fa fa-pagelines text-secondary mr-2"></i> 植物
+                                    </button>
+                                    <button class="timeline-filter w-full text-left py-2 px-3 rounded-lg hover:bg-gray-100 transition-colors" data-category="amphibian">
+                                        <i class="fa fa-paw text-secondary mr-2"></i> 两栖动物
+                                    </button>
+                                    <button class="timeline-filter w-full text-left py-2 px-3 rounded-lg hover:bg-gray-100 transition-colors" data-category="invertebrate">
+                                        <i class="fa fa-bug text-secondary mr-2"></i> 无脊椎动物
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="md:w-3/4">
+                            <div class="bg-white rounded-lg shadow p-4 h-full">
+                                <h4 class="font-semibold mb-4">演化事件时间线</h4>
+                                <div id="evolution-timeline" class="relative h-[400px] overflow-hidden">
+                                    <!-- 时间线背景 -->
+                                    <div class="absolute inset-0 flex flex-col justify-between">
+                                        <div class="h-1 bg-gray-200 flex">
+                                            <div class="h-full w-1/3 bg-primary/20" data-time="4.19-3.93"></div>
+                                            <div class="h-full w-1/6 bg-primary/40" data-time="3.93-3.83"></div>
+                                            <div class="h-full w-1/2 bg-primary/60" data-time="3.83-3.59"></div>
+                                        </div>
+                                        <div class="flex justify-between text-xs text-gray-500">
+                                            <span>4.19亿年前</span>
+                                            <span>3.93亿年前</span>
+                                            <span>3.83亿年前</span>
+                                            <span>3.59亿年前</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 事件标记 -->
+                                    <div class="timeline-event absolute" style="left: 10%; top: 30%;" data-category="fish">
+                                        <div class="w-4 h-4 bg-secondary rounded-full cursor-pointer"></div>
+                                        <div class="absolute left-6 -translate-y-1/2 bg-white p-2 rounded-lg shadow-md max-w-[200px] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                            <div class="font-medium text-secondary">最早的盾皮鱼</div>
+                                            <div class="text-xs text-gray-600">约4.1亿年前出现</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="timeline-event absolute" style="left: 25%; top: 50%;" data-category="plant">
+                                        <div class="w-4 h-4 bg-green-500 rounded-full cursor-pointer"></div>
+                                        <div class="absolute left-6 -translate-y-1/2 bg-white p-2 rounded-lg shadow-md max-w-[200px] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                            <div class="font-medium text-green-500">最早的陆生植物</div>
+                                            <div class="text-xs text-gray-600">约4.05亿年前出现</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="timeline-event absolute" style="left: 40%; top: 20%;" data-category="fish">
+                                        <div class="w-4 h-4 bg-secondary rounded-full cursor-pointer"></div>
+                                        <div class="absolute left-6 -translate-y-1/2 bg-white p-2 rounded-lg shadow-md max-w-[200px] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                            <div class="font-medium text-secondary">肉鳍鱼出现</div>
+                                            <div class="text-xs text-gray-600">约3.9亿年前出现</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="timeline-event absolute" style="left: 50%; top: 60%;" data-category="invertebrate">
+                                        <div class="w-4 h-4 bg-purple-500 rounded-full cursor-pointer"></div>
+                                        <div class="absolute left-6 -translate-y-1/2 bg-white p-2 rounded-lg shadow-md max-w-[200px] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                            <div class="font-medium text-purple-500">陆生节肢动物</div>
+                                            <div class="text-xs text-gray-600">约3.85亿年前出现</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="timeline-event absolute" style="left: 65%; top: 35%;" data-category="fish">
+                                        <div class="w-4 h-4 bg-secondary rounded-full cursor-pointer"></div>
+                                        <div class="absolute left-6 -translate-y-1/2 bg-white p-2 rounded-lg shadow-md max-w-[200px] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                            <div class="font-medium text-secondary">邓氏鱼出现</div>
+                                            <div class="text-xs text-gray-600">约3.8亿年前出现</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="timeline-event absolute" style="left: 75%; top: 55%;" data-category="plant">
+                                        <div class="w-4 h-4 bg-green-500 rounded-full cursor-pointer"></div>
+                                        <div class="absolute left-6 -translate-y-1/2 bg-white p-2 rounded-lg shadow-md max-w-[200px] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                            <div class="font-medium text-green-500">种子植物出现</div>
+                                            <div class="text-xs text-gray-600">约3.7亿年前出现</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="timeline-event absolute" style="left: 85%; top: 25%;" data-category="amphibian">
+                                        <div class="w-4 h-4 bg-orange-500 rounded-full cursor-pointer"></div>
+                                        <div class="absolute left-6 -translate-y-1/2 bg-white p-2 rounded-lg shadow-md max-w-[200px] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                            <div class="font-medium text-orange-500">最早的两栖动物</div>
+                                            <div class="text-xs text-gray-600">约3.65亿年前出现</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">泥盆纪探索</h3>
+                    <p class="text-gray-400 mb-4">探索地球历史上的重要时期，了解泥盆纪的地质特征和生物演化。</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">快速链接</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#overview" class="text-gray-400 hover:text-white transition-colors">概述</a></li>
+                        <li><a href="#geology" class="text-gray-400 hover:text-white transition-colors">地质特征</a></li>
+                        <li><a href="#life" class="text-gray-400 hover:text-white transition-colors">生物演化</a></li>
+                        <li><a href="#timeline" class="text-gray-400 hover:text-white transition-colors">年代划分</a></li>
+                        <li><a href="#interactive" class="text-gray-400 hover:text-white transition-colors">互动探索</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">相关资源</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">古生物数据库</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">地质年代表</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">泥盆纪化石图鉴</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">学术研究论文</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">博物馆展览</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            
+        </div>
+    </footer>
+
+    <!-- 模态框 -->
+    <div id="fish-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold text-primary" id="modal-title">海洋生物详情</h3>
+                    <button id="close-modal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div id="modal-content">
+                    <!-- 模态框内容将通过JavaScript动态加载 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 导航栏滚动效果
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-white', 'shadow-md');
+                navbar.classList.remove('bg-transparent');
+            } else {
+                navbar.classList.remove('bg-white', 'shadow-md');
+                navbar.classList.add('bg-transparent');
+            }
+        });
+        
+        // 移动端菜单切换
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuToggle.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('opacity-0')) {
+                mobileMenu.classList.remove('opacity-0', '-translate-y-full', 'pointer-events-none');
+                mobileMenu.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                menuToggle.innerHTML = '<i class="fa fa-times text-2xl"></i>';
+            } else {
+                mobileMenu.classList.add('opacity-0', '-translate-y-full', 'pointer-events-none');
+                mobileMenu.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                menuToggle.innerHTML = '<i class="fa fa-bars text-2xl"></i>';
+            }
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                // 如果是移动端菜单，点击后关闭
+                if (!mobileMenu.classList.contains('opacity-0')) {
+                    mobileMenu.classList.add('opacity-0', '-translate-y-full', 'pointer-events-none');
+                    mobileMenu.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                    menuToggle.innerHTML = '<i class="fa fa-bars text-2xl"></i>';
+                }
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // 泥盆纪时间线图表
+        const ctx = document.getElementById('devonianTimelineChart').getContext('2d');
+        const timelineChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['早泥盆世', '中泥盆世', '晚泥盆世'],
+                datasets: [{
+                    label: '持续时间 (百万年)',
+                    data: [26, 10, 24],
+                    backgroundColor: [
+                        'rgba(139, 69, 19, 0.6)',
+                        'rgba(139, 69, 19, 0.7)',
+                        'rgba(139, 69, 19, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(139, 69, 19, 1)',
+                        'rgba(139, 69, 19, 1)',
+                        'rgba(139, 69, 19, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: '百万年'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: '地质年代'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `持续时间: ${context.raw} 百万年`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 鱼类信息模态框
+        const fishModal = document.getElementById('fish-modal');
+        const closeModal = document.getElementById('close-modal');
+        const showFishInfo = document.getElementById('show-fish-info');
+        const modalTitle = document.getElementById('modal-title');
+        const modalContent = document.getElementById('modal-content');
+        
+        showFishInfo.addEventListener('click', () => {
+            modalTitle.textContent = '泥盆纪海洋生物多样性';
+            modalContent.innerHTML = `
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <img src="海洋生物.jpg" alt="泥盆纪海洋生物" class="rounded-lg w-full">
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-semibold mb-3">泥盆纪海洋生态系统</h4>
+                        <p class="text-gray-700 mb-4">泥盆纪海洋是一个充满活力和多样性的生态系统，尤其是鱼类的演化达到了一个高峰。这一时期的海洋生物包括：</p>
+                        
+                        <ul class="space-y-2 mb-4">
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-secondary mt-1 mr-3"></i>
+                                <span><strong>盾皮鱼</strong>：具有厚重骨甲的鱼类，如邓氏鱼，是当时的顶级掠食者</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-secondary mt-1 mr-3"></i>
+                                <span><strong>硬骨鱼</strong>：包括肉鳍鱼和辐鳍鱼，肉鳍鱼后来演化出四肢，成为陆生脊椎动物的祖先</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-secondary mt-1 mr-3"></i>
+                                <span><strong>软骨鱼</strong>：包括早期的鲨鱼，开始在海洋中占据重要地位</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-secondary mt-1 mr-3"></i>
+                                <span><strong>无脊椎动物</strong>：珊瑚、腕足动物、三叶虫和菊石等继续繁荣</span>
+                            </li>
+                        </ul>
+                        
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h5 class="font-semibold mb-2">生态系统变化</h5>
+                            <p class="text-sm text-gray-700">泥盆纪海洋生态系统的变化对后来的生物演化产生了深远影响。珊瑚礁的发展为许多生物提供了栖息地，而鱼类的多样化为脊椎动物登陆奠定了基础。</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            fishModal.classList.remove('opacity-0', 'pointer-events-none');
+            fishModal.querySelector('div').classList.remove('scale-95');
+            fishModal.querySelector('div').classList.add('scale-100');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        closeModal.addEventListener('click', () => {
+            fishModal.classList.add('opacity-0', 'pointer-events-none');
+            fishModal.querySelector('div').classList.remove('scale-100');
+            fishModal.querySelector('div').classList.add('scale-95');
+            document.body.style.overflow = '';
+        });
+        
+        // 点击模态框外部关闭
+        fishModal.addEventListener('click', (e) => {
+            if (e.target === fishModal) {
+                fishModal.classList.add('opacity-0', 'pointer-events-none');
+                fishModal.querySelector('div').classList.remove('scale-100');
+                fishModal.querySelector('div').classList.add('scale-95');
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // 加载更多物种按钮
+        const loadMoreSpecies = document.getElementById('load-more-species');
+        let speciesLoaded = false;
+        
+        loadMoreSpecies.addEventListener('click', () => {
+            if (!speciesLoaded) {
+                const speciesContainer = loadMoreSpecies.closest('section').querySelector('.grid');
+                const newSpecies = `
+                    
+                    
+                    <!-- 生物6 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer">
+                        <div class="h-48 overflow-hidden relative">
+                            <img src="粒骨鱼.jpg" alt="粒骨鱼" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                                <h4 class="text-white font-semibold p-4">粒骨鱼</h4>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-sm text-gray-700">肉鳍鱼纲，生存于约3.6亿年前，具有强壮的鳍骨，可能能够在浅水环境中移动。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 生物7 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer">
+                        <div class="h-48 overflow-hidden relative">
+                            <img src="初始全颌鱼.jpg" alt="初始全颌鱼" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                                <h4 class="text-white font-semibold p-4">初始全颌鱼</h4>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-sm text-gray-700">盾皮鱼纲，生存于约4.1亿年前，具有类似硬骨鱼的颌骨结构，是颌骨演化的关键物种。</p>
+                        </div>
+                    </div>
+                    
+                    
+                `;
+                
+                speciesContainer.innerHTML += newSpecies;
+                loadMoreSpecies.innerHTML = '加载完成 <i class="fa fa-check ml-2"></i>';
+                loadMoreSpecies.disabled = true;
+                loadMoreSpecies.classList.add('bg-gray-400', 'cursor-not-allowed');
+                loadMoreSpecies.classList.remove('bg-accent', 'hover:bg-accent/90');
+                speciesLoaded = true;
+            }
+        });
+        
+        // 演化时间线筛选
+        const timelineFilters = document.querySelectorAll('.timeline-filter');
+        const timelineEvents = document.querySelectorAll('.timeline-event');
+        
+        timelineFilters.forEach(filter => {
+            filter.addEventListener('click', () => {
+                // 移除所有筛选器的活动状态
+                timelineFilters.forEach(f => {
+                    f.classList.remove('bg-gray-100', 'font-medium');
+                });
+                
+                // 添加当前筛选器的活动状态
+                filter.classList.add('bg-gray-100', 'font-medium');
+                
+                const category = filter.getAttribute('data-category');
+                
+                // 筛选事件
+                timelineEvents.forEach(event => {
+                    if (category === 'all' || event.getAttribute('data-category') === category) {
+                        event.style.display = 'block';
+                    } else {
+                        event.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+    

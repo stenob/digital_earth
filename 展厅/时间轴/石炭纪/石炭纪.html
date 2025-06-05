@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>石炭纪地质重大事件与生物发展科普</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2563eb',
+            secondary: '#f97316',
+            dark: '#1e293b',
+            light: '#f8fafc'
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .timeline-item-active {
+        @apply bg-primary text-white;
+      }
+      .creature-card-selected {
+        @apply border-primary bg-blue-50;
+      }
+      .accordion-content-visible {
+        @apply max-h-96 opacity-100;
+      }
+    }
+  </style>
+</head>
+<body class="bg-light text-dark">
+  <!-- 导航栏 -->
+  <header class="sticky top-0 z-50 bg-white shadow-md transition-all duration-300">
+    <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <i class="fa fa-diamond text-primary text-2xl"></i>
+        <h1 class="text-xl md:text-2xl font-bold text-primary">石炭纪地质科普</h1>
+      </div>
+      <div class="hidden md:flex space-x-6">
+        <a href="#geological-events" class="text-dark hover:text-primary transition-colors">地质事件</a>
+        <a href="#biological-development" class="text-dark hover:text-primary transition-colors">生物发展</a>
+        <a href="#timeline" class="text-dark hover:text-primary transition-colors">时间轴</a>
+        <a href="#creature-comparison" class="text-dark hover:text-primary transition-colors">生物对比</a>
+        <a href="#event-simulation" class="text-dark hover:text-primary transition-colors">事件模拟</a>
+      </div>
+      <button id="mobile-menu-button" class="md:hidden text-dark">
+        <i class="fa fa-bars text-xl"></i>
+      </button>
+    </nav>
+    <!-- 移动端菜单 -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg absolute w-full">
+      <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
+        <a href="#geological-events" class="text-dark hover:text-primary py-2 transition-colors">地质事件</a>
+        <a href="#biological-development" class="text-dark hover:text-primary py-2 transition-colors">生物发展</a>
+        <a href="#timeline" class="text-dark hover:text-primary py-2 transition-colors">时间轴</a>
+        <a href="#creature-comparison" class="text-dark hover:text-primary py-2 transition-colors">生物对比</a>
+        <a href="#event-simulation" class="text-dark hover:text-primary py-2 transition-colors">事件模拟</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-8">
+    <!-- 英雄区域 -->
+    <section class="relative bg-gradient-to-r from-primary/90 to-dark text-white rounded-2xl p-8 mb-12 overflow-hidden">
+      <div class="absolute inset-0 opacity-20">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="w-full h-full">
+          <path d="M0,0 L100,0 L100,100 L0,100 Z" fill="url(#pattern)"></path>
+          <defs>
+            <pattern id="pattern" width="10" height="10" patternUnits="userSpaceOnUse">
+              <circle cx="5" cy="5" r="1" fill="white" opacity="0.5"></circle>
+            </pattern>
+          </defs>
+        </svg>
+      </div>
+      <div class="relative z-10 max-w-3xl mx-auto text-center">
+        <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-4">探索石炭纪：地球历史的重要篇章</h1>
+        <p class="text-[clamp(1rem,2vw,1.25rem)] mb-8 opacity-90">穿越时空，了解石炭纪的地质变迁与生命演化</p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a href="#geological-events" class="bg-white text-primary px-6 py-3 rounded-full font-medium hover:bg-opacity-90 transition-all transform hover:scale-105 shadow-lg">
+            探索地质事件 <i class="fa fa-compass ml-2"></i>
+          </a>
+          <a href="#timeline" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-full font-medium hover:bg-white/10 transition-all transform hover:scale-105">
+            时间轴之旅 <i class="fa fa-clock-o ml-2"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 地质重大事件部分 -->
+    <section id="geological-events" class="mb-16 scroll-mt-24">
+      <div class="text-center mb-8">
+        <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-2">地质重大事件</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">石炭纪时期地球发生的主要地质变化，塑造了当时的环境和生态系统</p>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- 板块运动与造山运动 -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-[1.02] transition-all duration-300">
+          <div class="p-6">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-primary">
+                <i class="fa fa-mountain text-xl"></i>
+              </div>
+              <h3 class="text-xl font-bold ml-4">板块运动与造山运动</h3>
+            </div>
+            <p class="text-gray-700 mb-4 editable-content">石炭纪时期，全球板块运动依旧活跃，深刻塑造着地球的地质格局。海西运动（又称华力西运动）在这一时期占据主导地位，它是晚古生代的主要地壳运动。在石炭纪早期，经过加里东运动褶皱、造山后的区域，转入相对稳静的阶段，但随后裂解运动逐渐兴起。到了石炭纪末至二叠纪，海西运动进入后半期，呈现出更为剧烈的态势。这一运动使得众多板块相互碰撞、聚合，诸多山脉在这一过程中拔地而起。乌拉尔山脉便是在此时，因俄罗斯地块和西伯利亚地块的碰撞拼接而逐渐形成，它宛如一道天然的屏障，分隔了东欧平原和西西伯利亚平原。同时，哈萨克斯坦、蒙古地区以及长白 - 兴安褶皱带、秦岭 - 昆仑褶皱带、祁连山、天山等山脉也在海西运动的作用下相继崛起。这些山脉的形成，极大地改变了地球的地形地貌，使得陆地的起伏更为显著，也对全球气候和生态系统产生了连锁反应。此外，石炭纪时期，劳亚古陆和冈瓦纳大陆继续漂移，两者之间的距离逐渐缩小，为后来盘古大陆的最终形成奠定了基础。</p>
+          </div>
+        </div>
+        
+        <!-- 海平面变化 -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-[1.02] transition-all duration-300">
+          <div class="p-6">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-primary">
+                <i class="fa fa-tint text-xl"></i>
+              </div>
+              <h3 class="text-xl font-bold ml-4">海平面变化</h3>
+            </div>
+            <p class="text-gray-700 mb-4 editable-content">石炭纪的海平面变化较为复杂，呈现出明显的波动特征。在石炭纪早期，全球气候相对温暖湿润，冰川的融化使得海平面逐渐上升。这一上升趋势为海洋生物的扩散和多样化创造了有利条件，浅海区域不断扩张，为各类海洋生物提供了更为广阔的栖息空间，促使海洋生态系统更加繁荣。然而，到了石炭纪中晚期，情况发生了转变。随着大陆面积的不断扩大以及板块运动引发的地形变化，海平面开始出现下降。海平面的下降导致浅海区域大面积缩减，许多依赖浅海环境生存的生物面临栖息地丧失的危机，一些生物种类甚至因此灭绝。同时，海平面的升降变化还影响了海洋与陆地之间的物质交换和能量流动，对全球气候和生态系统的稳定性产生了重要影响。</p>
+          </div>
+        </div>
+        
+        <!-- 火山活动 -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-[1.02] transition-all duration-300">
+          <div class="p-6">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-secondary">
+                <i class="fa fa-fire text-xl"></i>
+              </div>
+              <h3 class="text-xl font-bold ml-4">火山活动</h3>
+            </div>
+            <p class="text-gray-700 mb-4 editable-content">石炭纪时期，火山活动在全球范围内较为频繁。火山喷发宛如地球的 “愤怒咆哮”，将大量的火山气体（如二氧化硫、二氧化碳等）、火山灰和岩浆等物质释放到大气和地表环境中。这些火山物质对地球环境产生了多方面的影响。火山灰进入大气层后，犹如一层 “面纱”，阻挡了太阳辐射，使得地球表面接收的太阳热量减少，进而导致气温下降，对全球气候的稳定性造成冲击。同时，火山喷发带来的大量矿物质和营养物质进入海洋，如同给海洋生态系统注入了一剂 “强心针”，在一定程度上改变了海洋的化学性质和生态环境，为海洋生物的生存和演化带来了新的机遇与挑战。此外，在板块边界和俯冲带等区域，火山活动尤为活跃，它们与板块运动密切相关，共同塑造了地球的地质景观。例如，在一些地区，火山喷发形成的火山岛链或火山高原，成为了独特的地理标志。</p>
+          </div>
+        </div>
+        
+        <!-- 沉积环境变化 -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-[1.02] transition-all duration-300">
+          <div class="p-6">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                <i class="fa fa-database text-xl"></i>
+              </div>
+              <h3 class="text-xl font-bold ml-4">沉积环境变化</h3>
+            </div>
+            <p class="text-gray-700 mb-4 editable-content">石炭纪时期，沉积环境丰富多样，呈现出独特的面貌。在海洋环境中，浅海区域广泛分布着珊瑚礁和腕足动物等生物群落。珊瑚礁犹如海洋中的 “城市”，为众多海洋生物提供了栖息和繁衍的场所，其复杂的生态系统对海洋生态平衡起着重要作用。而腕足动物则在浅海底栖生物中占据重要地位，它们的壳体大量沉积，对沉积物的组成和性质产生了影响。在陆地上，石炭纪是植物大发展的时期，形成了广袤的森林。森林的出现不仅改变了陆地的景观，还对沉积环境产生了深远影响。植物的根系深入土壤，增强了土壤的稳定性，减少了水土流失。同时，植物的枯枝落叶等有机质大量堆积，经过漫长的地质作用，逐渐形成泥炭层。这些泥炭层在后续的地质历史时期，经过压实、碳化等过程，最终成为重要的煤炭资源。此外，河流、湖泊等淡水环境也在石炭纪时期进一步发展，为淡水生物的演化提供了适宜的条件。在河流入海口和湖泊周边，形成了丰富的三角洲和湖相沉积，这些沉积环境中保存了大量的化石，为我们了解石炭纪的生物和环境提供了珍贵的线索。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 生物发展情况部分 -->
+    <section id="biological-development" class="mb-16 scroll-mt-24">
+      <div class="text-center mb-8">
+        <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-2">生物发展情况</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">石炭纪时期地球上生物的演化与繁荣，见证了生命的多样性发展</p>
+      </div>
+      
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- 海洋生物的发展 -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden group">
+          <div class="h-48 bg-blue-200 relative overflow-hidden">
+            <img src="海洋生物.jpg" alt="石炭纪海洋生物" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <h3 class="text-white text-xl font-bold p-4">海洋生物的发展</h3>
+            </div>
+          </div>
+          <div class="p-6">
+            <p class="text-gray-700 mb-4 editable-content">石炭纪时期，海洋生物在延续泥盆纪发展的基础上，继续呈现出多样化的态势。在无脊椎动物方面，珊瑚和腕足类仍然是浅海底栖生物的重要组成部分。珊瑚通过分泌钙质骨骼，构建起庞大的珊瑚礁生态系统，为其他海洋生物提供了栖息和保护的场所。不同种类的珊瑚形态各异，有的呈树枝状，有的呈块状，它们共同营造出丰富多彩的海底景观。腕足动物则凭借其独特的壳体结构，在浅海海底大量繁衍。它们的壳体化石在石炭纪的地层中广泛分布，成为研究这一时期海洋生态的重要依据。此外，菊石在石炭纪的海洋中也十分繁盛。菊石由杆石目的角石演化而来，其壳内卷程度比鹦鹉螺更为复杂，且螺旋中心存在独立的胎壳。菊石凭借其灵活的身体结构和强大的适应能力，在海洋中迅速扩散，种类繁多，成为石炭纪海洋生态系统中的重要一环。在鱼类方面，硬骨鱼类继续进化，逐渐占据了海洋生态系统的主导地位。它们的身体结构更加适应海洋环境，鳍的形态和功能不断优化，使得它们在游泳速度和灵活性方面有了显著提升。一些硬骨鱼类逐渐向深海区域拓展生存空间，演化出了适应深海高压、低温环境的特征。</p>
+          </div>
+        </div>
+        
+        <!-- 陆地生物的繁荣 -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden group">
+          <div class="h-48 bg-green-200 relative overflow-hidden">
+            <img src="陆地生物.jpg" alt="石炭纪陆地生物" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <h3 class="text-white text-xl font-bold p-4">陆地生物的繁荣</h3>
+            </div>
+          </div>
+          <div class="p-6">
+            <p class="text-gray-700 mb-4 editable-content">石炭纪被誉为 “植物的时代”，陆地植物迎来了前所未有的繁荣。在石炭纪早期，裸蕨植物逐渐退出历史舞台，取而代之的是石松类、楔叶类、真蕨类和种子蕨类等孢子植物。这些植物生长茂盛，形成了壮观的森林景观。石松类植物中的鳞木，高大挺拔，树干直径可达 1 米以上，高度可达 30 - 40 米，它们的叶子呈螺旋状排列在树干上，宛如一把把巨大的绿伞。楔叶类植物中的芦木，茎干分节，节间中空，常常成片生长在沼泽地带，是石炭纪森林中的常见植物。真蕨类植物则凭借其复杂的叶片结构和高效的光合作用能力，在森林中占据了重要地位。到了石炭纪晚期，裸子植物中的苛达树开始出现。苛达树是一种高大的乔木，树干粗壮，枝叶繁茂，成为造煤的重要材料之一。这些植物的大量繁殖，不仅改变了陆地的生态景观，还对地球环境产生了深远影响。它们通过光合作用吸收大量的二氧化碳，释放出氧气，使得大气中的氧气含量逐渐升高，为陆生动物的发展创造了有利条件。随着陆地植物的繁荣，陆生动物也迎来了快速发展的时期。昆虫在石炭纪突然崛起，与当时茂盛的森林密切相关。已知石炭、二叠纪的昆虫种类就达 1300 种以上，蟑螂类和蜻蜓类等昆虫在这一时期十分常见。其中，巨脉蜻蜓堪称昆虫界的 “巨无霸”，其翼展可达 75 厘米甚至更大，是当时空中的霸主。它们凭借着强大的飞行能力和敏锐的视觉，在森林中捕食其他小型昆虫。此外，还有体长可达 2 米的巨型马陆，它们浑身布满坚硬的盔甲，在陆地上缓慢爬行，以植物的枯枝落叶为食，几乎没有天敌。在脊椎动物方面，两栖动物在石炭纪占据了统治地位。它们已经能够在陆地上生活，但还不能完全脱离水域环境。两栖动物的皮肤湿润，有助于呼吸和保持水分，它们的四肢逐渐适应了陆地行走，但在运动能力和适应干燥环境方面仍存在一定的局限性。然而，在石炭纪晚期，脊椎动物演化史上出现了一次重大飞跃，爬行动物开始出现。爬行动物的皮肤覆盖着角质鳞片，能够有效防止水分散失，它们还进化出了羊膜卵，使得繁殖过程不再依赖水环境。爬行动物的出现，标志着脊椎动物终于摆脱了对水的依赖，能够更加深入地向内陆拓展生存空间，为后来陆生脊椎动物的多样化发展奠定了基础。</p>
+          </div>
+        </div>
+        
+        <!-- 石炭纪末生物灭绝事件 -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden group">
+          <div class="h-48 bg-red-200 relative overflow-hidden">
+            <img src="生物灭绝.jpg" alt="石炭纪末生物灭绝" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <h3 class="text-white text-xl font-bold p-4">石炭纪末生物灭绝事件</h3>
+            </div>
+          </div>
+          <div class="p-6">
+            <p class="text-gray-700 mb-4 editable-content">石炭纪末期发生了一次规模较大的生物灭绝事件，虽然其灭绝规模和影响程度不及二叠纪末的生物大灭绝，但也对当时的生物界造成了沉重打击。这次灭绝事件导致了许多生物种类的消失，尤其是一些海洋生物和陆地的巨型昆虫受到了严重影响。关于石炭纪末生物灭绝事件的原因，科学家们提出了多种假说。一种观点认为，全球气候变化是主要原因之一。在石炭纪末期，地球气候逐渐变冷，冰川面积扩大，海平面下降。这种气候变化使得许多生物无法适应新的环境，尤其是那些对温度和湿度变化较为敏感的生物。例如，一些海洋生物的生存范围受到了极大限制，它们的食物来源也因生态系统的变化而减少，最终导致灭绝。另一种假说认为，大规模的火山活动可能是罪魁祸首。火山喷发释放出大量的火山气体和火山灰，这些物质进入大气层后，阻挡了太阳辐射，导致全球气温下降，同时还可能引发酸雨等环境问题，对生物的生存造成了严重威胁。此外，还有学者认为，植物的演化和生态系统的变化也可能在生物灭绝事件中起到了一定作用。随着石炭纪晚期裸子植物的兴起，植物群落结构发生了改变，这可能影响了依赖特定植物生存的动物的食物供应，进而导致它们的数量减少甚至灭绝。尽管目前关于石炭纪末生物灭绝事件的具体原因尚无定论，但这次事件无疑对地球生物的演化历程产生了重要影响，它促使生物界进行了一次大规模的调整和重组，为新的生物类群的崛起和发展创造了机会。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 时间轴互动部分 -->
+    <section id="timeline" class="mb-16 scroll-mt-24">
+      <div class="text-center mb-8">
+        <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-2">石炭纪时间轴</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">探索石炭纪各个时期的重大事件和生物演化历程</p>
+      </div>
+      
+      <div class="relative">
+        <!-- 时间轴 -->
+        <div class="h-2 bg-primary/20 absolute top-1/2 left-0 right-0 transform -translate-y-1/2 z-0"></div>
+        
+        <div class="flex flex-col md:flex-row justify-between relative z-10">
+          <!-- 时间点1 -->
+          <div class="timeline-item w-full md:w-1/4 mb-8 md:mb-0 flex flex-col items-center">
+            <div class="timeline-circle w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center cursor-pointer transition-all hover:scale-110 timeline-item-active" data-year="3.59亿年前" data-content="石炭纪开始，全球气候温暖湿润，海平面上升，海洋生物多样化发展，陆地开始出现大片森林。">
+              <i class="fa fa-calendar"></i>
+            </div>
+            <div class="mt-4 text-center">
+              <h3 class="font-bold text-lg">石炭纪早期</h3>
+              <p class="text-sm text-gray-600">约3.59亿年前</p>
+            </div>
+          </div>
+          
+          <!-- 时间点2 -->
+          <div class="timeline-item w-full md:w-1/4 mb-8 md:mb-0 flex flex-col items-center">
+            <div class="timeline-circle w-12 h-12 rounded-full bg-gray-300 text-white flex items-center justify-center cursor-pointer transition-all hover:scale-110" data-year="3.3亿年前" data-content="海西运动加剧，山脉形成，陆地面积扩大，海平面开始下降，部分浅海生物面临生存危机，裸蕨植物逐渐被石松类、楔叶类等取代。">
+              <i class="fa fa-mountain"></i>
+            </div>
+            <div class="mt-4 text-center">
+              <h3 class="font-bold text-lg">石炭纪中期</h3>
+              <p class="text-sm text-gray-600">约3.3亿年前</p>
+            </div>
+          </div>
+          
+          <!-- 时间点3 -->
+          <div class="timeline-item w-full md:w-1/4 mb-8 md:mb-0 flex flex-col items-center">
+            <div class="timeline-circle w-12 h-12 rounded-full bg-gray-300 text-white flex items-center justify-center cursor-pointer transition-all hover:scale-110" data-year="3.0亿年前" data-content="裸子植物苛达树出现，森林更加繁茂，为煤炭形成提供物质基础。昆虫种类激增，巨脉蜻蜓和巨型马陆等出现。脊椎动物中，爬行动物开始演化，逐渐摆脱对水环境的依赖。">
+              <i class="fa fa-leaf"></i>
+            </div>
+            <div class="mt-4 text-center">
+              <h3 class="font-bold text-lg">石炭纪晚期</h3>
+              <p class="text-sm text-gray-600">约3.0亿年前</p>
+            </div>
+          </div>
+          
+          <!-- 时间点4 -->
+          <div class="timeline-item w-full md:w-1/4 mb-8 md:mb-0 flex flex-col items-center">
+            <div class="timeline-circle w-12 h-12 rounded-full bg-gray-300 text-white flex items-center justify-center cursor-pointer transition-all hover:scale-110" data-year="2.99亿年前" data-content="石炭纪结束，发生生物灭绝事件，许多海洋生物和陆地巨型昆虫灭绝。气候变冷，冰川扩大，为二叠纪的生物演化奠定基础。">
+              <i class="fa fa-exclamation-triangle"></i>
+            </div>
+            <div class="mt-4 text-center">
+              <h3 class="font-bold text-lg">石炭纪末期</h3>
+              <p class="text-sm text-gray-600">约2.99亿年前</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 时间点详情 -->
+        <div id="timeline-detail" class="mt-12 bg-white p-6 rounded-xl shadow-lg">
+          <h3 class="text-xl font-bold mb-2">石炭纪早期（约3.59亿年前）</h3>
+          <p class="text-gray-700">石炭纪开始，全球气候温暖湿润，海平面上升，海洋生物多样化发展，陆地开始出现大片森林。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 生物特征对比部分 -->
+    <section id="creature-comparison" class="mb-16 scroll-mt-24">
+      <div class="text-center mb-8">
+        <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-2">石炭纪生物特征对比</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">探索石炭纪不同生物的特征与适应性</p>
+      </div>
+      
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <!-- 珊瑚 -->
+        <div class="creature-card bg-white rounded-lg shadow p-4 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-1 creature-card-selected" data-name="珊瑚" data-feature="珊瑚通过分泌钙质骨骼构建珊瑚礁生态系统，为其他海洋生物提供栖息场所，形态多样，有树枝状、块状等。在石炭纪海洋中广泛分布，是重要的造礁生物。">
+          <div class="h-32 bg-blue-100 rounded-lg overflow-hidden mb-3">
+            <img src="石炭纪珊瑚.jpg" alt="石炭纪珊瑚" class="w-full h-full object-cover">
+          </div>
+          <h3 class="font-bold text-center">珊瑚</h3>
+        </div>
+        
+        <!-- 腕足动物 -->
+        <div class="creature-card bg-white rounded-lg shadow p-4 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-1" data-name="腕足动物" data-feature="腕足动物凭借独特的壳体结构在浅海海底大量繁衍，壳体化石广泛分布，是研究海洋生态的重要依据。石炭纪时期腕足类达到鼎盛，种类繁多。">
+          <div class="h-32 bg-blue-100 rounded-lg overflow-hidden mb-3">
+            <img src="腕足动物.jpg" alt="石炭纪腕足动物" class="w-full h-full object-cover">
+          </div>
+          <h3 class="font-bold text-center">腕足动物</h3>
+        </div>
+        
+        <!-- 菊石 -->
+        <div class="creature-card bg-white rounded-lg shadow p-4 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-1" data-name="菊石" data-feature="菊石由杆石目的角石演化而来，壳内卷程度比鹦鹉螺更复杂，螺旋中心有独立胎壳，适应能力强，种类繁多。在石炭纪海洋中是重要的掠食者和食腐动物。">
+          <div class="h-32 bg-blue-100 rounded-lg overflow-hidden mb-3">
+            <img src="菊石.jpg" alt="石炭纪菊石" class="w-full h-full object-cover">
+          </div>
+          <h3 class="font-bold text-center">菊石</h3>
+        </div>
+        
+        <!-- 硬骨鱼类 -->
+        <div class="creature-card bg-white rounded-lg shadow p-4 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-1" data-name="硬骨鱼类" data-feature="硬骨鱼类身体结构更适应海洋环境，鳍的形态和功能不断优化，游泳速度和灵活性显著提升。石炭纪时期硬骨鱼类开始多样化发展，为后来的脊椎动物演化奠定基础。">
+          <div class="h-32 bg-blue-100 rounded-lg overflow-hidden mb-3">
+            <img src="硬骨鱼类.jpg" alt="石炭纪硬骨鱼类" class="w-full h-full object-cover">
+          </div>
+          <h3 class="font-bold text-center">硬骨鱼类</h3>
+        </div>
+        
+        <!-- 鳞木 -->
+        <div class="creature-card bg-white rounded-lg shadow p-4 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-1" data-name="鳞木" data-feature="鳞木是石松类植物中的代表，树干直径可达1米以上，高度可达30-40米，叶子呈螺旋状排列。石炭纪时期形成大片森林，是重要的成煤植物之一。">
+          <div class="h-32 bg-green-100 rounded-lg overflow-hidden mb-3">
+            <img src="鳞木.jpg" alt="石炭纪鳞木" class="w-full h-full object-cover">
+          </div>
+          <h3 class="font-bold text-center">鳞木</h3>
+        </div>
+        
+        <!-- 巨脉蜻蜓 -->
+        <div class="creature-card bg-white rounded-lg shadow p-4 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-1" data-name="巨脉蜻蜓" data-feature="巨脉蜻蜓是石炭纪空中的霸主，翼展可达75厘米甚至更大，是已知最大的昆虫。凭借强大的飞行能力和敏锐的视觉捕食其他小型昆虫。">
+          <div class="h-32 bg-yellow-100 rounded-lg overflow-hidden mb-3">
+            <img src="巨脉蜻蜓.jpg" alt="石炭纪巨脉蜻蜓" class="w-full h-full object-cover">
+          </div>
+          <h3 class="font-bold text-center">巨脉蜻蜓</h3>
+        </div>
+        
+        <!-- 两栖动物 -->
+        <div class="creature-card bg-white rounded-lg shadow p-4 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-1" data-name="两栖动物" data-feature="两栖动物在石炭纪占据统治地位，已经能够在陆地上生活，但还不能完全脱离水域环境。皮肤湿润有助于呼吸，四肢逐渐适应陆地行走。">
+          <div class="h-32 bg-teal-100 rounded-lg overflow-hidden mb-3">
+            <img src="两栖动物.jpg" alt="石炭纪两栖动物" class="w-full h-full object-cover">
+          </div>
+          <h3 class="font-bold text-center">两栖动物</h3>
+        </div>
+        
+        <!-- 爬行动物 -->
+        <div class="creature-card bg-white rounded-lg shadow p-4 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-1" data-name="爬行动物" data-feature="爬行动物在石炭纪晚期出现，皮肤覆盖角质鳞片，能有效防止水分散失，进化出羊膜卵，繁殖过程不再依赖水环境，标志着脊椎动物彻底征服陆地。">
+          <div class="h-32 bg-red-100 rounded-lg overflow-hidden mb-3">
+            <img src="爬行动物.jpg" alt="石炭纪爬行动物" class="w-full h-full object-cover">
+          </div>
+          <h3 class="font-bold text-center">爬行动物</h3>
+        </div>
+      </div>
+      
+      <!-- 对比结果 -->
+      <div id="comparison-result" class="mt-8 bg-white p-6 rounded-xl shadow-lg">
+        <h3 class="text-xl font-bold mb-4">生物特征详情：珊瑚</h3>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="bg-blue-50 p-4 rounded-lg">
+            <h4 class="font-bold text-primary mb-2">分类</h4>
+            <p>无脊椎动物，刺胞动物门</p>
+          </div>
+          <div class="bg-blue-50 p-4 rounded-lg">
+            <h4 class="font-bold text-primary mb-2">生存环境</h4>
+            <p>浅海温暖水域，石炭纪全球海洋</p>
+          </div>
+          <div class="bg-blue-50 p-4 rounded-lg">
+            <h4 class="font-bold text-primary mb-2">特征</h4>
+            <p>通过分泌钙质骨骼构建珊瑚礁生态系统，为其他海洋生物提供栖息场所，形态多样，有树枝状、块状等。在石炭纪海洋中广泛分布，是重要的造礁生物。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 地质事件影响模拟部分 -->
+    <section id="event-simulation" class="mb-16 scroll-mt-24">
+      <div class="text-center mb-8">
+        <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-2">地质事件影响模拟</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">调整不同地质事件的强度，观察它们对石炭纪生态系统的影响</p>
+      </div>
+      
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="grid md:grid-cols-3 gap-8">
+          <!-- 板块运动 -->
+          <div>
+            <h3 class="font-bold text-lg mb-3 flex items-center">
+              <i class="fa fa-arrows-h text-primary mr-2"></i> 板块运动强度
+            </h3>
+            <div class="flex flex-col">
+              <input type="range" id="plate-movement" min="0" max="100" value="50" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary">
+              <div class="flex justify-between mt-2 text-sm text-gray-600">
+                <span>低</span>
+                <span>中</span>
+                <span>高</span>
+              </div>
+              <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+                <p id="plate-effect" class="text-sm">中等强度的板块运动导致山脉逐渐形成，陆地面积扩大，为陆生生物提供更多栖息地。</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 海平面变化 -->
+          <div>
+            <h3 class="font-bold text-lg mb-3 flex items-center">
+              <i class="fa fa-tint text-primary mr-2"></i> 海平面变化强度
+            </h3>
+            <div class="flex flex-col">
+              <input type="range" id="sea-level" min="0" max="100" value="50" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary">
+              <div class="flex justify-between mt-2 text-sm text-gray-600">
+                <span>下降</span>
+                <span>稳定</span>
+                <span>上升</span>
+              </div>
+              <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+                <p id="sea-effect" class="text-sm">海平面稳定，浅海生态系统保持平衡，为海洋生物提供适宜的生存环境。</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 火山活动 -->
+          <div>
+            <h3 class="font-bold text-lg mb-3 flex items-center">
+              <i class="fa fa-fire text-primary mr-2"></i> 火山活动强度
+            </h3>
+            <div class="flex flex-col">
+              <input type="range" id="volcanic" min="0" max="100" value="50" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary">
+              <div class="flex justify-between mt-2 text-sm text-gray-600">
+                <span>低</span>
+                <span>中</span>
+                <span>高</span>
+              </div>
+              <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+                <p id="volcanic-effect" class="text-sm">中等强度的火山活动释放适量的矿物质到海洋，促进海洋生物的繁衍，但也可能导致局部气候变化。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 模拟结果 -->
+        <div class="mt-8">
+          <h3 class="font-bold text-lg mb-4">综合影响评估</h3>
+          <div id="simulation-result" class="p-5 bg-gray-50 rounded-xl border border-gray-200">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+              <div class="mb-4 md:mb-0">
+                <h4 class="font-bold text-lg mb-2">生态系统状态</h4>
+                <div class="flex items-center">
+                  <div class="w-24 h-6 bg-gray-200 rounded-full overflow-hidden">
+                    <div id="ecosystem-health" class="h-full bg-green-500 transition-all duration-500" style="width: 75%"></div>
+                  </div>
+                  <span class="ml-3 font-medium">75%</span>
+                </div>
+                <p class="mt-2 text-sm text-gray-600">当前生态系统健康状况良好，各类生物繁荣发展。</p>
+              </div>
+              
+              <div class="w-full md:w-2/3 mt-4 md:mt-0">
+                <h4 class="font-bold text-lg mb-2">主要影响</h4>
+                <p id="impact-summary" class="text-gray-700">中等强度的板块运动导致山脉逐渐形成，陆地面积扩大，为陆生生物提供更多栖息地。海平面稳定，浅海生态系统保持平衡。中等强度的火山活动释放适量的矿物质到海洋，促进海洋生物的繁衍，但也可能导致局部气候变化。综合来看，石炭纪生态系统处于稳定发展阶段，生物多样性持续增加。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="bg-dark text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4">石炭纪地质科普</h3>
+          <p class="text-gray-400">探索石炭纪时期的地质变迁与生物演化，了解地球历史上这一重要时期的奥秘。</p>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-4">相关资源</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">地质年代表</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">古生物数据库</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">科学研究论文</a></li>
+          </ul>
+        </div>
+    
+      </div>
+     
+    </div>
+  </footer>
+
+  <!-- 编辑模态框 -->
+  <div id="edit-modal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center">
+    <div class="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="p-6 border-b">
+        <div class="flex justify-between items-center">
+          <h3 class="text-xl font-bold">编辑内容</h3>
+          <button id="close-modal" class="text-gray-500 hover:text-gray-700">
+            <i class="fa fa-times text-xl"></i>
+          </button>
+        </div>
+      </div>
+      <div class="p-6">
+        <div class="mb-4">
+          <label for="edit-title" class="block font-medium mb-2">标题</label>
+          <input type="text" id="edit-title" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+        </div>
+        <div class="mb-4">
+          <label for="edit-content" class="block font-medium mb-2">内容</label>
+          <textarea id="edit-content" rows="10" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+        </div>
+        <div class="flex justify-end">
+          <button id="cancel-edit" class="px-4 py-2 border border-gray-300 rounded-lg mr-2 hover:bg-gray-100 transition-colors">取消</button>
+          <button id="save-edit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">保存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 移动端菜单
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+    
+    // 导航栏滚动效果
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        header.classList.add('py-2');
+        header.classList.add('shadow-lg');
+      } else {
+        header.classList.remove('py-2');
+        header.classList.remove('shadow-lg');
+      }
+    });
+    
+    // 时间轴互动
+    const timelineCircles = document.querySelectorAll('.timeline-circle');
+    const timelineDetail = document.getElementById('timeline-detail');
+    
+    timelineCircles.forEach(circle => {
+      circle.addEventListener('click', () => {
+        // 移除所有活动状态
+        timelineCircles.forEach(c => c.classList.remove('timeline-item-active'));
+        // 添加当前活动状态
+        circle.classList.add('timeline-item-active');
+        
+        const year = circle.getAttribute('data-year');
+        const content = circle.getAttribute('data-content');
+        
+        timelineDetail.innerHTML = `
+          <h3 class="text-xl font-bold mb-2">${circle.parentElement.querySelector('h3').textContent}（${year}）</h3>
+          <p class="text-gray-700">${content}</p>
+        `;
+      });
+    });
+    
+    // 生物特征对比
+    const creatureCards = document.querySelectorAll('.creature-card');
+    const comparisonResult = document.getElementById('comparison-result');
+    
+    creatureCards.forEach(card => {
+      card.addEventListener('click', () => {
+        // 移除所有选中状态
+        creatureCards.forEach(c => c.classList.remove('creature-card-selected'));
+        // 添加当前选中状态
+        card.classList.add('creature-card-selected');
+        
+        const name = card.getAttribute('data-name');
+        const feature = card.getAttribute('data-feature');
+        
+        // 更新对比结果
+        comparisonResult.innerHTML = `
+          <h3 class="text-xl font-bold mb-4">生物特征详情：${name}</h3>
+          <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-blue-50 p-4 rounded-lg">
+              <h4 class="font-bold text-primary mb-2">分类</h4>
+              <p>${getCreatureCategory(name)}</p>
+            </div>
+            <div class="bg-blue-50 p-4 rounded-lg">
+              <h4 class="font-bold text-primary mb-2">生存环境</h4>
+              <p>${getCreatureEnvironment(name)}</p>
+            </div>
+            <div class="bg-blue-50 p-4 rounded-lg">
+              <h4 class="font-bold text-primary mb-2">特征</h4>
+              <p>${feature}</p>
+            </div>
+          </div>
+        `;
+      });
+    });
+    
+    // 获取生物分类信息
+    function getCreatureCategory(name) {
+      const categories = {
+        '珊瑚': '无脊椎动物，刺胞动物门',
+        '腕足动物': '无脊椎动物，腕足动物门',
+        '菊石': '无脊椎动物，头足纲',
+        '硬骨鱼类': '脊椎动物，硬骨鱼纲',
+        '鳞木': '陆生植物，石松纲',
+        '巨脉蜻蜓': '陆生动物，昆虫纲',
+        '两栖动物': '脊椎动物，两栖纲',
+        '爬行动物': '脊椎动物，爬行纲'
+      };
+      return categories[name] || '未知分类';
+    }
+    
+    // 获取生物生存环境信息
+    function getCreatureEnvironment(name) {
+      const environments = {
+        '珊瑚': '浅海温暖水域',
+        '腕足动物': '浅海海底',
+        '菊石': '海洋',
+        '硬骨鱼类': '海洋、淡水',
+        '鳞木': '陆生，沼泽森林',
+        '巨脉蜻蜓': '陆生，森林',
+        '两栖动物': '水陆两栖，河流、湖泊附近',
+        '爬行动物': '陆生，森林、草原'
+      };
+      return environments[name] || '未知环境';
+    }
+    
+    // 地质事件模拟
+    const plateMovement = document.getElementById('plate-movement');
+    const seaLevel = document.getElementById('sea-level');
+    const volcanic = document.getElementById('volcanic');
+    const plateEffect = document.getElementById('plate-effect');
+    const seaEffect = document.getElementById('sea-effect');
+    const volcanicEffect = document.getElementById('volcanic-effect');
+    const ecosystemHealth = document.getElementById('ecosystem-health');
+    const ecosystemHealthValue=document.querySelector('#simulation-result .font-medium');
+    const impactSummary = document.getElementById('impact-summary');
+    
+    // 更新模拟结果
+    function updateSimulation() {
+      const pm = parseInt(plateMovement.value);
+      const sl = parseInt(seaLevel.value);
+      const va = parseInt(volcanic.value);
+      
+      // 计算生态系统健康度 (0-100)
+      let health = 75;
+      
+      // 板块运动影响
+      if (pm < 30) {
+        plateEffect.textContent = "板块运动较弱，山脉形成缓慢，陆地面积变化不大，对生物演化影响较小。";
+        health -= 5;
+      } else if (pm > 70) {
+        plateEffect.textContent = "强烈的板块运动导致山脉快速形成，地形剧烈变化，部分生物栖息地被破坏，但也创造了新的生态位。";
+        health -= 10;
+      } else {
+        plateEffect.textContent = "中等强度的板块运动导致山脉逐渐形成，陆地面积扩大，为陆生生物提供更多栖息地。";
+      }
+      
+      // 海平面影响
+      if (sl < 30) {
+        seaEffect.textContent = "海平面大幅下降，浅海面积缩减，许多海洋生物失去栖息地，物种数量减少。";
+        health -= 15;
+      } else if (sl > 70) {
+        seaEffect.textContent = "海平面大幅上升，淹没大片陆地，陆生生物栖息地减少，但海洋生态系统繁荣。";
+        health -= 10;
+      } else {
+        seaEffect.textContent = "海平面稳定，浅海生态系统保持平衡，为海洋生物提供适宜的生存环境。";
+      }
+      
+      // 火山活动影响
+      if (va < 30) {
+        volcanicEffect.textContent = "火山活动微弱，释放的矿物质不足，可能影响海洋生物的生长，但气候稳定。";
+        health -= 5;
+      } else if (va > 70) {
+        volcanicEffect.textContent = "强烈的火山活动释放大量火山灰和气体，导致全球气温下降，海洋酸化，许多生物面临生存危机。";
+        health -= 20;
+      } else {
+        volcanicEffect.textContent = "中等强度的火山活动释放适量的矿物质到海洋，促进海洋生物的繁衍，但也可能导致局部气候变化。";
+      }
+      
+      // 限制健康值范围
+      health = Math.max(0, Math.min(100, health));
+      
+      // 更新生态系统健康条
+      ecosystemHealth.style.width = `${health}%`;
+      ecosystemHealthValue.textContent = `${health}%`;
+      
+      // 根据健康值改变颜色
+      if (health < 40) {
+        ecosystemHealth.className = "h-full bg-red-500 transition-all duration-500";
+      } else if (health < 70) {
+        ecosystemHealth.className = "h-full bg-yellow-500 transition-all duration-500";
+      } else {
+        ecosystemHealth.className = "h-full bg-green-500 transition-all duration-500";
+      }
+      
+      // 更新综合影响
+      let summary = "当前地质条件下：";
+      
+      if (pm < 30) {
+        summary += "板块运动较弱，山脉形成缓慢；";
+      } else if (pm > 70) {
+        summary += "板块运动剧烈，地形变化显著；";
+      } else {
+        summary += "板块运动适中，陆地面积稳定增长；";
+      }
+      
+      if (sl < 30) {
+        summary += "海平面下降，海洋生物受到较大影响；";
+      } else if (sl > 70) {
+        summary += "海平面上升，陆地生物栖息地减少；";
+      } else {
+        summary += "海平面稳定，生态系统平衡；";
+      }
+      
+          if (va < 30) {
+        summary += "火山活动微弱，气候稳定但营养物质不足；";
+      } else if (va > 70) {
+        summary += "火山活动强烈，可能引发全球性气候变化和生态危机；";
+      } else {
+        summary += "火山活动适中，为海洋提供适量营养物质；";
+      }
+      
+      // 根据健康值添加总结
+      if (health < 40) {
+        summary += "综合来看，当前生态系统面临严重压力，生物多样性显著减少。";
+      } else if (health < 70) {
+        summary += "综合来看，生态系统面临一定压力，部分生物种群数量减少。";
+      } else {
+        summary += "综合来看，石炭纪生态系统处于稳定发展阶段，生物多样性持续增加。";
+      }
+      
+      impactSummary.textContent = summary;
+    }
+    
+    // 为滑块添加事件监听器
+    plateMovement.addEventListener('input', updateSimulation);
+    seaLevel.addEventListener('input', updateSimulation);
+    volcanic.addEventListener('input', updateSimulation);
+    
+    // 编辑功能
+    const editModal = document.getElementById('edit-modal');
+    const closeModal = document.getElementById('close-modal');
+    const cancelEdit = document.getElementById('cancel-edit');
+    const saveEdit = document.getElementById('save-edit');
+    const editTitle = document.getElementById('edit-title');
+    const editContent = document.getElementById('edit-content');
+    let currentEditableElement = null;
+    
+    // 为所有可编辑内容添加点击事件
+    document.querySelectorAll('.editable-content').forEach(element => {
+      element.addEventListener('click', () => {
+        currentEditableElement = element;
+        editTitle.value = element.parentElement.querySelector('h3')?.textContent || '编辑内容';
+        editContent.value = element.textContent;
+        editModal.style.display = 'flex';
+      });
+    });
+    
+    // 关闭模态框
+    closeModal.addEventListener('click', () => {
+      editModal.style.display = 'none';
+    });
+    
+    cancelEdit.addEventListener('click', () => {
+      editModal.style.display = 'none';
+    });
+    
+    // 保存编辑内容
+    saveEdit.addEventListener('click', () => {
+      if (currentEditableElement) {
+        currentEditableElement.textContent = editContent.value;
+        editModal.style.display = 'none';
+      }
+    });
+    
+    // 点击模态框外部关闭
+    editModal.addEventListener('click', (e) => {
+      if (e.target === editModal) {
+        editModal.style.display = 'none';
+      }
+    });
+    
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+          
+          // 关闭移动端菜单
+          if (!mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.add('hidden');
+          }
+        }
+      });
+    });
+    
+    // 初始化模拟结果
+    updateSimulation();
+  </script>
+</body>
+</html>

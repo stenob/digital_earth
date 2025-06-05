@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>志留纪地质与生物发展</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#FF7D00',
+                        tertiary: '#22C55E',
+                        dark: '#1E293B',
+                        light: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .animate-float {
+                animation: float 6s ease-in-out infinite;
+            }
+            .animate-pulse-slow {
+                animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            }
+            .animate-fade-in {
+                animation: fadeIn 0.5s ease-in-out;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+            .timeline-line {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 50%;
+                width: 2px;
+                background-color: #165DFF;
+                transform: translateX(-50%);
+            }
+            .timeline-dot {
+                position: absolute;
+                left: 50%;
+                width: 20px;
+                height: 20px;
+                background-color: #165DFF;
+                border-radius: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+    <!-- 导航栏 -->
+    <nav id="main-nav" class="fixed w-full z-50 transition-all duration-300 bg-white/90 backdrop-blur-sm shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="#" class="flex-shrink-0 flex items-center">
+                        <i class="fa fa-globe text-primary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-dark">志留纪探索</span>
+                    </a>
+                    <div class="hidden sm:ml-8 sm:flex space-x-8">
+                        <a href="#events" class="text-gray-700 hover:text-primary px-3 py-2 text-sm font-medium transition-colors">地质事件</a>
+                        <a href="#timeline" class="text-gray-700 hover:text-primary px-3 py-2 text-sm font-medium transition-colors">时间轴</a>
+                        <a href="#life" class="text-gray-700 hover:text-primary px-3 py-2 text-sm font-medium transition-colors">生物发展</a>
+                        <a href="#simulation" class="text-gray-700 hover:text-primary px-3 py-2 text-sm font-medium transition-colors">事件模拟</a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <button id="menu-toggle" class="sm:hidden text-gray-700 hover:text-primary focus:outline-none">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="sm:hidden hidden bg-white border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="#events" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary">地质事件</a>
+                <a href="#timeline" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary">时间轴</a>
+                <a href="#life" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary">生物发展</a>
+                <a href="#simulation" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary">事件模拟</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区 -->
+    <header class="relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70"></div>
+        <div class="absolute inset-0">
+            <img src="https://picsum.photos/id/1047/1920/1080" alt="志留纪地球景观" class="w-full h-full object-cover opacity-30">
+        </div>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center">
+                <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-bold text-white leading-tight mb-4 animate-fade-in">
+                    志留纪地质与生物发展
+                </h1>
+                <p class="text-[clamp(1rem,2vw,1.25rem)] text-white/90 max-w-3xl mx-auto mb-8 animate-fade-in" style="animation-delay: 0.2s">
+                    探索4.43亿至4.19亿年前地球的奥秘，见证生命从海洋向陆地的伟大跨越
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in" style="animation-delay: 0.4s">
+                    <a href="#events" class="px-6 py-3 bg-white text-primary font-medium rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
+                        探索地质事件 <i class="fa fa-compass ml-2"></i>
+                    </a>
+                    <a href="#simulation" class="px-6 py-3 bg-secondary text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
+                        体验互动模拟 <i class="fa fa-flask ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" class="w-full h-auto">
+                <path fill="#f9fafb" fill-opacity="1" d="M0,96L48,85.3C96,75,192,53,288,58.7C384,64,480,96,576,96C672,96,768,64,864,53.3C960,43,1056,53,1152,69.3C1248,85,1344,107,1392,117.3L1440,128L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z"></path>
+            </svg>
+        </div>
+    </header>
+
+    <!-- 地质事件部分 -->
+    <section id="events" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark mb-4">志留纪地质重大事件</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">志留纪是地球历史上一个重要的时期，发生了许多影响深远的地质事件，塑造了当时的地球环境和生物演化。</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- 事件卡片 1 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover">
+                    <div class="relative h-48">
+                        <img src="板块.jpg" alt="板块运动与造山运动" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                        <h3 class="absolute bottom-4 left-4 text-white text-xl font-bold">板块运动与造山运动</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-600 mb-4">加里东运动促使劳伦大陆与波罗的大陆碰撞，形成苏格兰高地等山脉，古大西洋闭合。</p>
+                        <button class="text-primary font-medium hover:text-primary/80 transition-colors" onclick="showEventDetails('plate-movement')">
+                            了解更多 <i class="fa fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 事件卡片 2 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover">
+                    <div class="relative h-48">
+                        <img src="海面.jpg" alt="海平面变化" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                        <h3 class="absolute bottom-4 left-4 text-white text-xl font-bold">海平面变化</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-600 mb-4">早志留世海平面骤降80米，中志留世海侵形成碳酸盐台地，晚志留世海退，呈现大规模海侵旋回。</p>
+                        <button class="text-primary font-medium hover:text-primary/80 transition-colors" onclick="showEventDetails('sea-level')">
+                            了解更多 <i class="fa fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 事件卡片 3 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover">
+                    <div class="relative h-48">
+                        <img src="火山.jpg" alt="火山活动" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                        <h3 class="absolute bottom-4 left-4 text-white text-xl font-bold">火山活动</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-600 mb-4">奥陶纪-志留纪过渡期火山活动频繁，扬子地区火山灰来源复杂，对生态环境产生重要影响。</p>
+                        <button class="text-primary font-medium hover:text-primary/80 transition-colors" onclick="showEventDetails('volcanic')">
+                            了解更多 <i class="fa fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 事件卡片 4 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover">
+                    <div class="relative h-48">
+                        <img src="地层.jpg" alt="沉积环境变化" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                        <h3 class="absolute bottom-4 left-4 text-white text-xl font-bold">沉积环境变化</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-600 mb-4">造山运动催生新型沉积环境，川南地区中志留世形成黑色页岩层，成为现代页岩气开发的重要层位。</p>
+                        <button class="text-primary font-medium hover:text-primary/80 transition-colors" onclick="showEventDetails('sedimentary')">
+                            了解更多 <i class="fa fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 志留纪时间轴 -->
+    <section id="timeline" class="py-16 bg-white relative overflow-hidden">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark mb-4">志留纪时间轴</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">探索志留纪各个时期的重大事件和生物演化里程碑</p>
+            </div>
+
+            <div class="relative">
+                <!-- 时间轴线 -->
+                <div class="absolute left-1/2 top-0 bottom-0 w-1 bg-primary/20 transform -translate-y-0"></div>
+                
+                <!-- 时间点 1 -->
+                <div class="timeline-item relative py-12 md:flex md:justify-between">
+                    <div class="md:w-5/12 mb-6 md:mb-0">
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-md card-hover">
+                            <h3 class="text-xl font-bold text-primary mb-2">兰多维列世 (4.43-4.33亿年前)</h3>
+                            <p class="text-gray-600">志留纪早期，地球开始从奥陶纪末的大灭绝事件中恢复。板块运动导致海平面变化，形成了新的浅海环境。笔石类生物开始多样化，珊瑚礁逐渐形成。最早的有颌鱼类出现，标志着脊椎动物演化的重要里程碑。</p>
+                        </div>
+                    </div>
+                    <div class="absolute left-1/2 top-1/2 w-8 h-8 bg-primary rounded-full transform -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center shadow-lg">
+                        <div class="w-4 h-4 bg-white rounded-full"></div>
+                    </div>
+                    <div class="md:w-5/12 md:text-right"></div>
+                </div>
+
+                <!-- 时间点 2 -->
+                <div class="timeline-item relative py-12 md:flex md:justify-between">
+                    <div class="md:w-5/12 md:text-right md:order-1 mb-6 md:mb-0"></div>
+                    <div class="absolute left-1/2 top-1/2 w-8 h-8 bg-primary rounded-full transform -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center shadow-lg">
+                        <div class="w-4 h-4 bg-white rounded-full"></div>
+                    </div>
+                    <div class="md:w-5/12">
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-md card-hover">
+                            <h3 class="text-xl font-bold text-primary mb-2">文洛克世 (4.33-4.27亿年前)</h3>
+                            <p class="text-gray-600">气候逐渐稳定，海平面上升，形成广泛的浅海和珊瑚礁生态系统。海洋生物进一步繁荣，腕足动物、三叶虫和头足类动物占据主导地位。陆地上，最早的维管植物开始出现，标志着植物从水生向陆生的过渡。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 时间点 3 -->
+                <div class="timeline-item relative py-12 md:flex md:justify-between">
+                    <div class="md:w-5/12 mb-6 md:mb-0">
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-md card-hover">
+                            <h3 class="text-xl font-bold text-primary mb-2">罗德洛世 (4.27-4.23亿年前)</h3>
+                            <p class="text-gray-600">造山运动活跃，导致陆地面积增加，浅海环境减少。珊瑚礁继续发展，但种类有所变化。海洋中，板足鲎类动物达到鼎盛，成为顶级掠食者。陆地上，植物开始向内陆扩展，土壤逐渐形成，为更复杂的陆地生态系统奠定基础。</p>
+                        </div>
+                    </div>
+                    <div class="absolute left-1/2 top-1/2 w-8 h-8 bg-primary rounded-full transform -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center shadow-lg">
+                        <div class="w-4 h-4 bg-white rounded-full"></div>
+                    </div>
+                    <div class="md:w-5/12 md:text-right"></div>
+                </div>
+
+                <!-- 时间点 4 -->
+                <div class="timeline-item relative py-12 md:flex md:justify-between">
+                    <div class="md:w-5/12 md:text-right md:order-1 mb-6 md:mb-0"></div>
+                    <div class="absolute left-1/2 top-1/2 w-8 h-8 bg-primary rounded-full transform -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center shadow-lg">
+                        <div class="w-4 h-4 bg-white rounded-full"></div>
+                    </div>
+                    <div class="md:w-5/12">
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-md card-hover">
+                            <h3 class="text-xl font-bold text-primary mb-2">普里道利世 (4.23-4.19亿年前)</h3>
+                            <p class="text-gray-600">志留纪末期，发生了小规模的灭绝事件，可能与气候变冷和海平面下降有关。海洋生物多样性有所减少，但有颌鱼类继续发展并多样化，为泥盆纪的"鱼类时代"奠定基础。陆地上，植物进一步演化，出现了更复杂的根系和维管系统。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 生物发展部分 -->
+    <section id="life" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark mb-4">志留纪生物发展</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">志留纪是生物演化的关键时期，见证了生命从海洋向陆地的伟大跨越</p>
+            </div>
+
+            <!-- 生物对比选择器 -->
+            <div class="bg-white p-6 rounded-xl shadow-md mb-12">
+                <h3 class="text-xl font-bold text-dark mb-6">生物特征对比</h3>
+                <div class="flex flex-wrap gap-4 mb-8">
+                    <button class="px-4 py-2 bg-primary text-white rounded-lg" onclick="compareCreatures('cephalopods', 'eurypterids')">
+                        头足类 vs 板足鲎
+                    </button>
+                    <button class="px-4 py-2 bg-primary text-white rounded-lg" onclick="compareCreatures('jawless-fish', 'jawed-fish')">
+                        无颌鱼类 vs 有颌鱼类
+                    </button>
+                    <button class="px-4 py-2 bg-primary text-white rounded-lg" onclick="compareCreatures('corals', 'brachiopods')">
+                        珊瑚 vs 腕足动物
+                    </button>
+                    <button class="px-4 py-2 bg-primary text-white rounded-lg" onclick="compareCreatures('land-plants', 'marine-algae')">
+                        陆生植物 vs 海洋藻类
+                    </button>
+                </div>
+
+                <div id="comparison-result" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- 对比结果将通过JavaScript动态生成 -->
+                </div>
+            </div>
+
+            <!-- 生物演化历程 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- 海洋生物 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="relative h-60">
+                        <img src="志留纪海洋生物.jpg" alt="海洋生物" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                        <h3 class="absolute bottom-4 left-4 text-white text-2xl font-bold">海洋生物的恢复与演变</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-600 mb-4">志留纪海洋生物从奥陶纪末的大灭绝中逐渐恢复，演化出许多新的类群。笔石类生物在贫氧环境中繁荣，板足鲎成为顶级掠食者，而有颌鱼类的出现标志着脊椎动物演化的重要突破。</p>
+                        <ul class="space-y-2 mb-4">
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-tertiary mt-1 mr-2"></i>
+                                <span>笔石类演化出网格状、螺旋状等20余种新型群落结构</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-tertiary mt-1 mr-2"></i>
+                                <span>板足鲎体长可达2.3米，成为海洋顶级掠食者</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-tertiary mt-1 mr-2"></i>
+                                <span>最早的有颌鱼类出现，为脊椎动物的多样化奠定基础</span>
+                            </li>
+                        </ul>
+                        <button class="text-primary font-medium hover:text-primary/80 transition-colors" onclick="showLifeDetails('marine')">
+                            深入了解 <i class="fa fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 陆地生物 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="relative h-60">
+                        <img src="陆地生物.jpg" alt="陆地生物" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                        <h3 class="absolute bottom-4 left-4 text-white text-2xl font-bold">陆地生物的起源与发展</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-600 mb-4">志留纪见证了生命从海洋向陆地的伟大跨越。维管植物的出现使陆地首次披上绿装，而最早的陆生节肢动物开始在陆地上建立食物链，为更复杂的陆地生态系统铺平道路。</p>
+                        <ul class="space-y-2 mb-4">
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-tertiary mt-1 mr-2"></i>
+                                <span>最早的维管植物出现，标志着植物成功登陆</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-tertiary mt-1 mr-2"></i>
+                                <span>昆虫和蛛形类节肢动物开始在陆地上建立食物链</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-tertiary mt-1 mr-2"></i>
+                                <span>陆地生态系统开始形成，能量流动模式逐渐多样化</span>
+                            </li>
+                        </ul>
+                        <button class="text-primary font-medium hover:text-primary/80 transition-colors" onclick="showLifeDetails('terrestrial')">
+                            深入了解 <i class="fa fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 地质事件模拟 -->
+    <section id="simulation" class="py-16 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark mb-4">地质事件影响模拟</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">调整不同地质事件的强度，观察它们如何影响志留纪的生态系统</p>
+            </div>
+
+            <div class="bg-gray-50 rounded-xl shadow-md p-6 md:p-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- 控制面板 -->
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <h3 class="text-lg font-bold text-dark mb-6">调整参数</h3>
+                        
+                        <!-- 板块运动控制 -->
+                        <div class="mb-6">
+                            <label for="plate-movement" class="block text-sm font-medium text-gray-700 mb-2">
+                                板块运动强度
+                            </label>
+                            <div class="flex items-center">
+                                <span class="text-sm text-gray-500 mr-2">弱</span>
+                                <input type="range" id="plate-movement" min="0" max="100" value="50" 
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                    oninput="updateSimulation()">
+                                <span class="text-sm text-gray-500 ml-2">强</span>
+                            </div>
+                            <p id="plate-effect" class="mt-2 text-sm text-gray-600">
+                                中等强度的板块运动导致山脉逐渐形成，陆地面积扩大，为陆生生物提供更多栖息地。
+                            </p>
+                        </div>
+                        
+                        <!-- 海平面控制 -->
+                        <div class="mb-6">
+                            <label for="sea-level" class="block text-sm font-medium text-gray-700 mb-2">
+                                海平面变化
+                            </label>
+                            <div class="flex items-center">
+                                <span class="text-sm text-gray-500 mr-2">低</span>
+                                <input type="range" id="sea-level" min="0" max="100" value="50" 
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                    oninput="updateSimulation()">
+                                <span class="text-sm text-gray-500 ml-2">高</span>
+                            </div>
+                            <p id="sea-effect" class="mt-2 text-sm text-gray-600">
+                                海平面稳定，浅海生态系统保持平衡，为海洋生物提供适宜的生存环境。
+                            </p>
+                        </div>
+                        
+                        <!-- 火山活动控制 -->
+                        <div class="mb-6">
+                            <label for="volcanic" class="block text-sm font-medium text-gray-700 mb-2">
+                                火山活动强度
+                            </label>
+                            <div class="flex items-center">
+                                <span class="text-sm text-gray-500 mr-2">弱</span>
+                                <input type="range" id="volcanic" min="0" max="100" value="50" 
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                    oninput="updateSimulation()">
+                                <span class="text-sm text-gray-500 ml-2">强</span>
+                            </div>
+                            <p id="volcanic-effect" class="mt-2 text-sm text-gray-600">
+                                中等强度的火山活动释放适量的矿物质到海洋，促进海洋生物的繁衍，但也可能导致局部气候变化。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- 模拟结果 -->
+                    <div class="md:col-span-2 bg-white rounded-lg shadow-sm p-6">
+                        <h3 class="text-lg font-bold text-dark mb-6">生态系统状态</h3>
+                        
+                        <!-- 生态系统健康度 -->
+                        <div class="mb-8">
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm font-medium text-gray-700">生态系统健康度</span>
+                                <span id="ecosystem-health-value" class="text-sm font-medium text-green-600">75%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-4">
+                                <div id="ecosystem-health" class="h-full bg-green-500 rounded-full transition-all duration-500" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- 生态系统影响总结 -->
+                        <div>
+                            <h4 class="text-base font-medium text-gray-700 mb-3">综合影响</h4>
+                            <p id="impact-summary" class="text-gray-600">
+                                当前地质条件下：板块运动适中，陆地面积稳定增长；海平面稳定，生态系统平衡；火山活动适中，为海洋提供适量营养物质；综合来看，石炭纪生态系统处于稳定发展阶段，生物多样性持续增加。
+                            </p>
+                        </div>
+                        
+                        <!-- 可视化图表 -->
+                        <div class="mt-8">
+                            <h4 class="text-base font-medium text-gray-700 mb-3">生物多样性变化趋势</h4>
+                            <div class="w-full h-64 bg-gray-50 rounded-lg p-4">
+                                <svg id="biodiversity-chart" viewBox="0 0 500 200" class="w-full h-full">
+                                    <!-- 图表将通过JavaScript动态生成 -->
+                                    <g transform="translate(40, 0)">
+                                        <line x1="0" y1="160" x2="420" y2="160" stroke="#9CA3AF" stroke-width="1" />
+                                        <line x1="0" y1="0" x2="0" y2="160" stroke="#9CA3AF" stroke-width="1" />
+                                        
+                                        <!-- X轴标签 -->
+                                        <text x="0" y="180" text-anchor="middle" font-size="10">兰多维列世</text>
+                                        <text x="105" y="180" text-anchor="middle" font-size="10">文洛克世</text>
+                                        <text x="210" y="180" text-anchor="middle" font-size="10">罗德洛世</text>
+                                        <text x="315" y="180" text-anchor="middle" font-size="10">普里道利世</text>
+                                        <text x="420" y="180" text-anchor="middle" font-size="10">未来</text>
+                                        
+                                        <!-- Y轴标签 -->
+                                        <text x="-10" y="160" text-anchor="end" font-size="10">0</text>
+                                        <text x="-10" y="120" text-anchor="end" font-size="10">25</text>
+                                        <text x="-10" y="80" text-anchor="end" font-size="10">50</text>
+                                        <text x="-10" y="40" text-anchor="end" font-size="10">75</text>
+                                        <text x="-10" y="0" text-anchor="end" font-size="10">100</text>
+                                        
+                                        <!-- 参考线 -->
+                                        <line x1="0" y1="120" x2="420" y2="120" stroke="#E5E7EB" stroke-width="0.5" />
+                                        <line x1="0" y1="80" x2="420" y2="80" stroke="#E5E7EB" stroke-width="0.5" />
+                                        <line x1="0" y1="40" x2="420" y2="40" stroke="#E5E7EB" stroke-width="0.5" />
+                                        
+                                        <!-- 趋势线 -->
+                                        <path d="M0,120 C105,80 210,60 315,80 420,100" fill="none" stroke="#165DFF" stroke-width="2" />
+                                        
+                                        <!-- 数据点 -->
+                                        <circle cx="0" cy="120" r="4" fill="#165DFF" />
+                                        <circle cx="105" cy="80" r="4" fill="#165DFF" />
+                                        <circle cx="210" cy="60" r="4" fill="#165DFF" />
+                                        <circle cx="315" cy="80" r="4" fill="#165DFF" />
+                                        <circle cx="420" cy="100" r="4" fill="#165DFF" />
+                                    </g>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">志留纪探索</h3>
+                    <p class="text-gray-400 mb-4">探索4.43亿至4.19亿年前地球的奥秘，见证生命从海洋向陆地的伟大跨越</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">快速链接</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#events" class="text-gray-400 hover:text-white transition-colors">地质事件</a></li>
+                        <li><a href="#timeline" class="text-gray-400 hover:text-white transition-colors">时间轴</a></li>
+                        <li><a href="#life" class="text-gray-400 hover:text-white transition-colors">生物发展</a></li>
+                        <li><a href="#simulation" class="text-gray-400 hover:text-white transition-colors">事件模拟</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">资源与参考</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">地质研究论文</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">生物演化图表</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">志留纪地图集</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">科学文献</a></li>
+                    </ul>
+                </div>
+            </div>
+       
+        </div>
+    </footer>
+
+    <!-- 事件详情模态框 -->
+    <div id="event-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto animate-fade-in">
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 id="modal-title" class="text-2xl font-bold text-dark"></h3>
+                    <button id="close-modal" class="text-gray-400 hover:text-gray-600">
+                        <i class="fa fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div id="modal-content" class="text-gray-600"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const nav = document.getElementById('main-nav');
+            if (window.scrollY > 100) {
+                nav.classList.add('shadow-md');
+                nav.classList.remove('bg-white/90');
+                nav.classList.add('bg-white');
+            } else {
+                nav.classList.remove('shadow-md');
+                nav.classList.add('bg-white/90');
+                nav.classList.remove('bg-white');
+            }
+        });
+
+        // 移动端菜单切换
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    // 关闭移动端菜单
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                }
+            });
+        });
+
+        // 事件详情模态框
+        const eventModal = document.getElementById('event-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalContent = document.getElementById('modal-content');
+        const closeModal = document.getElementById('close-modal');
+
+        function showEventDetails(eventType) {
+            let title = '';
+            let content = '';
+
+            switch (eventType) {
+                case 'plate-movement':
+                    title = '板块运动与造山运动';
+                    content = `
+                        <p>志留纪初期，加里东运动强势拉开帷幕，成为重塑地球面貌的核心驱动力。彼时，劳伦大陆与波罗的大陆相向而行，最终发生了激烈的碰撞。这一碰撞促使苏格兰高地等雄伟山脉拔地而起。在随后约 2500 万年的岁月里，大陆面积扩张了 12%。与此同时，古大西洋逐渐闭合，板块间的剧烈碰撞作用让原本深陷海底的地槽发生褶皱并逐渐升起。地球的古地理面貌就此发生了翻天覆地的变化，全新的海陆分布格局逐渐形成，为后续生物的演化与迁徙创造了全新的地理条件与基础。</p>
+                        <p>板块运动还导致了一系列其他地质事件的发生，如火山活动和地震频繁。这些活动不仅改变了地球的表面形态，还对气候和生态系统产生了深远的影响。例如，山脉的形成改变了大气环流模式，导致局部气候发生变化；而火山喷发释放的气体和尘埃则可能影响全球气候。</p>
+                    `;
+                    break;
+                case 'sea-level':
+                    title = '海平面变化';
+                    content = `
+                        <p>志留纪的海平面变化犹如一场跌宕起伏的大戏。早志留世，受板块运动以及复杂的气候变化等多重因素共同作用，海平面短时间内骤降 80 米。这一急剧的变化，使得浅海区域大幅缩减，面积减少了 60%。众多曾经生机勃勃的浅海生态系统遭受重创，大量高度依赖浅海环境生存的生物瞬间面临栖息地丧失的严峻危机。</p>
+                        <p>然而，到了中志留世，冰川的消融引发了大规模的海侵。海水迅速蔓延，逐渐形成了横跨欧亚的碳酸盐台地。这片广阔的浅海区域再次成为海洋生物繁衍的温床，新的生态系统在这片扩张的海域中逐渐孕育并发展起来。而到晚志留世，各地又呈现出不同程度的海退现象，陆地开始上升，整体表现出一个规模巨大的海侵旋回。这种频繁且剧烈的海平面升降，对地球生态系统产生了极为深远的影响，持续推动着生物不断进化与适应新的环境变化。</p>
+                    `;
+                    break;
+                case 'volcanic':
+                    title = '火山活动';
+                    content = `
+                        <p>奥陶纪 - 志留纪过渡期，全球性火山活动频繁爆发。通过对斑脱岩层数和厚度分布的深入研究，以及运用 Y–Nb 图解、Nb/Y–TiO₂图解等多种先进的地球化学分析手段，科学家们发现扬子地区奥陶纪–志留纪之交的火山灰来源极为复杂。部分火山灰源自扬子板块与华夏板块汇聚边界的再活化过程，部分则来自冈瓦纳大陆与华南地块的猛烈碰撞，还有少部分是北方古秦岭洋向华北地块俯冲的产物。</p>
+                        <p>在 4.5 亿年至 4.45 亿年前这段时期，冈瓦纳大陆挤压洋壳向华南地块俯冲，洋壳俯冲过程中产生了镁铁质岩浆；与此同时，扬子板块与华夏板块之间发生再活化现象，造就了花岗质岩浆，古秦岭洋洋壳也在向华北地块俯冲的高峰期发生部分熔融。这些火山活动将大量原本深藏于地球深处的物质带到地表，对生态环境产生了不可忽视的影响。虽然短期小规模的火山活动可能会被海洋庞大的体量以及较强的自我修复能力所缓冲，但密集的火山活动持续不断地破坏生态环境，逐渐超出了生态系统的承受极限，最终可能对生态系统造成毁灭性的打击。</p>
+                    `;
+                    break;
+                case 'sedimentary':
+                    title = '沉积环境变化';
+                    content = `
+                        <p>志留纪时期，造山运动不仅深刻改变了地形地貌，还催生了一系列新型的沉积环境。以川南地区为例，在中志留世海侵期，这里形成了厚达 200 米的黑色页岩层。这一特殊岩层的总有机碳含量（TOC）高达 5%，具备极佳的页岩气储存条件，因此成为当今页岩气开发的黄金层位。</p>
+                        <p>而在志留纪末期的全球海退过程中，龙马溪组页岩中有机质保存率高达 7.3%。这些黑色岩层每克岩石中包含多达 3000 个纳米级孔隙，其甲烷吸附能力是现代煤层的 20 倍，构成了中国页岩气可采储量的 43%。沉积环境的这些显著变化，不仅如实地记录了志留纪的地质变迁过程，也为现代能源开发提供了极为宝贵的资源基础。</p>
+                    `;
+                    break;
+            }
+
+            modalTitle.textContent = title;
+            modalContent.innerHTML = content;
+            eventModal.classList.remove('hidden');
+        }
+
+        closeModal.addEventListener('click', function() {
+            eventModal.classList.add('hidden');
+        });
+
+        // 点击模态框外部关闭
+        eventModal.addEventListener('click', function(e) {
+            if (e.target === eventModal) {
+                eventModal.classList.add('hidden');
+            }
+        });
+
+        // 生物详情模态框
+        function showLifeDetails(lifeType) {
+            let title = '';
+            let content = '';
+
+            switch (lifeType) {
+                case 'marine':
+                    title = '海洋生物的恢复与演变';
+                    content = `
+                        <p>经历奥陶纪末那场几乎摧毁 85% 海洋物种的大灭绝灾难后，志留纪成为海洋生物艰难恢复与重新演变的重要时期。笔石类生物在这场灾难后的 "废墟" 中展现出了顽强的生命力与独特的适应能力，演化出网格状、螺旋状等 20 余种新型群落结构，成功在贫氧环境中建立起新的生态霸权。</p>
+                        <p>曾经在奥陶纪称霸海洋的以角石为代表的软体动物，由于大灭绝的冲击，其局限的生活环境使其失去了往日的霸主地位，体型也从原来的数米长迅速退化到分米长。与之形成鲜明对比的是，与角石类生物竞争了超一千多万年的板足鲎（又称海蝎），凭借着高超的游泳技巧，在大灭绝中找到了生存的机遇。进入志留纪后，板足鲎迎来了快速的进化与发展。例如，翼肢鲎的体长可达 2.3 米，拥有更发达的复眼和更快的游泳速度，其第五对附肢演化成了用于划水的桨，并且将捕食钳发展壮大，成为了志留纪海洋中最令人恐惧的生物。强大的游泳能力使得板足鲎很快在全球范围内分布开来，处于无人可比的霸主地位，这也促使其快速演化，形成了庞大的种群，甚至不同物种之间的板足鲎也存在着捕食关系。部分海蝎还凭借着叶腮状的腿部呼吸器官和可以爬行的肢体，勇敢地前往陆地，这类节肢动物后续逐渐演化成了蛛形纲动物，也就是我们如今熟知的蜘蛛等节肢动物。</p>
+                        <p>在海洋脊椎动物方面，脊椎动物最早出现于寒武纪，那时只是弱小的存在。到了志留纪，鱼类有了明显的进化，长出了厚厚的盔甲，头部也长出了嘴，虽然还没有现代鱼类应有的下颌，被称为无颌鱼类，但捕食能力已经有了很大进步。最早诞生的无颌鱼因厚厚的甲壳被称为甲胄鱼，其进化出甲壳主要是为了在躲避板足鲎追杀时增加存活几率。很快，在志留纪兰多维列世晚期，鱼类就进化出了可以活动的上下颌，有颌鱼类开始出现，最早的有颌鱼类为某些盾皮鱼类，以胴甲鱼为代表，在中国云南的志留纪地层中广泛分布。不过，此时有颌鱼类的上下颌还不足以与统治海洋的板足鲎相抗衡，直到泥盆纪，鱼类才真正翻身，迎来属于它们的 "鱼类时代"。</p>
+                    `;
+                    break;
+                case 'terrestrial':
+                    title = '陆地生物的起源与发展';
+                    content = `
+                        <p>志留纪时期，一个具有划时代意义的生物进化事件发生了，那就是维管植物的出现，这代表着生物征服陆地的伟大征程正式开启。科学研究表明，奥陶纪时一些藻类虽已在陆地短暂出现，但它们是因海退被迫留在陆地，无法长期存活。而在志留纪中期，维管植物的诞生改变了这一局面。</p>
+                        <p>志留纪期间，造山运动带来了大量降水，淡水和半咸水域不断增加，浅海中生存的绿藻类有机会进入这些水域。然而，淡水水域若持续受到阳光照射，很快就会干涸。这类绿藻在反复面临这样的恶劣环境中，逐渐进化出适应陆地的关键结构 —— 维管。维管可以高效地帮助植物运输水分和营养物质，同时，"角质层" 膜和 "气孔" 的出现，也为植物在陆地吸收二氧化碳等气体创造了条件，使得植物能够更好地在陆地上生存与发展。</p>
+                        <p>伴随着陆生植物的发展，志留纪晚期还出现了最早的昆虫和蛛形类节肢动物，它们开始在腐殖质层建立起陆地食物链，其体表蜡质层的进化更是使水分流失率降低至海洋祖先的 1/8 ，陆地生态系统开始逐渐发展起来，每年固定的太阳能达到 1.2×10¹⁸焦耳，相当于同期海洋生物总能量的 15%，标志着地球能量流动从单一的海洋主导模式，逐渐走向海洋与陆地并存的多极模式。</p>
+                    `;
+                    break;
+            }
+
+            modalTitle.textContent = title;
+            modalContent.innerHTML = content;
+            eventModal.classList.remove('hidden');
+        }
+
+        // 生物对比功能
+        function compareCreatures(creature1, creature2) {
+            const comparisonResult = document.getElementById('comparison-result');
+            comparisonResult.innerHTML = '';
+            
+            // 生物数据
+            const creatures = {
+                'cephalopods': {
+                    name: '头足类动物',
+                    image: '头足类.jpg',
+                    description: '奥陶纪的海洋霸主，以角石为代表，体型庞大，最长可达数米。具有直壳或卷曲的外壳，是当时顶级掠食者。但在奥陶纪末大灭绝后，体型大幅缩小，生态位逐渐被板足鲎取代。',
+                    features: [
+                        '拥有复杂的眼睛和触手',
+                        '外壳提供保护和浮力',
+                        '在奥陶纪占据顶级掠食者地位',
+                        '志留纪后体型从数米缩小到分米级'
+                    ]
+                },
+                'eurypterids': {
+                    name: '板足鲎（海蝎）',
+                    image: '板足鲎（海蝎）.jpg',
+                    description: '志留纪的新兴掠食者，最大可达2.3米。拥有桨状附肢用于游泳和特化的捕食钳，适应能力强。部分种类能够短暂登陆，是最早尝试陆地生活的动物之一，后来演化出蛛形纲动物。',
+                    features: [
+                        '第五对附肢特化为桨状，游泳能力强',
+                        '捕食钳发达，成为顶级掠食者',
+                        '部分种类具备初步的陆地生存能力',
+                        '体型差异大，从几厘米到数米不等'
+                    ]
+                },
+                'jawless-fish': {
+                    name: '无颌鱼类',
+                    image: '无颌鱼类.jpg',
+                    description: '志留纪早期的脊椎动物，如甲胄鱼，身体覆盖厚重骨甲，没有可活动的上下颌，通过过滤或吸食获取食物。虽然防御能力强，但捕食能力有限，处于食物链较低位置。',
+                    features: [
+                        '身体覆盖厚重骨甲，防御能力强',
+                        '没有可活动的上下颌',
+                        '通过过滤或吸食获取食物',
+                        '游泳能力较弱，行动相对缓慢'
+                    ]
+                },
+                'jawed-fish': {
+                    name: '有颌鱼类',
+                    image: '有颌鱼类.jpg',
+                    description: '志留纪晚期出现的革命性脊椎动物，如胴甲鱼，具有可活动的上下颌，大大增强了捕食能力。虽然早期体型较小，但为脊椎动物的多样化奠定了基础，后来演化出各种鱼类、两栖类、爬行类、鸟类和哺乳类。',
+                    features: [
+                        '具有可活动的上下颌，捕食能力强',
+                        '身体结构更灵活，游泳速度更快',
+                        '牙齿特化，适应不同食物来源',
+                        '成为泥盆纪"鱼类时代"的先驱'
+                    ]
+                },
+                'corals': {
+                    name: '珊瑚',
+                    image: '珊瑚.jpg',
+                    description: '志留纪海洋中重要的造礁生物，形成复杂的珊瑚礁生态系统，为众多海洋生物提供栖息地。珊瑚分泌碳酸钙形成坚硬的骨骼，群体生活，通过共生藻类获取能量，对环境变化敏感。',
+                    features: [
+                        '分泌碳酸钙形成坚硬骨骼',
+                        '群体生活，形成复杂生态系统',
+                        '通过共生藻类进行光合作用',
+                        '对水质和温度变化敏感'
+                    ]
+                },
+                'brachiopods': {
+                    name: '腕足动物',
+                    image: '腕足动物.jpg',
+                    description: '志留纪最丰富的海洋生物之一，外形类似双壳贝类，但两壳不对称。通过纤毛过滤水中的有机物获取食物，分布广泛，适应能力强，在奥陶纪末大灭绝后迅速恢复并多样化。',
+                    features: [
+                        '两壳不对称，与双壳贝类不同',
+                        '通过纤毛过滤食物',
+                        '分布广泛，适应多种环境',
+                        '外壳由磷酸钙和蛋白质组成'
+                    ]
+                },
+                'land-plants': {
+                    name: '陆生植物',
+                    image: '陆生植物.jpg',
+                    description: '志留纪出现的最早陆生维管植物，如裸蕨，体型矮小，没有真正的根和叶，通过假根固定在地面，维管组织负责运输水分和养分。它们的出现标志着陆地生态系统的开始，为后来更复杂的陆生植物演化奠定了基础。',
+                    features: [
+                        '具有维管组织，运输水分和养分',
+                        '角质层和气孔减少水分流失',
+                        '没有真正的根和叶，结构简单',
+                        '通过孢子繁殖'
+                    ]
+                },
+                'marine-algae': {
+                    name: '海洋藻类',
+                    image: '海洋藻类.jpg',
+                    description: '志留纪海洋中的主要光合生物，包括绿藻、红藻等，结构简单，没有维管组织。它们是海洋食物链的基础，通过光合作用产生氧气，为海洋生物提供食物和栖息地。',
+                    features: [
+                        '结构简单，没有维管组织',
+                        '通过全身吸收养分和气体',
+                        '繁殖方式多样，包括无性和有性繁殖',
+                        '是海洋食物链的基础'
+                    ]
+                }
+            };
+
+            // 创建对比卡片
+            [creature1, creature2].forEach(creature => {
+                const data = creatures[creature];
+                if (data) {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-lg shadow-md overflow-hidden';
+                    
+                    card.innerHTML = `
+                        <div class="relative h-48">
+                            <img src="${data.image}" alt="${data.name}" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                            <h3 class="absolute bottom-4 left-4 text-white text-xl font-bold">${data.name}</h3>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-gray-600 mb-4">${data.description}</p>
+                            <h4 class="font-medium text-gray-700 mb-2">主要特征</h4>
+                            <ul class="space-y-2 text-gray-600">
+                                ${data.features.map(feature => `<li class="flex items-start"><i class="fa fa-circle text-primary/50 text-xs mt-1.5 mr-2"></i>${feature}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                    
+                    comparisonResult.appendChild(card);
+                }
+            });
+        }
+
+        // 初始化生物对比（默认显示第一组）
+        window.addEventListener('load', function() {
+            compareCreatures('cephalopods', 'eurypterids');
+        });
+
+        // 地质事件模拟
+        function updateSimulation() {
+            const pm = parseInt(document.getElementById('plate-movement').value);
+            const sl = parseInt(document.getElementById('sea-level').value);
+            const va = parseInt(document.getElementById('volcanic').value);
+            
+            // 计算生态系统健康度 (0-100)
+            let health = 75;
+            
+            // 板块运动影响
+            if (pm < 30) {
+                document.getElementById('plate-effect').textContent = "板块运动较弱，山脉形成缓慢，陆地面积变化不大，对生物演化影响较小。";
+                health -= 5;
+            } else if (pm > 70) {
+                document.getElementById('plate-effect').textContent = "强烈的板块运动导致山脉快速形成，地形剧烈变化，部分生物栖息地被破坏，但也创造了新的生态位。";
+                health -= 10;
+            } else {
+                document.getElementById('plate-effect').textContent = "中等强度的板块运动导致山脉逐渐形成，陆地面积扩大，为陆生生物提供更多栖息地。";
+            }
+            
+            // 海平面影响
+            if (sl < 30) {
+                document.getElementById('sea-effect').textContent = "海平面大幅下降，浅海面积缩减，许多海洋生物失去栖息地，物种数量减少。";
+                health -= 15;
+            } else if (sl > 70) {
+                document.getElementById('sea-effect').textContent = "海平面大幅上升，淹没大片陆地，陆生生物栖息地减少，但海洋生态系统繁荣。";
+                health -= 10;
+            } else {
+                document.getElementById('sea-effect').textContent = "海平面稳定，浅海生态系统保持平衡，为海洋生物提供适宜的生存环境。";
+            }
+            
+            // 火山活动影响
+            if (va < 30) {
+                document.getElementById('volcanic-effect').textContent = "火山活动微弱，释放的矿物质不足，可能影响海洋生物的生长，但气候稳定。";
+                health -= 5;
+            } else if (va > 70) {
+                document.getElementById('volcanic-effect').textContent = "强烈的火山活动释放大量火山灰和气体，导致全球气温下降，海洋酸化，许多生物面临生存危机。";
+                health -= 20;
+            } else {
+                document.getElementById('volcanic-effect').textContent = "中等强度的火山活动释放适量的矿物质到海洋，促进海洋生物的繁衍，但也可能导致局部气候变化。";
+            }
+            
+            // 限制健康值范围
+            health = Math.max(0, Math.min(100, health));
+            
+            // 更新生态系统健康条和数值
+            document.getElementById('ecosystem-health').style.width = `${health}%`;
+            document.getElementById('ecosystem-health-value').textContent = `${health}%`;
+            
+            // 根据健康值改变颜色
+            const healthBar = document.getElementById('ecosystem-health');
+            if (health < 40) {
+                healthBar.className = "h-full bg-red-500 transition-all duration-500";
+            } else if (health < 70) {
+                healthBar.className = "h-full bg-yellow-500 transition-all duration-500";
+            } else {
+                healthBar.className = "h-full bg-green-500 transition-all duration-500";
+            }
+            
+            // 更新综合影响
+            let summary = "当前地质条件下：";
+            
+            if (pm < 30) {
+                summary += "板块运动较弱，山脉形成缓慢；";
+            } else if (pm > 70) {
+                summary += "板块运动剧烈，地形变化显著；";
+            } else {
+                summary += "板块运动适中，陆地面积稳定增长；";
+            }
+            
+            if (sl < 30) {
+                summary += "海平面下降，海洋生物受到较大影响；";
+            } else if (sl > 70) {
+                summary += "海平面上升，陆地生物栖息地减少；";
+            } else {
+                summary += "海平面稳定，生态系统平衡；";
+            }
+            
+            if (va < 30) {
+                summary += "火山活动微弱，气候稳定但营养物质不足；";
+            } else if (va > 70) {
+                summary += "火山活动强烈，可能引发全球性气候变化和生态危机；";
+            } else {
+                summary += "火山活动适中，为海洋提供适量营养物质；";
+            }
+            
+            // 根据健康值添加总结
+            if (health < 40) {
+                summary += "综合来看，当前生态系统面临严重压力，生物多样性显著减少。";
+            } else if (health < 70) {
+                summary += "综合来看，生态系统面临一定压力，部分生物种群数量减少。";
+            } else {
+                summary += "综合来看，志留纪生态系统处于稳定发展阶段，生物多样性持续增加。";
+            }
+            
+            document.getElementById('impact-summary').textContent = summary;
+            
+            // 更新图表
+            updateChart(pm, sl, va);
+        }
+
+        // 更新生物多样性图表
+        function updateChart(pm, sl, va) {
+            const svg = document.getElementById('biodiversity-chart');
+            svg.innerHTML = '';
+            
+            // 计算健康度影响
+            const health = Math.max(0, Math.min(100, 75 - (pm < 30 ? 5 : pm > 70 ? 10 : 0) - 
+                                              (sl < 30 ? 15 : sl > 70 ? 10 : 0) - 
+                                              (va < 30 ? 5 : va > 70 ? 20 : 0)));
+            
+            // 绘制坐标轴和参考线
+            const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            g.setAttribute("transform", "translate(40, 0)");
+            svg.appendChild(g);
+            
+            // X轴和Y轴
+            addLine(g, 0, 160, 420, 160, "#9CA3AF", 1);
+            addLine(g, 0, 0, 0, 160, "#9CA3AF", 1);
+            
+            // X轴标签
+            addText(g, 0, 180, "兰多维列世", "middle", 10);
+            addText(g, 105, 180, "文洛克世", "middle", 10);
+            addText(g, 210, 180, "罗德洛世", "middle", 10);
+            addText(g, 315, 180, "普里道利世", "middle", 10);
+            addText(g, 420, 180, "未来", "middle", 10);
+            
+            // Y轴标签
+            addText(g, -10, 160, "0", "end", 10);
+            addText(g, -10, 120, "25", "end", 10);
+            addText(g, -10, 80, "50", "end", 10);
+            addText(g, -10, 40, "75", "end", 10);
+            addText(g, -10, 0, "100", "end", 10);
+            
+            // 参考线
+            addLine(g, 0, 120, 420, 120, "#E5E7EB", 0.5);
+            addLine(g, 0, 80, 420, 80, "#E5E7EB", 0.5);
+            addLine(g, 0, 40, 420, 40, "#E5E7EB", 0.5);
+            
+            // 根据参数生成曲线
+            const points = [
+                {x: 0, y: 120 - (Math.random() * 20)},  // 兰多维列世
+                {x: 105, y: 120 - (Math.random() * 40)}, // 文洛克世
+                {x: 210, y: 120 - (health * 1.2)},    // 罗德洛世 (当前)
+                {x: 315, y: 120 - (health * 1.1)},    // 普里道利世
+                {x: 420, y: 120 - (health * 1.0)}     // 未来
+            ];
+            
+            // 绘制曲线
+            let pathData = `M${points[0].x},${points[0].y}`;
+            for (let i = 1; i < points.length; i++) {
+                const cp1x = points[i-1].x + (points[i].x - points[i-1].x) / 3;
+                const cp1y = points[i-1].y;
+                const cp2x = points[i].x - (points[i].x - points[i-1].x) / 3;
+                const cp2y = points[i].y;
+                pathData += ` C${cp1x},${cp1y} ${cp2x},${cp2y} ${points[i].x},${points[i].y}`;
+            }
+            
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", pathData);
+            path.setAttribute("fill", "none");
+            path.setAttribute("stroke", "#165DFF");
+            path.setAttribute("stroke-width", "2");
+            g.appendChild(path);
+            
+            // 绘制数据点
+            points.forEach(point => {
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circle.setAttribute("cx", point.x);
+                circle.setAttribute("cy", point.y);
+                circle.setAttribute("r", "4");
+                circle.setAttribute("fill", "#165DFF");
+                g.appendChild(circle);
+            });
+        }
+        
+        // 辅助函数：添加线条
+        function addLine(parent, x1, y1, x2, y2, stroke, width) {
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", x1);
+            line.setAttribute("y1", y1);
+            line.setAttribute("x2", x2);
+            line.setAttribute("y2", y2);
+            line.setAttribute("stroke", stroke);
+            line.setAttribute("stroke-width", width);
+            parent.appendChild(line);
+        }
+        
+        // 辅助函数：添加文本
+        function addText(parent, x, y, text, anchor, size) {
+            const textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            textElement.setAttribute("x", x);
+            textElement.setAttribute("y", y);
+            textElement.setAttribute("text-anchor", anchor);
+            textElement.setAttribute("font-size", size);
+            textElement.textContent = text;
+            parent.appendChild(textElement);
+        }
+        
+        // 初始化模拟
+        updateSimulation();
+    </script>
+</body>
+</html>    

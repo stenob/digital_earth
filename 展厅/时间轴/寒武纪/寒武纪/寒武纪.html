@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寒武纪：生命大爆发的神秘时代</title>
+    <link rel="stylesheet" href="寒武纪.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 粒子背景 -->
+    <div id="particles-container"></div>
+    
+    <!-- 导航 -->
+    <nav class="navbar">
+        <div class="nav-brand">寒武纪探索</div>
+        <ul class="nav-menu">
+            <li><a href="#hero" class="nav-link">首页</a></li>
+            <li><a href="#timeline" class="nav-link">时间轴</a></li>
+            <li><a href="#creatures" class="nav-link">生物</a></li>
+            <li><a href="#geology" class="nav-link">地质</a></li>
+        </ul>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <section id="hero" class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">寒武纪</h1>
+            <h2 class="hero-subtitle">生命大爆发的神秘时代</h2>
+            <p class="hero-description">探索5.41亿年前地球上最壮观的生命奇迹</p>
+            <button class="explore-btn" onclick="scrollToSection('timeline')">开始探索</button>
+        </div>
+        <div class="hero-animation">
+            <div class="floating-organism organism1"></div>
+            <div class="floating-organism organism2"></div>
+            <div class="floating-organism organism3"></div>
+        </div>
+    </section>
+
+    <!-- 交互式时间轴 -->
+    <section id="timeline" class="timeline-section">
+        <h2 class="section-title">寒武纪时间轴</h2>
+        <div class="timeline">
+            <div class="timeline-item" data-period="early">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <h3>早寒武世 (541-521 Ma)</h3>
+                    <p>生命大爆发开始，三叶虫首次出现</p>
+                    <button class="detail-btn" onclick="showTimelineDetail('early')">详细信息</button>
+                </div>
+            </div>
+            <div class="timeline-item" data-period="middle">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <h3>中寒武世 (521-514 Ma)</h3>
+                    <p>生物多样性达到高峰，奇虾等捕食者出现</p>
+                    <button class="detail-btn" onclick="showTimelineDetail('middle')">详细信息</button>
+                </div>
+            </div>
+            <div class="timeline-item" data-period="late">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <h3>晚寒武世 (514-485 Ma)</h3>
+                    <p>生态系统趋于稳定，现代动物门类基本确立</p>
+                    <button class="detail-btn" onclick="showTimelineDetail('late')">详细信息</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 生物展示区 -->
+    <section id="creatures" class="creatures-section">
+        <h2 class="section-title">寒武纪生物奇观</h2>
+        <div class="creatures-grid">
+            <div class="creature-card" data-creature="trilobite">
+                <div class="creature-image trilobite-img"></div>
+                <h3>三叶虫</h3>
+                <p>寒武纪最成功的节肢动物</p>
+                <button class="info-btn" onclick="showCreatureInfo('trilobite')">了解更多</button>
+            </div>
+            <div class="creature-card" data-creature="anomalocaris">
+                <div class="creature-image anomalocaris-img"></div>
+                <h3>奇虾</h3>
+                <p>寒武纪顶级捕食者</p>
+                <button class="info-btn" onclick="showCreatureInfo('anomalocaris')">了解更多</button>
+            </div>
+            <div class="creature-card" data-creature="hallucigenia">
+                <div class="creature-image hallucigenia-img"></div>
+                <h3>怪诞虫</h3>
+                <p>最奇异的寒武纪生物之一</p>
+                <button class="info-btn" onclick="showCreatureInfo('hallucigenia')">了解更多</button>
+            </div>
+            <div class="creature-card" data-creature="wiwaxia">
+                <div class="creature-image wiwaxia-img"></div>
+                <h3>威瓦西亚虫</h3>
+                <p>身覆鳞片的神秘生物</p>
+                <button class="info-btn" onclick="showCreatureInfo('wiwaxia')">了解更多</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 地质环境 -->
+    <section id="geology" class="geology-section">
+        <h2 class="section-title">寒武纪地质环境</h2>
+        <div class="geology-content">
+            <div class="geology-interactive">
+                <div class="earth-model" id="earthModel">
+                    <div class="continent" id="continent1"></div>
+                    <div class="continent" id="continent2"></div>
+                    <div class="continent" id="continent3"></div>
+                    <div class="ocean-current"></div>
+                </div>
+                <div class="geology-controls">
+                    <button onclick="animateEarth()">查看大陆漂移</button>
+                    <button onclick="showOceanLevels()">海平面变化</button>
+                    <button onclick="showClimate()">气候条件</button>
+                </div>
+            </div>
+            <div class="geology-info">
+                <h3>地质特征</h3>
+                <ul>
+                    <li>🌊 海平面较高，大陆主要为浅海环境</li>
+                    <li>🌡️ 全球气候温暖，无极地冰盖</li>
+                    <li>⛰️ 超大陆潘诺西亚开始分裂</li>
+                    <li>🏔️ 火山活动频繁，岩浆活动活跃</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+  
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+ 
+
+    <script src="寒武纪.js"></script>
+</body>
+</html>

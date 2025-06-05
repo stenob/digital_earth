@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新近纪地质探索</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4C81',
+                        secondary: '#4A6FA5',
+                        accent: '#E07A5F',
+                        neutral: '#F4F1DE',
+                        dark: '#3D405B'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .animate-float {
+                animation: float 6s ease-in-out infinite;
+            }
+            .animate-float-delay-1 {
+                animation: float 6s ease-in-out 1s infinite;
+            }
+            .animate-float-delay-2 {
+                animation: float 6s ease-in-out 2s infinite;
+            }
+            @keyframes float {
+                0% { transform: translateY(0px); }
+                50% { transform: translateY(-15px); }
+                100% { transform: translateY(0px); }
+            }
+            .bg-blur {
+                backdrop-filter: blur(8px);
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .map-marker {
+                position: absolute;
+                width: 16px;
+                height: 16px;
+                background-color: #E07A5F;
+                border-radius: 50%;
+                transform: translate(-50%, -50%);
+                cursor: pointer;
+                z-index: 10;
+                transition: transform 0.3s ease;
+            }
+            .map-marker:hover {
+                transform: translate(-50%, -50%) scale(1.5);
+            }
+            .map-marker::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: #E07A5F;
+                border-radius: 50%;
+                animation: pulse 2s infinite;
+                opacity: 0.6;
+            }
+            @keyframes pulse {
+                0% { transform: scale(1); opacity: 0.6; }
+                70% { transform: scale(2); opacity: 0; }
+                100% { transform: scale(1); opacity: 0; }
+            }
+            .map-tooltip {
+                position: absolute;
+                background-color: white;
+                padding: 8px;
+                border-radius: 4px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease, transform 0.3s ease;
+                transform: translate(-50%, -100%) translateY(-10px);
+                z-index: 20;
+                white-space: nowrap;
+            }
+            .map-marker:hover .map-tooltip {
+                opacity: 1;
+                visibility: visible;
+                transform: translate(-50%, -100%) translateY(-5px);
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-neutral text-dark overflow-x-hidden">
+    <!-- 导航栏 -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-transparent">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2">
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
+                    <i class="fa fa-globe text-white text-xl"></i>
+                </div>
+                <span class="text-xl font-bold text-white text-shadow">新近纪地质探索</span>
+            </a>
+            <div class="hidden md:flex space-x-8">
+                <a href="#overview" class="text-white hover:text-accent transition-colors">概述</a>
+                <a href="#geology" class="text-white hover:text-accent transition-colors">地质特征</a>
+                <a href="#climate" class="text-white hover:text-accent transition-colors">气候变化</a>
+                <a href="#life" class="text-white hover:text-accent transition-colors">生物演化</a>
+                <a href="#interactive" class="text-white hover:text-accent transition-colors">互动探索</a>
+            </div>
+            <button class="md:hidden text-white text-2xl" id="menu-toggle">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-primary/90 bg-blur absolute w-full">
+            <div class="container mx-auto px-4 py-3 flex flex-col space-y-4">
+                <a href="#overview" class="text-white hover:text-accent transition-colors py-2">概述</a>
+                <a href="#geology" class="text-white hover:text-accent transition-colors py-2">地质特征</a>
+                <a href="#climate" class="text-white hover:text-accent transition-colors py-2">气候变化</a>
+                <a href="#life" class="text-white hover:text-accent transition-colors py-2">生物演化</a>
+                <a href="#interactive" class="text-white hover:text-accent transition-colors py-2">互动探索</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区 -->
+    <header class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://picsum.photos/id/1018/1920/1080" alt="新近纪时期的地球景观" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-b from-primary/60 to-dark/80"></div>
+        </div>
+        <div class="container mx-auto px-4 z-10 text-center">
+            <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-bold text-white mb-6 leading-tight animate-fade-in">
+                探索<span class="text-accent">新近纪</span><br>地球的演化历程
+            </h1>
+            <p class="text-[clamp(1rem,3vw,1.5rem)] text-white/90 max-w-3xl mx-auto mb-10">
+                穿越时空，探索2300万年前至258万年前的地质变迁与生命演化
+            </p>
+            <a href="#overview" class="inline-block bg-accent hover:bg-accent/90 text-white font-semibold px-8 py-3 rounded-full transition-all transform hover:scale-105 hover:shadow-lg">
+                开始探索 <i class="fa fa-arrow-down ml-2"></i>
+            </a>
+        </div>
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
+            <i class="fa fa-angle-down text-3xl"></i>
+        </div>
+    </header>
+
+    <!-- 概述部分 -->
+    <section id="overview" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-primary mb-4">新近纪概述</h2>
+                <div class="w-20 h-1 bg-accent mx-auto mb-6"></div>
+                <p class="text-lg text-dark/80 max-w-3xl mx-auto">
+                    新近纪是新生代的第二个纪，时间范围大约是2300万年前至258万年前，包括中新世和上新世两个阶段。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-neutral rounded-xl shadow-lg p-8 transform transition-all hover:scale-105 hover:shadow-xl">
+                    <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-6 mx-auto">
+                        <i class="fa fa-clock-o text-primary text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-center mb-4">时间范围</h3>
+                    <p class="text-dark/80 text-center">
+                        约2300万年前至258万年前，包括中新世（2300万-533万年前）和上新世（533万-258万年前）。
+                    </p>
+                </div>
+
+                <div class="bg-neutral rounded-xl shadow-lg p-8 transform transition-all hover:scale-105 hover:shadow-xl">
+                    <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-6 mx-auto">
+                        <i class="fa fa-globe text-primary text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-center mb-4">地质特征</h3>
+                    <p class="text-dark/80 text-center">
+                        地球经历大陆碰撞与张裂，形成现代全球构造框架，气候逐渐变冷并伴有波动。
+                    </p>
+                </div>
+
+                <div class="bg-neutral rounded-xl shadow-lg p-8 transform transition-all hover:scale-105 hover:shadow-xl">
+                    <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-6 mx-auto">
+                        <i class="fa fa-paw text-primary text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-center mb-4">生物演化</h3>
+                    <p class="text-dark/80 text-center">
+                        哺乳动物大发展，偶蹄类、长鼻目等迅速演化，出现早期人类祖先，海洋生物也有显著发展。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 地质特征部分 -->
+    <section id="geology" class="py-20 bg-gradient-to-b from-neutral to-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-primary mb-4">地质特征</h2>
+                <div class="w-20 h-1 bg-accent mx-auto mb-6"></div>
+                <p class="text-lg text-dark/80 max-w-3xl mx-auto">
+                    新近纪地球发生了剧烈的构造运动，重塑了全球地形和海洋分布
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="order-2 lg:order-1">
+                    <h3 class="text-2xl font-semibold text-primary mb-6">大陆碰撞与张裂</h3>
+                    <p class="text-dark/80 mb-6">
+                        印度板块与亚洲板块碰撞，闭合了特提斯洋，形成喜马拉雅山脉，这一过程不仅影响了亚洲的地形，还对亚洲季风气候和北半球冰川作用产生了深远影响。同时，海洋板块的张裂和形态变化也十分显著，大陆板块继续移动，美洲大陆形成，地中海形成而特提斯海消失。
+                    </p>
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 rounded-full bg-accent flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                                <i class="fa fa-check text-white text-xs"></i>
+                            </div>
+                            <p>印度板块与亚洲板块碰撞形成喜马拉雅山脉</p>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 rounded-full bg-accent flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                                <i class="fa fa-check text-white text-xs"></i>
+                            </div>
+                            <p>特提斯洋闭合，地中海形成</p>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 rounded-full bg-accent flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                                <i class="fa fa-check text-white text-xs"></i>
+                            </div>
+                            <p>美洲大陆形成，大西洋扩张</p>
+                        </div>
+                    </div>
+                    <a href="#interactive" class="inline-block bg-primary hover:bg-primary/90 text-white font-semibold px-6 py-3 rounded-lg transition-all transform hover:scale-105">
+                        探索更多地质互动 <i class="fa fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                <div class="order-1 lg:order-2 relative">
+                    <div class="rounded-xl overflow-hidden shadow-2xl">
+                        <img src="板块.jpg" alt="新近纪地质构造示意图" class="w-full h-auto">
+                    </div>
+                    <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-accent/20 rounded-full blur-3xl"></div>
+                    <div class="absolute -top-6 -right-6 w-32 h-32 bg-primary/20 rounded-full blur-3xl"></div>
+                </div>
+            </div>
+
+            <div class="mt-20">
+                <h3 class="text-2xl font-semibold text-primary mb-8 text-center">全球构造变化</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white rounded-xl shadow-lg p-6 transition-all hover:shadow-xl">
+                        <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                            <i class="fa fa-map-marker text-primary text-xl"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold mb-3">板块运动</h4>
+                        <p class="text-dark/80">
+                            各大陆板块继续移动，逐渐形成现代的海陆分布格局，特提斯洋闭合，地中海和大西洋逐渐形成。
+                        </p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6 transition-all hover:shadow-xl">
+                        <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                            <i class="fa fa-mountain text-primary text-xl"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold mb-3">山脉形成</h4>
+                        <p class="text-dark/80">
+                            喜马拉雅山脉、阿尔卑斯山脉等主要山脉在这一时期形成，地球表面的地形逐渐接近现代形态。
+                        </p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6 transition-all hover:shadow-xl">
+                        <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                            <i class="fa fa-tint text-primary text-xl"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold mb-3">海洋变化</h4>
+                        <p class="text-dark/80">
+                            海洋面积逐渐稳定，太平洋和大西洋的形态基本形成，但深度和海岸线仍有变化。
+                        </p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6 transition-all hover:shadow-xl">
+                        <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                            <i class="fa fa-volcano text-primary text-xl"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold mb-3">火山活动</h4>
+                        <p class="text-dark/80">
+                            火山活动频繁，特别是在板块边界地区，火山喷发对气候和环境产生了重要影响。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 气候变化部分 -->
+    <section id="climate" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-primary mb-4">气候变化</h2>
+                <div class="w-20 h-1 bg-accent mx-auto mb-6"></div>
+                <p class="text-lg text-dark/80 max-w-3xl mx-auto">
+                    新近纪气候经历了显著变化，从相对温暖逐渐转变为寒冷，为第四纪冰期奠定了基础
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
+                <div class="relative">
+                    <div class="rounded-xl overflow-hidden shadow-2xl">
+                        <img src="气候.jpg" alt="新近纪气候变化图" class="w-full h-auto">
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-accent/20 rounded-full blur-3xl"></div>
+                    <div class="absolute -top-6 -left-6 w-32 h-32 bg-primary/20 rounded-full blur-3xl"></div>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-semibold text-primary mb-6">气候演变过程</h3>
+                    <p class="text-dark/80 mb-6">
+                        新近纪全球气候开始逐渐变冷，并伴有一些大小不等的波动。中新世时期气温相对温暖，上新世则变得更加寒冷和干燥。南极冰盖在这一时期逐渐扩大，北冰洋开始形成冰层，中纬度地区的冰川也有所发展。
+                    </p>
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 rounded-full bg-accent flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                                <i class="fa fa-check text-white text-xs"></i>
+                            </div>
+                            <p>中新世：气候温暖湿润，类似现代亚热带气候</p>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 rounded-full bg-accent flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                                <i class="fa fa-check text-white text-xs"></i>
+                            </div>
+                            <p>上新世：气候开始变冷，南极冰盖扩大</p>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 rounded-full bg-accent flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                                <i class="fa fa-check text-white text-xs"></i>
+                            </div>
+                            <p>晚期：北半球出现冰盖，为第四纪冰期做准备</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 气候图表 -->
+            <div class="bg-neutral rounded-xl shadow-xl p-8">
+                <h3 class="text-2xl font-semibold text-primary mb-8 text-center">新近纪温度变化趋势</h3>
+                <div class="h-80">
+                    <canvas id="climateChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 生物演化部分 -->
+    <section id="life" class="py-20 bg-gradient-to-b from-white to-neutral">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-primary mb-4">生物演化</h2>
+                <div class="w-20 h-1 bg-accent mx-auto mb-6"></div>
+                <p class="text-lg text-dark/80 max-w-3xl mx-auto">
+                    新近纪是哺乳动物大发展的时期，同时海洋生物也经历了显著的演化
+                </p>
+            </div>
+
+            <!-- 生物演化时间线 -->
+            <div class="relative max-w-4xl mx-auto">
+                <div class="absolute left-0 md:left-1/2 top-0 bottom-0 w-1 bg-primary/20 transform md:-translate-x-1/2"></div>
+                
+                <!-- 中新世 -->
+                <div class="relative z-10 mb-16">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="order-2 md:order-1 md:w-1/2 md:pr-12 md:text-right mt-4 md:mt-0">
+                            <div class="bg-white rounded-xl shadow-lg p-6 transform transition-all hover:scale-105">
+                                <h3 class="text-xl font-semibold text-primary mb-3">中新世生物</h3>
+                                <p class="text-dark/80">
+                                    哺乳动物继续繁荣发展，偶蹄类动物如原利比鹿、萨摩麟等占据主导地位，奇蹄目动物如远角犀、草原古马等也较为常见。长鼻目动物如铲齿象开始出现并逐渐演化。海洋中鲸鱼等海洋哺乳动物进一步发展，巨齿鲨成为顶级掠食者。
+                                </p>
+                            </div>
+                        </div>
+                        <div class="order-1 md:order-2 flex justify-center mb-4 md:mb-0">
+                            <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center z-10">
+                                <i class="fa fa-clock-o text-white text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="order-3 md:w-1/2 md:pl-12 hidden md:block"></div>
+                    </div>
+                </div>
+                
+                <!-- 上新世 -->
+                <div class="relative z-10 mb-16">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="order-2 md:w-1/2 md:pr-12 hidden md:block"></div>
+                        <div class="order-1 md:order-2 flex justify-center mb-4 md:mb-0">
+                            <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center z-10">
+                                <i class="fa fa-clock-o text-white text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="order-3 md:w-1/2 md:pl-12 mt-4 md:mt-0">
+                            <div class="bg-white rounded-xl shadow-lg p-6 transform transition-all hover:scale-105">
+                                <h3 class="text-xl font-semibold text-primary mb-3">上新世生物</h3>
+                                <p class="text-dark/80">
+                                    偶蹄类动物继续多样化发展，象类迅速演化，出现了剑齿象等。奇蹄目动物逐渐减少，而食肉目动物如郊熊、巨鬣狗等得到发展。海洋中六射珊瑚大量繁殖形成大型珊瑚礁，鲸类动物进一步适应海洋生活。值得注意的是，上新世晚期出现了早期人类祖先，如乍得沙赫人、图根原人等。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 生物类别展示 -->
+            <div class="mt-20">
+                <h3 class="text-2xl font-semibold text-primary mb-10 text-center">主要生物类别</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- 哺乳动物 -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden group">
+                        <div class="h-60 overflow-hidden">
+                            <img src="哺乳动物.jpg" alt="新近纪哺乳动物" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-xl font-semibold text-primary mb-3">哺乳动物</h4>
+                            <p class="text-dark/80 mb-4">
+                                哺乳动物在新近纪占据主导地位，偶蹄类、奇蹄类、长鼻目等迅速演化，同时出现了早期人类祖先。
+                            </p>
+                            <button class="text-accent hover:text-accent/80 font-medium flex items-center" onclick="openModal('mammals')">
+                                了解更多 <i class="fa fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 海洋生物 -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden group">
+                        <div class="h-60 overflow-hidden">
+                            <img src="海洋生物.jpg" alt="新近纪海洋生物" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-xl font-semibold text-primary mb-3">海洋生物</h4>
+                            <p class="text-dark/80 mb-4">
+                                海洋生物在这一时期也有显著发展，六射珊瑚形成大型珊瑚礁，鲸鱼等海洋哺乳动物进一步多样化。
+                            </p>
+                            <button class="text-accent hover:text-accent/80 font-medium flex items-center" onclick="openModal('marine')">
+                                了解更多 <i class="fa fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 其他生物 -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden group">
+                        <div class="h-60 overflow-hidden">
+                            <img src="淡水介形虫.jpg" alt="新近纪其他生物" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-xl font-semibold text-primary mb-3">其他生物</h4>
+                            <p class="text-dark/80 mb-4">
+                                包括淡水介形虫、爬行动物、鸟类等，它们在新近纪的生态系统中也扮演了重要角色。
+                            </p>
+                            <button class="text-accent hover:text-accent/80 font-medium flex items-center" onclick="openModal('others')">
+                                了解更多 <i class="fa fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 互动探索部分 -->
+    <section id="interactive" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-primary mb-4">互动探索</h2>
+                <div class="w-20 h-1 bg-accent mx-auto mb-6"></div>
+                <p class="text-lg text-dark/80 max-w-3xl mx-auto">
+                    通过互动内容深入了解新近纪的奥秘
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                
+                </div>
+
+                <!-- 生物演化图谱 -->
+                <div class="bg-neutral rounded-xl shadow-xl p-8">
+                    <h3 class="text-2xl font-semibold text-primary mb-6">生物演化图谱</h3>
+                    <p class="text-dark/80 mb-6">
+                        点击不同的生物类别，查看它们在新近纪的演化历程
+                    </p>
+                    <div class="flex flex-wrap gap-3 mb-6" id="bioTypeSelector">
+                        <button class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors" data-type="all">
+                            点击图例可以隐藏/显示相应类别
+                        </button>
+                    <!--<button class="px-4 py-2 bg-white text-primary border border-primary rounded-lg hover:bg-primary/10 transition-colors" data-type="mammals">
+                            哺乳动物
+                        </button>
+                        <button class="px-4 py-2 bg-white text-primary border border-primary rounded-lg hover:bg-primary/10 transition-colors" data-type="marine">
+                            海洋生物
+                        </button>
+                        <button class="px-4 py-2 bg-white text-primary border border-primary rounded-lg hover:bg-primary/10 transition-colors" data-type="reptiles">
+                            爬行动物
+                        </button>
+                        <button class="px-4 py-2 bg-white text-primary border border-primary rounded-lg hover:bg-primary/10 transition-colors" data-type="birds">
+                            鸟类
+                        </button>-->
+                    </div>
+                    <div class="bg-white rounded-lg p-6 shadow-md h-80 overflow-hidden relative">
+                        <div id="evolutionChart" class="h-full w-full"></div>
+                    <!--<div class="absolute top-4 right-4 text-sm text-dark/60">
+                            <i class="fa fa-info-circle"></i> 点击图例可以隐藏/显示相应类别
+                        </div>-->
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">新近纪地质探索</h3>
+                    <p class="text-white/70 mb-4">
+                        探索2300万年前至258万年前的地质变迁与生命演化，了解地球历史上这一重要时期的奥秘。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-white hover:text-accent transition-colors">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-accent transition-colors">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-accent transition-colors">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-accent transition-colors">
+                            <i class="fa fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold mb-4">快速链接</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#overview" class="text-white/70 hover:text-white transition-colors">概述</a></li>
+                        <li><a href="#geology" class="text-white/70 hover:text-white transition-colors">地质特征</a></li>
+                        <li><a href="#climate" class="text-white/70 hover:text-white transition-colors">气候变化</a></li>
+                        <li><a href="#life" class="text-white/70 hover:text-white transition-colors">生物演化</a></li>
+                        <li><a href="#interactive" class="text-white/70 hover:text-white transition-colors">互动探索</a></li>
+                    </ul>
+                </div>
+                
+             
+            </div>
+            
+        </div>
+    </footer>
+
+    <!-- 模态框 -->
+    <div id="modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" id="modalOverlay"></div>
+        <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full mx-4 z-10 transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
+            <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-primary" id="modalTitle">生物详情</h3>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6 max-h-[70vh] overflow-y-auto" id="modalBody">
+                <!-- 模态框内容将通过JavaScript动态填充 -->
+            </div>
+            <div class="p-6 border-t border-gray-200 flex justify-end">
+                <button onclick="closeModal()" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-primary/90', 'bg-blur', 'shadow-lg');
+                navbar.classList.remove('bg-transparent');
+            } else {
+                navbar.classList.remove('bg-primary/90', 'bg-blur', 'shadow-lg');
+                navbar.classList.add('bg-transparent');
+            }
+        });
+
+        // 移动端菜单切换
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // 关闭移动端菜单
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                }
+            });
+        });
+
+        
+
+        // 生物演化图谱
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.createElement('canvas');
+            document.getElementById('evolutionChart').appendChild(ctx);
+            
+            const evolutionChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['23 Ma', '20 Ma', '15 Ma', '10 Ma', '5 Ma', '2.6 Ma'],
+                    datasets: [
+                        {
+                            label: '哺乳动物',
+                            data: [30, 45, 65, 75, 85, 90],
+                            borderColor: '#0F4C81',
+                            backgroundColor: 'rgba(15, 76, 129, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: '海洋生物',
+                            data: [40, 45, 50, 60, 70, 75],
+                            borderColor: '#4A6FA5',
+                            backgroundColor: 'rgba(74, 111, 165, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: '爬行动物',
+                            data: [25, 25, 20, 25, 30, 35],
+                            borderColor: '#E07A5F',
+                            backgroundColor: 'rgba(224, 122, 95, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: '鸟类',
+                            data: [20, 30, 40, 50, 60, 65],
+                            borderColor: '#3D405B',
+                            backgroundColor: 'rgba(61, 64, 91, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '多样性指数'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: '时间 (百万年前)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    },
+                    animation: {
+                        duration: 2000,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+            
+            // 生物类型筛选
+            document.querySelectorAll('#bioTypeSelector button').forEach(button => {
+                button.addEventListener('click', function() {
+                    // 更新按钮样式
+                    document.querySelectorAll('#bioTypeSelector button').forEach(btn => {
+                        btn.classList.remove('bg-primary', 'text-white');
+                        btn.classList.add('bg-white', 'text-primary', 'border', 'border-primary');
+                    });
+                    this.classList.remove('bg-white', 'text-primary', 'border', 'border-primary');
+                    this.classList.add('bg-primary', 'text-white');
+                    
+                    // 筛选图表数据
+                    const type = this.getAttribute('data-type');
+                    evolutionChart.data.datasets.forEach(dataset => {
+                        if (type === 'all' || dataset.label === type) {
+                            dataset.hidden = false;
+                        } else {
+                            dataset.hidden = true;
+                        }
+                    });
+                    evolutionChart.update();
+                });
+            });
+        });
+
+        // 气候变化图表
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('climateChart').getContext('2d');
+            
+            const climateChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['23 Ma', '20 Ma', '15 Ma', '10 Ma', '5 Ma', '2.6 Ma'],
+                    datasets: [
+                        {
+                            label: '全球平均温度 (°C)',
+                            data: [22, 20, 18, 15, 10, 8],
+                            borderColor: '#E07A5F',
+                            backgroundColor: 'rgba(224, 122, 95, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: '冰盖覆盖面积 (%)',
+                            data: [5, 15, 25, 40, 60, 80],
+                            borderColor: '#4A6FA5',
+                            backgroundColor: 'rgba(74, 111, 165, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            yAxisID: 'y1'
+                        },
+                        {
+                            label: '海平面高度 (相对于现代)',
+                            data: [40, 30, 20, 10, -10, -30],
+                            borderColor: '#0F4C81',
+                            backgroundColor: 'rgba(15, 76, 129, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            yAxisID: 'y2'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: '温度 (°C)'
+                            },
+                            position: 'left',
+                            grid: {
+                                drawOnChartArea: false
+                            }
+                        },
+                        y1: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '冰盖覆盖面积 (%)'
+                            },
+                            position: 'right',
+                            grid: {
+                                drawOnChartArea: false
+                            }
+                        },
+                        y2: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: '海平面高度 (米)'
+                            },
+                            position: 'right',
+                            grid: {
+                                drawOnChartArea: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value >= 0 ? '+' + value : value;
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: '时间 (百万年前)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    },
+                    animation: {
+                        duration: 2000,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+        });
+
+        // 模态框函数
+        function openModal(type) {
+            const modal = document.getElementById('modal');
+            const modalContent = document.getElementById('modalContent');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            
+            // 设置模态框标题
+            if (type === 'mammals') {
+                modalTitle.textContent = '哺乳动物演化';
+                modalBody.innerHTML = `
+                    <div class="space-y-6">
+                        <div><div>
+                            <h4 class="text-lg font-semibold text-primary mb-2">偶蹄类</h4>
+                            <p class="text-dark/80">
+                                偶蹄类动物在新近纪占据主导地位，包括鹿科、牛科、猪科等。原利比鹿是中新世早期的代表性偶蹄类动物，体型较小，具有简单的角。随着时间推移，偶蹄类动物逐渐演化出更复杂的角和牙齿结构，适应不同的生态环境。
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-primary mb-2">奇蹄类</h4>
+                            <p class="text-dark/80">
+                                奇蹄类动物在新近纪逐渐减少，主要包括马科、犀科等。草原古马是中新世的代表性奇蹄类动物，体型较小，具有三趾。随着草原环境的扩展，马科动物逐渐演化出单趾结构，适应快速奔跑。
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-primary mb-2">长鼻目</h4>
+                            <p class="text-dark/80">
+                                长鼻目动物在新近纪迅速演化，包括象科、铲齿象科等。铲齿象是中新世的代表性长鼻目动物，具有特殊的铲状下颌，用于挖掘植物根茎。随着环境变化，象科动物逐渐演化出更大的体型和更复杂的牙齿结构。
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-primary mb-2">早期人类祖先</h4>
+                            <p class="text-dark/80">
+                                上新世晚期出现了早期人类祖先，如乍得沙赫人、图根原人等。这些早期人类祖先具有一些人类特征，如直立行走的倾向，但仍保留了许多猿类特征。它们的出现标志着人类演化的重要阶段。
+                            </p>
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'marine') {
+                modalTitle.textContent = '海洋生物演化';
+                modalBody.innerHTML = `
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-lg font-semibold text-primary mb-2">海洋哺乳动物</h4>
+                            <p class="text-dark/80">
+                                海洋哺乳动物在新近纪进一步发展，包括鲸类、海牛类等。鲸鱼在这一时期逐渐适应海洋生活，演化出流线型身体和特殊的呼吸器官。巨齿鲨是新近纪海洋中的顶级掠食者，体型巨大，牙齿锋利，以其他海洋哺乳动物为食。
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-primary mb-2">珊瑚礁</h4>
+                            <p class="text-dark/80">
+                                六射珊瑚在新近纪大量繁殖，形成大型珊瑚礁。这些珊瑚礁为众多海洋生物提供了栖息地和食物来源，是海洋生态系统的重要组成部分。珊瑚礁的分布范围和结构在新近纪也发生了变化，适应了气候变化和海洋环境的演变。
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-primary mb-2">其他海洋生物</h4>
+                            <p class="text-dark/80">
+                                除了海洋哺乳动物和珊瑚礁，新近纪的海洋中还生活着各种鱼类、贝类、甲壳类等生物。这些生物在形态、结构和生态习性上都发生了多样化的演化，适应了不同的海洋环境。
+                            </p>
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'others') {
+                modalTitle.textContent = '其他生物演化';
+                modalBody.innerHTML = `
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-lg font-semibold text-primary mb-2">淡水介形虫</h4>
+                            <p class="text-dark/80">
+                                淡水介形虫在新近纪的淡水湖泊和河流中广泛分布。它们的壳体微小，但保存良好，是研究古环境和古气候的重要化石材料。通过分析淡水介形虫的化石记录，可以了解新近纪时期淡水环境的变化和演化。
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-primary mb-2">爬行动物</h4>
+                            <p class="text-dark/80">
+                                爬行动物在新近纪继续演化，包括蛇类、蜥蜴类、龟鳖类等。虽然哺乳动物在新近纪占据主导地位，但爬行动物仍然在许多生态系统中扮演重要角色。一些爬行动物适应了特殊的环境，如沙漠、海洋等。
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-primary mb-2">鸟类</h4>
+                            <p class="text-dark/80">
+                                鸟类在新近纪进一步多样化，演化出许多现代鸟类的类群。一些鸟类适应了飞行生活，发展出强大的飞行能力；另一些鸟类则适应了地面生活，如鸵鸟等。鸟类的食性也变得更加多样化，包括植食性、肉食性、杂食性等。
+                            </p>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // 显示模态框
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            const modalContent = document.getElementById('modalContent');
+            
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // 点击模态框外部关闭模态框
+        document.getElementById('modalOverlay').addEventListener('click', closeModal);
+
+        // 初始化页面
+        window.addEventListener('load', function() {
+            // 触发导航栏样式更新
+            window.dispatchEvent(new Event('scroll'));
+        });
+    </script>
+</body>
+</html>

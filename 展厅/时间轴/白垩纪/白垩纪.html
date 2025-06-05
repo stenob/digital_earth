@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>白垩纪地质与生物探索</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#E63946', // 地质红
+                        secondary: '#1D3557', // 深海蓝
+                        tertiary: '#F4A261', // 生物橙
+                        quaternary: '#A8DADC', // 浅海蓝
+                        neutral: '#F8F9FA',
+                        dark: '#121212',
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans SC', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-balance {
+                text-wrap: balance;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .card-hover {
+                @apply transition-all duration-500 hover:shadow-xl hover:-translate-y-2;
+            }
+            .parallax {
+                background-attachment: fixed;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+            .geology-gradient {
+                background: linear-gradient(135deg, #E63946 0%, #457B9D 100%);
+            }
+            .bio-gradient {
+                background: linear-gradient(135deg, #F4A261 0%, #A8DADC 100%);
+            }
+        }
+    </style>
+</head>
+<body class="font-sans bg-neutral text-dark antialiased overflow-x-hidden">
+    <!-- 导航栏 -->
+    <header id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 bg-white/95 backdrop-blur-md shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <a href="#" class="flex items-center space-x-2">
+                    <i class="fa fa-dinosaur text-primary text-2xl"></i>
+                    <span class="text-xl font-bold text-secondary">白垩纪探索</span>
+                </a>
+                
+                <!-- 桌面导航 -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#overview" class="text-dark hover:text-primary transition-colors font-medium">概述</a>
+                    <a href="#geology" class="text-dark hover:text-primary transition-colors font-medium">地质事件</a>
+               
+                    <a href="#creatures" class="text-dark hover:text-primary transition-colors font-medium">生物演化</a>
+                    <a href="#extinction" class="text-dark hover:text-primary transition-colors font-medium">大灭绝</a>
+                </nav>
+                
+                <!-- 移动端菜单按钮 -->
+                <div class="md:hidden flex items-center">
+                    <button id="menu-toggle" class="text-dark hover:text-primary focus:outline-none">
+                        <i class="fa fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t animate-fade-in">
+            <div class="container mx-auto px-4 py-3 space-y-3">
+                <a href="#overview" class="block text-dark hover:text-primary transition-colors font-medium py-2">概述</a>
+                <a href="#geology" class="block text-dark hover:text-primary transition-colors font-medium py-2">地质事件</a>
+            
+                <a href="#creatures" class="block text-dark hover:text-primary transition-colors font-medium py-2">生物演化</a>
+                <a href="#extinction" class="block text-dark hover:text-primary transition-colors font-medium py-2">大灭绝</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 英雄区域 - 带视差效果和3D元素容器 -->
+    <section class="pt-24 md:pt-0 h-screen relative overflow-hidden">
+        <div id="hero-3d-container" class="absolute inset-0 z-0"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-dark/60 to-dark/30 z-10"></div>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-20 h-full flex items-center">
+            <div class="max-w-3xl">
+                <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-bold text-white leading-tight mb-6 text-balance text-shadow">
+                    白垩纪 <span class="text-primary">地质史诗</span> 与 <span class="text-tertiary">生命奇观</span>
+                </h1>
+                <p class="text-[clamp(1rem,3vw,1.5rem)] text-white/90 mb-8 max-w-2xl text-shadow">
+                    穿越1.45亿年时光，探索恐龙盛世、大陆分裂与生物大灭绝的地球演化之谜
+                </p>
+                <div class="flex flex-wrap gap-4">
+               
+                    <a href="#geology" class="px-8 py-4 bg-white/20 backdrop-blur-sm text-white border border-white/40 rounded-full font-medium hover:bg-white/30 transition-all transform hover:-translate-y-1 flex items-center">
+                        <i class="fa fa-rock-o mr-2"></i> 地质事件
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 animate-bounce">
+            <a href="#overview" class="text-white/80 hover:text-white transition-colors">
+                <i class="fa fa-angle-down text-3xl"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- 概述部分 - 带动态数据可视化 -->
+    <section id="overview" class="py-20 bg-white relative overflow-hidden">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-secondary mb-4">白垩纪概述</h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="max-w-2xl mx-auto text-gray-600">
+                    中生代最后一个纪，见证地球板块剧烈运动、气候剧变与生物多样性巅峰
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+                <div class="bg-neutral rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow card-hover">
+                    <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+                        <i class="fa fa-calendar text-primary text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-secondary">时间跨度</h3>
+                    <p class="text-gray-600">
+                        <span class="text-primary font-bold text-2xl" id="cretaceous-start">1.45</span> 亿年前 - <span class="text-primary font-bold text-2xl" id="cretaceous-end">0.66</span> 亿年前<br>
+                        持续约 <span class="text-primary font-bold text-2xl" id="cretaceous-duration">7900</span> 万年
+                    </p>
+                </div>
+                
+                <div class="bg-neutral rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow card-hover">
+                    <div class="w-20 h-20 bg-secondary/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-secondary/20 transition-colors">
+                        <i class="fa fa-globe text-secondary text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-secondary">地理特征</h3>
+                    <p class="text-gray-600">
+                        <span class="text-secondary font-semibold">大陆格局：</span>泛大陆分裂为劳亚与冈瓦纳<br>
+                        <span class="text-secondary font-semibold">海洋分布：</span>特提斯洋横贯全球，海侵面积达历史峰值
+                    </p>
+                </div>
+                
+                <div class="bg-neutral rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow card-hover">
+                    <div class="w-20 h-20 bg-tertiary/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-tertiary/20 transition-colors">
+                        <i class="fa fa-dna text-tertiary text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-secondary">生物标志</h3>
+                    <p class="text-gray-600">
+                        <span class="text-tertiary font-semibold">陆地：</span>恐龙统治，被子植物兴起<br>
+                        <span class="text-tertiary font-semibold">海洋：</span>沧龙、菊石繁盛<br>
+                        <span class="text-tertiary font-semibold">天空：</span>翼龙与原始鸟类共存
+                    </p>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-quaternary/20 to-tertiary/20 rounded-2xl p-8 md:p-12 shadow-lg">
+                <div class="flex flex-col lg:flex-row items-center gap-8">
+                    <div class="lg:w-1/2">
+                        <h3 class="text-2xl font-bold text-secondary mb-4">白垩纪气候与大气</h3>
+                        <p class="text-gray-700 mb-6">
+                            白垩纪是典型的温室气候，两极无冰盖，全球平均温度比现代高 <span class="text-primary font-bold" id="climate-temp">10-15</span> °C。大气二氧化碳浓度约为现代的 <span class="text-primary font-bold" id="co2-level">4-6</span> 倍，促进了植物的繁盛与恐龙的演化。
+                        </p>
+                        <div class="mt-6">
+                            <canvas id="climate-chart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                    <div class="lg:w-1/2 relative">
+                        <img src="白垩纪植被.jpg" alt="白垩纪气候模拟" class="rounded-xl shadow-xl w-full h-auto object-cover">
+                        <div class="absolute -bottom-6 -right-6 bg-white p-4 rounded-lg shadow-xl max-w-xs">
+                            <h4 class="font-bold text-secondary mb-2">白垩纪植被复原</h4>
+                            <p class="text-sm text-gray-600">
+                                被子植物开始取代裸子植物，形成茂密的森林，为植食性恐龙提供丰富食物。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 背景装饰元素 -->
+        <div class="absolute -top-20 -right-20 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-40 -left-20 w-96 h-96 bg-tertiary/5 rounded-full blur-3xl"></div>
+    </section>
+
+    <!-- 地质事件部分 - 带交互式卡片和动画 -->
+    <section id="geology" class="py-20 bg-neutral relative overflow-hidden">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-secondary mb-4">重大地质事件</h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="max-w-2xl mx-auto text-gray-600">
+                    板块运动、火山活动与海洋变迁共同塑造了白垩纪的地球面貌
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 大陆分裂卡片 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md group card-hover">
+                    <div class="h-56 overflow-hidden relative">
+                        <img src="板块.jpg" alt="大陆分裂" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 text-white">
+                            <h3 class="text-xl font-semibold">大陆分裂与漂移</h3>
+                            <p class="text-white/80 text-sm">1.45亿-6600万年前</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-600 mb-4">
+                            泛大陆解体为南北两大块，南美洲与非洲分离，印度板块开始北向漂移，奠定现代大陆格局。
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500"><i class="fa fa-map-o mr-1"></i> 板块构造</span>
+                            <button class="text-primary font-medium hover:underline flex items-center" onclick="openGeologyModal('continental-drift')">
+                                查看详情 <i class="fa fa-play ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 海侵海退卡片 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md group card-hover">
+                    <div class="h-56 overflow-hidden relative">
+                        <img src="https://picsum.photos/id/1015/600/400" alt="海侵海退" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 text-white">
+                            <h3 class="text-xl font-semibold">大规模海侵与海退</h3>
+                            <p class="text-white/80 text-sm">1.4亿-6600万年前</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-600 mb-4">
+                            全球海平面上升，特提斯洋扩张，淹没大片陆地，形成广泛的浅海沉积。末期发生全球性海退，陆地面积扩大。
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500"><i class="fa fa-tint mr-1"></i> 海洋变迁</span>
+                            <button class="text-primary font-medium hover:underline flex items-center" onclick="openGeologyModal('marine-transgression')">
+                                查看详情 <i class="fa fa-play ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 火山活动卡片 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md group card-hover">
+                    <div class="h-56 overflow-hidden relative">
+                        <img src="火山.jpg" alt="火山活动" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 text-white">
+                            <h3 class="text-xl font-semibold">火山活动与构造运动</h3>
+                            <p class="text-white/80 text-sm">贯穿白垩纪</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-600 mb-4">
+                            环太平洋火山带剧烈活动，形成大规模岩浆岩。海底火山喷发增加大气二氧化碳浓度，影响全球气候。
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500"><i class="fa fa-fire mr-1"></i> 火山作用</span>
+                            <button class="text-primary font-medium hover:underline flex items-center" onclick="openGeologyModal('volcanic-activity')">
+                                查看详情 <i class="fa fa-play ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 大洋缺氧事件卡片 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md group card-hover">
+                    <div class="h-56 overflow-hidden relative">
+                        <img src="https://picsum.photos/id/1019/600/400" alt="大洋缺氧事件" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 text-white">
+                            <h3 class="text-xl font-semibold">大洋缺氧事件</h3>
+                            <p class="text-white/80 text-sm">多次发生</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-600 mb-4">
+                            海洋中氧气含量急剧下降，形成黑色页岩沉积，导致大量海洋生物灭绝，同时促进石油和天然气形成。
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500"><i class="fa fa-dna mr-1"></i> 海洋化学</span>
+                            <button class="text-primary font-medium hover:underline flex items-center" onclick="openGeologyModal('oceanic-anoxia')">
+                                查看详情 <i class="fa fa-info ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 白垩纪-古近纪界线卡片 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md group card-hover">
+                    <div class="h-56 overflow-hidden relative">
+                        <img src="白垩纪-古近纪界线.jpg" alt="K-Pg界线" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 text-white">
+                            <h3 class="text-xl font-semibold">白垩纪-古近纪界线</h3>
+                            <p class="text-white/80 text-sm">6600万年前</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-600 mb-4">
+                            小行星撞击地球，引发全球灾难，导致恐龙等约75%的物种灭绝，标志中生代结束和新生代开始。
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500"><i class="fa fa-exclamation-triangle mr-1"></i> 灭绝事件</span>
+                            <button class="text-primary font-medium hover:underline flex items-center" onclick="openGeologyModal('kpg-boundary')">
+                                查看详情 <i class="fa fa-info ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 白垩纪沉积卡片 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md group card-hover">
+                    <div class="h-56 overflow-hidden relative">
+                        <img src="白垩纪地层.jpg" alt="白垩纪沉积" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 text-white">
+                            <h3 class="text-xl font-semibold">白垩纪沉积</h3>
+                            <p class="text-white/80 text-sm">广泛分布</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-600 mb-4">
+                            形成大量白垩沉积，如欧洲的多佛白崖。同时生成重要矿产资源，包括石油、天然气和磷矿。
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500"><i class="fa fa-diamond mr-1"></i> 沉积矿产</span>
+                            <button class="text-primary font-medium hover:underline flex items-center" onclick="openGeologyModal('cretaceous-sediments')">
+                                查看详情 <i class="fa fa-info ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+        </div>
+        
+        
+    </section>
+
+    
+            </div>
+        </div>
+        
+        <!-- 背景装饰 -->
+        <div class="absolute top-1/3 -left-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-1/3 -right-40 w-80 h-80 bg-tertiary/10 rounded-full blur-3xl"></div>
+    </section>
+
+    <!-- 生物世界部分 -->
+    <section id="creatures" class="py-20 bg-white relative overflow-hidden">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-secondary mb-4">白垩纪生物世界</h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="max-w-2xl mx-auto text-gray-600">
+                    恐龙的鼎盛时期，同时见证了哺乳动物和被子植物的崛起
+                </p>
+            </div>
+            
+            <!-- 生物分类筛选 -->
+            
+            
+            <!-- 生物卡片网格 -->
+            <div id="creatures-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- 霸王龙卡片 -->
+                <div class="creature-card group" data-category="dinosaur">
+                    <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2">
+                        <div class="relative h-64 overflow-hidden">
+                            <img src="霸王龙.jpg" alt="霸王龙" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="text-xl font-semibold">霸王龙</h3>
+                                <p class="text-white/80 text-sm">晚白垩世 | 北美洲</p>
+                            </div>
+                            <div class="absolute top-4 right-4 bg-primary text-white text-xs px-2 py-1 rounded-full">
+                                恐龙
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-gray-600 text-sm mb-4">
+                                最大的陆生肉食性恐龙之一，体长可达12-13米，拥有极强的咬合力，是白垩纪末期的顶级掠食者。
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="fa fa-ruler-combined mr-1"></i> 12-13米
+                                </div>
+                                <button class="text-primary text-sm font-medium hover:underline" onclick="openCreatureModal('tyrannosaurus')">
+                                    详情 <i class="fa fa-arrow-right ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 三角龙卡片 -->
+                <div class="creature-card group" data-category="dinosaur">
+                    <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2">
+                        <div class="relative h-64 overflow-hidden">
+                            <img src="三角龙.jpg" alt="三角龙" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="text-xl font-semibold">三角龙</h3>
+                                <p class="text-white/80 text-sm">晚白垩世 | 北美洲</p>
+                            </div>
+                            <div class="absolute top-4 right-4 bg-primary text-white text-xs px-2 py-1 rounded-full">
+                                恐龙
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-gray-600 text-sm mb-4">
+                                角龙科的代表物种，以其独特的三对角和巨大的头盾闻名。体长约9米，是植食性恐龙，可能以低矮植物为食。
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="fa fa-ruler-combined mr-1"></i> 约9米
+                                </div>
+                                <button class="text-primary text-sm font-medium hover:underline" onclick="openCreatureModal('triceratops')">
+                                    详情 <i class="fa fa-arrow-right ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 沧龙卡片 -->
+                <div class="creature-card group" data-category="marine">
+                    <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2">
+                        <div class="relative h-64 overflow-hidden">
+                            <img src="沧龙.jpg" alt="沧龙" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="text-xl font-semibold">沧龙</h3>
+                                <p class="text-white/80 text-sm">晚白垩世 | 全球海洋</p>
+                            </div>
+                            <div class="absolute top-4 right-4 bg-secondary text-white text-xs px-2 py-1 rounded-full">
+                                海洋生物
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-gray-600 text-sm mb-4">
+                                白垩纪海洋中的顶级掠食者，最大个体可达17米以上。身体呈流线型，四肢演化成鳍状肢，适应海洋生活。
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="fa fa-ruler-combined mr-1"></i> 可达17米
+                                </div>
+                                <button class="text-primary text-sm font-medium hover:underline" onclick="openCreatureModal('mosasaurus')">
+                                    详情 <i class="fa fa-arrow-right ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 风神翼龙卡片 -->
+                <div class="creature-card group" data-category="flying">
+                    <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2">
+                        <div class="relative h-64 overflow-hidden">
+                            <img src="风神翼龙.jpg" alt="风神翼龙" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="text-xl font-semibold">风神翼龙</h3>
+                                <p class="text-white/80 text-sm">晚白垩世 | 北美洲</p>
+                            </div>
+                            <div class="absolute top-4 right-4 bg-tertiary text-white text-xs px-2 py-1 rounded-full">
+                                飞行生物
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-gray-600 text-sm mb-4">
+                                已知最大的飞行动物之一，翼展可达10-12米。可能以鱼类或小型动物为食，能够长时间飞行。
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="fa fa-ruler-combined mr-1"></i> 翼展10-12米
+                                </div>
+                                <button class="text-primary text-sm font-medium hover:underline" onclick="openCreatureModal('quetzalcoatlus')">
+                                    详情 <i class="fa fa-arrow-right ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 始祖兽卡片 -->
+                <div class="creature-card group" data-category="mammal">
+                    <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2">
+                        <div class="relative h-64 overflow-hidden">
+                            <img src="始祖兽.jpg" alt="始祖兽" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="text-xl font-semibold">始祖兽</h3>
+                                <p class="text-white/80 text-sm">早白垩世 | 亚洲</p>
+                            </div>
+                            <div class="absolute top-4 right-4 bg-quaternary text-white text-xs px-2 py-1 rounded-full">
+                                哺乳动物
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-gray-600 text-sm mb-4">
+                                早期真兽类哺乳动物，体型小，约10厘米长。可能生活在树上，以昆虫为食，是现代有胎盘哺乳动物的祖先之一。
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="fa fa-ruler-combined mr-1"></i> 约10厘米
+                                </div>
+                                <button class="text-primary text-sm font-medium hover:underline" onclick="openCreatureModal('eomaia')">
+                                    详情 <i class="fa fa-arrow-right ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 被子植物卡片 -->
+                <div class="creature-card group" data-category="plant">
+                    <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2">
+                        <div class="relative h-64 overflow-hidden">
+                            <img src="被子植物.jpg" alt="早期被子植物" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="text-xl font-semibold">早期被子植物</h3>
+                                <p class="text-white/80 text-sm">早白垩世-晚白垩世 | 全球</p>
+                            </div>
+                            <div class="absolute top-4 right-4 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+                                植物
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-gray-600 text-sm mb-4">
+                                白垩纪出现并迅速多样化的开花植物，取代裸子植物成为优势陆生植物。具有花和果实，促进了昆虫和植食动物的演化。
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="fa fa-seedling mr-1"></i> 多样化
+                                </div>
+                                <button class="text-primary text-sm font-medium hover:underline" onclick="openCreatureModal('angiosperms')">
+                                    详情 <i class="fa fa-arrow-right ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+        </div>
+        
+        <!-- 背景装饰元素 -->
+        <div class="absolute top-1/4 -right-20 w-40 h-40 bg-tertiary/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-1/4 -left-20 w-60 h-60 bg-primary/5 rounded-full blur-3xl"></div>
+    </section>
+
+    <!-- 大灭绝部分 -->
+    <section id="extinction" class="py-20 bg-gradient-to-b from-dark to-dark/90 text-white relative overflow-hidden">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">白垩纪-古近纪灭绝事件</h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="max-w-2xl mx-auto text-white/70">
+                    约6600万年前发生的第五次生物大灭绝，导致恐龙等约75%的物种灭绝
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h3 class="text-2xl font-bold mb-6">小行星撞击假说</h3>
+                    <p class="text-white/80 mb-6">
+                        目前最被广泛接受的理论认为，一颗直径约10公里的小行星撞击了现今墨西哥尤卡坦半岛的希克苏鲁伯地区，引发了一系列全球性灾难。
+                    </p>
+                    
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                                <i class="fa fa-meteor text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg mb-1">撞击事件</h4>
+                                <p class="text-white/70">
+                                    小行星撞击产生巨大能量，相当于100万亿吨TNT炸药爆炸，形成直径约180公里的撞击坑。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                                <i class="fa fa-fire text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg mb-1">全球火灾</h4>
+                                <p class="text-white/70">
+                                    撞击抛出的高温碎片引发全球范围森林大火，产生的烟尘遮蔽阳光，导致光合作用中断。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                                <i class="fa fa-smog text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg mb-1">气候剧变</h4>
+                                <p class="text-white/70">
+                                    尘埃云阻挡阳光，导致全球气温骤降约20°C，随后因火山气体释放导致长期温室效应。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                                <i class="fa fa-wave-square text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg mb-1">海啸与地震</h4>
+                                <p class="text-white/70">
+                                    撞击引发超级海啸，浪高超过100米，席卷全球海岸线，并触发大规模地震和火山活动。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/5 backdrop-blur-sm p-4 rounded-lg border border-white/10">
+                        <h4 class="font-semibold text-lg mb-2 flex items-center">
+                            <i class="fa fa-info-circle text-primary mr-2"></i> 希克苏鲁伯撞击坑
+                        </h4>
+                        <p class="text-white/70">
+                            位于墨西哥尤卡坦半岛的希克苏鲁伯撞击坑直径约180公里，是地球上已知最大的撞击坑之一。其形成年代与白垩纪-古近纪界线完全吻合，为小行星撞击假说提供了关键证据。
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <div class="relative h-[500px] rounded-xl overflow-hidden shadow-2xl">
+                        <img src="小行星撞击模拟图.jpg" alt="小行星撞击模拟" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 right-6">
+                            <h4 class="text-xl font-semibold mb-2">小行星撞击模拟图</h4>
+                            <p class="text-white/80">
+                                艺术家对希克苏鲁伯小行星撞击地球的想象图。这次撞击事件导致了白垩纪末期的生物大灭绝。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- 灭绝事件时间轴 -->
+                    <div class="mt-8 bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10">
+                        <h4 class="font-semibold text-lg mb-4">灭绝事件时间线</h4>
+                        <div class="relative">
+                            <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-primary/30"></div>
+                            
+                            <div class="relative pl-12 mb-6">
+                                <div class="absolute left-0 top-1 w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                                    <i class="fa fa-bolt text-white"></i>
+                                </div>
+                                <h5 class="font-medium text-lg mb-1">0-1小时</h5>
+                                <p class="text-white/70 text-sm">
+                                    小行星撞击，形成撞击坑，释放巨大能量，引发全球地震和火山活动。
+                                </p>
+                            </div>
+                            
+                            <div class="relative pl-12 mb-6">
+                                <div class="absolute left-0 top-1 w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                                    <i class="fa fa-wave-square text-white"></i>
+                                </div>
+                                <h5 class="font-medium text-lg mb-1">1-24小时</h5>
+                                <p class="text-white/70 text-sm">
+                                    超级海啸席卷全球海岸线，海浪高度超过100米，摧毁沿海生态系统。
+                                </p>
+                            </div>
+                            
+                            <div class="relative pl-12 mb-6">
+                                <div class="absolute left-0 top-1 w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                                    <i class="fa fa-fire text-white"></i>
+                                </div>
+                                <h5 class="font-medium text-lg mb-1">1-3个月</h5>
+                                <p class="text-white/70 text-sm">
+                                    全球范围森林火灾，烟尘遮蔽阳光，光合作用停止，植物大量死亡。
+                                </p>
+                            </div>
+                            
+                            <div class="relative pl-12 mb-6">
+                                <div class="absolute left-0 top-1 w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                                    <i class="fa fa-snowflake text-white"></i>
+                                </div>
+                                <h5 class="font-medium text-lg mb-1">3个月-数年</h5>
+                                <p class="text-white/70 text-sm">
+                                    全球气温骤降，黑暗期持续数年，食物链崩溃，大型动物陆续灭绝。
+                                </p>
+                            </div>
+                            
+                            <div class="relative pl-12">
+                                <div class="absolute left-0 top-1 w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                                    <i class="fa fa-sun text-white"></i>
+                                </div>
+                                <h5 class="font-medium text-lg mb-1">数年-千年</h5>
+                                <p class="text-white/70 text-sm">
+                                    尘埃沉降，阳光重新照射地球，但火山气体导致长期温室效应，气候逐渐回暖。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 灭绝影响 -->
+            <div class="mt-20">
+                <h3 class="text-2xl font-bold text-center mb-10">灭绝事件的影响</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
+                        <div class="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center mb-4">
+                            <i class="fa fa-dinosaur text-primary text-2xl"></i>
+                        </div>
+                        <h4 class="font-semibold text-lg mb-2">恐龙灭绝</h4>
+                        <p class="text-white/70 text-sm">
+                            非鸟恐龙全部灭绝，仅鸟类幸存。恐龙统治地球约1.6亿年的历史至此终结。
+                        </p>
+                    </div>
+                    
+                    <div class="bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
+                        <div class="w-14 h-14 rounded-full bg-secondary/20 flex items-center justify-center mb-4">
+                            <i class="fa fa-fish text-secondary text-2xl"></i>
+                        </div>
+                        <h4 class="font-semibold text-lg mb-2">海洋生物灾难</h4>
+                        <p class="text-white/70 text-sm">
+                            约90%的海洋物种灭绝，包括沧龙、蛇颈龙、菊石等。海洋生态系统经历重大重构。
+                        </p>
+                    </div>
+                    
+                    <div class="bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
+                        <div class="w-14 h-14 rounded-full bg-tertiary/20 flex items-center justify-center mb-4">
+                            <i class="fa fa-paw text-tertiary text-2xl"></i>
+                        </div>
+                        <h4 class="font-semibold text-lg mb-2">哺乳动物崛起</h4>
+                        <p class="text-white/70 text-sm">
+                            哺乳动物在灭绝事件后迅速多样化，占据了恐龙灭绝后留下的生态位，最终演化出人类。
+                        </p>
+                    </div>
+                    
+                    <div class="bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
+                        <div class="w-14 h-14 rounded-full bg-quaternary/20 flex items-center justify-center mb-4">
+                            <i class="fa fa-leaf text-quaternary text-2xl"></i>
+                        </div>
+                        <h4 class="font-semibold text-lg mb-2">植物群更替</h4>
+                        <p class="text-white/70 text-sm">
+                            被子植物在灭绝事件后成为陆地优势植物，针叶树等裸子植物数量大幅减少。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 背景装饰 -->
+        <div class="absolute top-1/3 -left-60 w-120 h-120 bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-1/3 -right-60 w-120 h-120 bg-tertiary/5 rounded-full blur-3xl"></div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white/70 py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4">白垩纪探索</h3>
+                    <p class="text-sm">
+                        一个交互式的地质与生物科普网站，带你穿越时空，探索白垩纪的奥秘。
+                    </p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-white/70 hover:text-white transition-colors">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-white/70 hover:text-white transition-colors">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-white/70 hover:text-white transition-colors">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-white/70 hover:text-white transition-colors">
+                            <i class="fa fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4">快速链接</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#overview" class="hover:text-white transition-colors">白垩纪概述</a></li>
+                        <li><a href="#geology" class="hover:text-white transition-colors">地质事件</a></li>
+              
+                        <li><a href="#creatures" class="hover:text-white transition-colors">生物世界</a></li>
+                        <li><a href="#extinction" class="hover:text-white transition-colors">大灭绝事件</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4">资源</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">科学研究</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">化石图库</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">科普文章</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">参考书籍</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">博物馆链接</a></li>
+                    </ul>
+                </div>
+               
+            </div>
+            
+        </div>
+    </footer>
+
+    <!-- 地质事件详情模态框 -->
+    <div id="geology-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 id="modal-title" class="text-2xl font-bold text-secondary"></h3>
+                    <button onclick="closeGeologyModal()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div id="modal-content" class="space-y-6">
+                    <!-- 内容将通过JavaScript动态填充 -->
+                </div>
+                <div class="mt-8 flex justify-end">
+                    <button onclick="closeGeologyModal()" class="px-6 py-2 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-colors">
+                        关闭
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 生物详情模态框 -->
+    <div id="creature-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 id="creature-modal-title" class="text-2xl font-bold text-secondary"></h3>
+                    <button onclick="closeCreatureModal()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div id="creature-modal-content" class="space-y-6">
+                    <!-- 内容将通过JavaScript动态填充 -->
+                </div>
+                <div class="mt-8 flex justify-end">
+                    <button onclick="closeCreatureModal()" class="px-6 py-2 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-colors">
+                        关闭
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-md');
+                navbar.classList.remove('bg-white/90');
+                navbar.classList.add('bg-white/95');
+            } else {
+                navbar.classList.remove('shadow-md');
+                navbar.classList.add('bg-white/90');
+                navbar.classList.remove('bg-white/95');
+            }
+        });
+        
+        // 移动端菜单切换
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // 关闭移动端菜单
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                }
+            });
+        });
+        
+        // 地质事件详情模态框
+        function openGeologyModal(eventId) {
+            const modal = document.getElementById('geology-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+            
+            // 根据事件ID设置内容
+            let title, content;
+            
+            switch(eventId) {
+                case 'continental-drift':
+                    title = '大陆分裂与漂移';
+                    content = `
+                        <div class="space-y-4">
+                            <img src="板块.jpg" alt="大陆分裂" class="w-full h-auto rounded-lg">
+                            <p class="text-gray-700">
+                                白垩纪是地球板块运动活跃的时期，泛大陆在此期间持续分裂。早白垩世，劳亚大陆（北美洲、欧洲和亚洲）与冈瓦纳大陆（南美洲、非洲、印度、澳大利亚和南极洲）完全分离。
+                            </p>
+                            <p class="text-gray-700">
+                                随着时间推移，南美洲与非洲之间的裂谷不断扩张，形成了南大西洋。在东部，印度板块开始脱离澳大利亚和南极洲，向北快速漂移，最终与欧亚板块碰撞，形成了喜马拉雅山脉。
+                            </p>
+                            <p class="text-gray-700">
+                                这些板块运动不仅塑造了现代大陆的基本格局，还导致了频繁的火山活动和地震，对全球气候和生物演化产生了深远影响。
+                            </p>
+                            <div class="bg-gray-100 p-4 rounded-lg">
+                                <h4 class="font-semibold text-secondary mb-2">关键事件时间线</h4>
+                                <ul class="space-y-2 text-sm text-gray-700">
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> 1.45亿年前：劳亚大陆与冈瓦纳大陆分离</li>
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> 1.2亿年前：南美洲与非洲开始分裂</li>
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> 8000万年前：印度板块开始快速向北漂移</li>
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> 6500万年后：南大西洋完全形成</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'marine-transgression':
+                    title = '大规模海侵与海退';
+                    content = `
+                        <div class="space-y-4">
+                            <img src="https://picsum.photos/id/1015/800/400" alt="海侵海退" class="w-full h-auto rounded-lg">
+                            <p class="text-gray-700">
+                                白垩纪是地球历史上最大规模的海侵时期之一。由于全球海平面上升，浅海覆盖了许多大陆地区，形成了广阔的陆表海。例如，北美洲中部被西部内陆海道分隔为东西两部分，欧洲大部分地区也被特提斯海和北海淹没。
+                            </p>
+                            <p class="text-gray-700">
+                                这些浅海环境为海洋生物提供了丰富的栖息地，促进了生物多样性的发展。同时，海侵也导致了沉积物的广泛分布，形成了重要的石油和天然气储层。
+                            </p>
+                            <p class="text-gray-700">
+                                白垩纪末期，全球海平面下降，发生大规模海退。这一变化可能与板块运动导致的洋中脊活动减弱、极地冰盖形成等因素有关。海退使得许多海洋生物失去了栖息地，加速了生物灭绝的进程。
+                            </p>
+                            <div class="bg-gray-100 p-4 rounded-lg">
+                                <h4 class="font-semibold text-secondary mb-2">海侵影响</h4>
+                                <ul class="space-y-2 text-sm text-gray-700">
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> 形成广泛的浅海沉积，包括白垩、石灰岩等</li>
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> 促进了海洋生物的繁荣，如菊石、箭石、有孔虫等</li>
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> 改变了陆地生态系统，分割了大陆，影响了陆生生物的分布</li>
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> 形成了重要的沉积矿产资源</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'volcanic-activity':
+                    title = '火山活动与构造运动';
+                    content = `
+                        <div class="space-y-4">
+                            <img src="火山.jpg" alt="火山活动" class="w-full h-auto rounded-lg">
+                            <p class="text-gray-700">
+                                白垩纪时期，全球火山活动频繁，特别是在环太平洋地区。这些火山活动与板块俯冲密切相关，形成了著名的环太平洋火山带。
+                            </p>
+                            <p class="text-gray-700">
+                                大规模的火山喷发向大气中释放了大量的二氧化碳和二氧化硫等气体。二氧化碳的增加导致了全球温室效应加剧，使白垩纪成为一个温暖的时期。而二氧化硫在大气中形成气溶胶，可能导致短期内的气候变冷。
+                            </p>
+                            <p class="text-gray-700">
+                                火山活动还产生了大量的火山灰和岩浆，形成了广泛分布的火山岩。在中国东部，白垩纪的火山活动尤为强烈，形成了著名的中生代火山岩带。
+                            </p>
+                            <div class="bg-gray-100 p-4 rounded-lg">
+                                <h4 class="font-semibold text-secondary mb-2">主要火山活动区域</h4>
+                                <ul class="space-y-2 text-sm text-gray-700">
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> 环太平洋火山带：包括现今的南美洲西岸、北美洲西岸、日本、菲律宾等地</li>
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> 印度洋大火成岩省：包括印度德干暗色岩等</li>
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i>
+                                                                        <li><i class="fa fa-circle text-primary text-xs mr-2"></i> 中国东部火山岩带：包括浙江、福建、江西等地的火山岩</li>
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> 北大西洋火成岩省：与大西洋张开相关的火山活动</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'oceanic-anoxia':
+                    title = '大洋缺氧事件';
+                    content = `
+                        <div class="space-y-4">
+                            <img src="https://picsum.photos/id/1019/800/400" alt="大洋缺氧事件" class="w-full h-auto rounded-lg">
+                            <p class="text-gray-700">
+                                白垩纪期间发生了多次大洋缺氧事件（OAEs），其中最著名的是发生在早白垩世阿普特期-阿尔布期的OAE1a和晚白垩世森诺曼期-土伦期的OAE2。这些事件的特征是海洋中氧气含量急剧下降，导致大面积海域处于缺氧状态。
+                            </p>
+                            <p class="text-gray-700">
+                                大洋缺氧事件的成因可能与全球气候变暖、火山活动释放大量二氧化碳、海洋环流减缓等因素有关。缺氧环境导致大量海洋生物灭绝，同时也促进了有机物质的保存，形成了重要的石油和天然气源岩。
+                            </p>
+                            <p class="text-gray-700">
+                                白垩纪的大洋缺氧事件是地质历史上规模最大的缺氧事件之一，对地球生态系统和气候演化产生了深远影响。
+                            </p>
+                            <div class="bg-gray-100 p-4 rounded-lg">
+                                <h4 class="font-semibold text-secondary mb-2">主要大洋缺氧事件</h4>
+                                <ul class="space-y-2 text-sm text-gray-700">
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> OAE1a（早阿普特期，约1.20亿年前）：持续约100万年，与大规模火山活动有关</li>
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> OAE1b（阿尔布期，约1.13亿年前）：分为多个亚事件，影响范围较广</li>
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> OAE2（森诺曼期-土伦期边界，约9400万年前）：与德干暗色岩火山活动有关，导致全球气候剧变</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'kpg-boundary':
+                    title = '白垩纪-古近纪界线';
+                    content = `
+                        <div class="space-y-4">
+                            <img src="白垩纪-古近纪界线.jpg" alt="K-Pg界线" class="w-full h-auto rounded-lg">
+                            <p class="text-gray-700">
+                                白垩纪-古近纪界线（K-Pg界线）是地质历史上的一个重要转折点，约发生在6600万年前。这一时期发生了地球历史上第五次生物大灭绝事件，导致约75%的物种灭绝，包括所有非鸟恐龙。
+                            </p>
+                            <p class="text-gray-700">
+                                目前普遍认为，这次灭绝事件与一颗直径约10公里的小行星撞击地球有关。撞击地点位于现今墨西哥尤卡坦半岛的希克苏鲁伯地区，形成了直径约180公里的撞击坑。
+                            </p>
+                            <p class="text-gray-700">
+                                小行星撞击引发了一系列全球性灾难，包括巨大的地震、海啸、全球火灾和尘埃遮蔽阳光导致的光合作用中断。这些事件共同导致了生态系统的崩溃和大规模物种灭绝。
+                            </p>
+                            <div class="bg-gray-100 p-4 rounded-lg">
+                                <h4 class="font-semibold text-secondary mb-2">K-Pg界线的证据</h4>
+                                <ul class="space-y-2 text-sm text-gray-700">
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> 铱异常：全球范围内K-Pg界线层中铱元素含量显著增加，铱在地球表层稀少，但在小行星中较为常见</li>
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> 冲击石英：在K-Pg界线层中发现了冲击石英颗粒，这是高压冲击事件的标志</li>
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> 微球粒：K-Pg界线层中含有大量微球粒，由撞击产生的熔融物质快速冷却形成</li>
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> 希克苏鲁伯撞击坑：其形成年代与K-Pg界线完全吻合</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'cretaceous-sediments':
+                    title = '白垩纪沉积';
+                    content = `
+                        <div class="space-y-4">
+                            <img src="白垩纪地层.jpg" alt="白垩纪沉积" class="w-full h-auto rounded-lg">
+                            <p class="text-gray-700">
+                                白垩纪的沉积记录了当时的地质环境和生物演化。由于全球海侵广泛，白垩纪地层中广泛分布着浅海沉积，其中最具代表性的是白垩沉积。
+                            </p>
+                            <p class="text-gray-700">
+                                白垩是一种由微小的海洋生物（如颗石藻）遗骸堆积而成的石灰岩，质地松软，颜色多为白色或浅黄色。英国的多佛白崖就是白垩纪白垩沉积的典型代表。
+                            </p>
+                            <p class="text-gray-700">
+                                除了白垩沉积外，白垩纪地层中还包括砂岩、页岩、煤层等。这些沉积岩中保存了丰富的化石，为研究白垩纪的生物提供了重要资料。
+                            </p>
+                            <div class="bg-gray-100 p-4 rounded-lg">
+                                <h4 class="font-semibold text-secondary mb-2">白垩纪沉积矿产</h4>
+                                <ul class="space-y-2 text-sm text-gray-700">
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> 石油和天然气：白垩纪的海洋沉积是重要的烃源岩，全球许多油田的石油和天然气都来自白垩纪地层</li>
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> 磷矿：白垩纪的海洋沉积中常含有丰富的磷，形成重要的磷矿资源</li>
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> 石灰岩和白垩：广泛用于建筑、水泥等工业</li>
+                                    <li><i class="fa fa-circle text-primary text-xs mr-2"></i> 煤：白垩纪的陆相沉积中可能含有煤层</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            modalTitle.textContent = title;
+            modalContent.innerHTML = content;
+            
+            // 显示模态框
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.remove('scale-95');
+            modal.querySelector('div').classList.add('scale-100');
+            
+            // 禁止背景滚动
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeGeologyModal() {
+            const modal = document.getElementById('geology-modal');
+            
+            // 隐藏模态框
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.remove('scale-100');
+            modal.querySelector('div').classList.add('scale-95');
+            
+            // 恢复背景滚动
+            document.body.style.overflow = '';
+        }
+        
+        // 生物详情模态框
+        function openCreatureModal(creatureId) {
+            const modal = document.getElementById('creature-modal');
+            const modalTitle = document.getElementById('creature-modal-title');
+            const modalContent = document.getElementById('creature-modal-content');
+            
+            // 根据生物ID设置内容
+            let title, content;
+            
+            switch(creatureId) {
+                case 'tyrannosaurus':
+                    title = '霸王龙';
+                    content = `
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="md:col-span-2">
+                                    <img src="霸王龙.jpg" alt="霸王龙" class="w-full h-auto rounded-lg">
+                                </div>
+                                <div class="bg-gray-100 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-secondary mb-3">基本信息</h4>
+                                    <ul class="space-y-2 text-sm">
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">学名</span>
+                                            <span class="font-medium">Tyrannosaurus rex</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">生存年代</span>
+                                            <span class="font-medium">晚白垩世（约6800-6600万年前）</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">分布区域</span>
+                                            <span class="font-medium">北美洲</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">体长</span>
+                                            <span class="font-medium">12-13米</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">体重</span>
+                                            <span class="font-medium">约8-14吨</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">食性</span>
+                                            <span class="font-medium">肉食性</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-lg text-secondary mb-3">简介</h4>
+                                <p class="text-gray-700">
+                                    霸王龙（Tyrannosaurus rex）是暴龙科中体型最大的一种，也是地球上已知最大的陆生肉食性恐龙之一。它生活在白垩纪末期的北美洲，是当时的顶级掠食者。
+                                </p>
+                                <p class="text-gray-700">
+                                    霸王龙拥有巨大而强壮的头部，最大的头骨长度超过1.5米。它的牙齿极其锋利，呈香蕉形，最大的牙齿长度可达30厘米（包括牙根）。霸王龙的咬合力极强，估计可达12万牛顿，能够轻易咬碎猎物的骨头。
+                                </p>
+                                <p class="text-gray-700">
+                                    尽管体型庞大，霸王龙的前肢却非常短小，只有两个手指。目前科学家对其前肢的功能还存在争议，可能用于在交配时抓住配偶，或在摔倒时辅助起身。
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-lg text-secondary mb-3">古生物学发现</h4>
+                                <p class="text-gray-700">
+                                    霸王龙的化石首次发现于1902年的蒙大拿州，由美国古生物学家巴纳姆·布朗（Barnum Brown）发现。最著名的霸王龙化石标本是"苏"（Sue），它是目前保存最完整的霸王龙化石之一，保存率达到90%。"苏"的骨架现藏于芝加哥菲尔德自然历史博物馆。
+                                </p>
+                                <p class="text-gray-700">
+                                    近年来的研究表明，霸王龙可能具有复杂的社会行为。在加拿大艾伯塔省发现的多具霸王龙化石集中在一起，这可能表明它们会群体捕猎或至少会聚集在一起。
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-lg text-secondary mb-3">灭绝</h4>
+                                <p class="text-gray-700">
+                                    霸王龙是白垩纪-古近纪灭绝事件的受害者之一，约6600万年前与其他非鸟恐龙一起灭绝。目前认为这次灭绝事件是由小行星撞击和火山活动等多重因素共同作用导致的。
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'triceratops':
+                    title = '三角龙';
+                    content = `
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="md:col-span-2">
+                                    <img src="三角龙.jpg" alt="三角龙" class="w-full h-auto rounded-lg">
+                                </div>
+                                <div class="bg-gray-100 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-secondary mb-3">基本信息</h4>
+                                    <ul class="space-y-2 text-sm">
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">学名</span>
+                                            <span class="font-medium">Triceratops</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">生存年代</span>
+                                            <span class="font-medium">晚白垩世（约6800-6600万年前）</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">分布区域</span>
+                                            <span class="font-medium">北美洲</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">体长</span>
+                                            <span class="font-medium">约7-9米</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">体重</span>
+                                            <span class="font-medium">约6-12吨</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">食性</span>
+                                            <span class="font-medium">植食性</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-lg text-secondary mb-3">简介</h4>
+                                <p class="text-gray-700">
+                                    三角龙（Triceratops）是角龙科恐龙的代表物种，生活在白垩纪末期的北美洲。它以其独特的三对角和巨大的头盾而闻名，是最著名的恐龙之一。
+                                </p>
+                                <p class="text-gray-700">
+                                    三角龙的头骨是动物界中最大的头骨之一，成年个体的头骨长度可达2.5米以上，约占身体长度的三分之一。它的头盾可能用于展示、防御或调节体温。
+                                </p>
+                                <p class="text-gray-700">
+                                    三角龙的嘴部呈喙状，适合切割植物，牙齿排列成齿系，能够高效地咀嚼坚韧的植物。它可能以低矮的蕨类、苏铁和松柏类植物为食。
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-lg text-secondary mb-3">角与头盾的功能</h4>
+                                <p class="text-gray-700">
+                                    三角龙的角和头盾一直是古生物学家研究的热点。传统观点认为，它们主要用于防御掠食者，如霸王龙。然而，近年来的研究表明，这些结构可能更多地用于种内竞争和展示。
+                                </p>
+                                <p class="text-gray-700">
+                                    头盾上的孔洞可能减轻了头骨的重量，同时也可能用于展示色彩或血管网络，以吸引配偶或威慑竞争对手。角的磨损模式表明，它们可能用于推搡或撞击同类，而非直接对抗掠食者。
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-lg text-secondary mb-3">分类与演化</h4>
+                                <p class="text-gray-700">
+                                    三角龙属于角龙科，角龙科是一群大型的植食性恐龙，主要分布在北美洲和亚洲。三角龙是角龙科中最晚出现的成员之一，与霸王龙生活在同一时期和地区。
+                                </p>
+                                <p class="text-gray-700">
+                                    三角龙的化石非常丰富，已发现了数百个标本，包括完整的头骨和骨架。这使得科学家对三角龙的了解比对许多其他恐龙更为详细。
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'mosasaurus':
+                    title = '沧龙';
+                    content = `
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="md:col-span-2">
+                                    <img src="沧龙.jpg" alt="沧龙" class="w-full h-auto rounded-lg">
+                                </div>
+                                <div class="bg-gray-100 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-secondary mb-3">基本信息</h4>
+                                    <ul class="space-y-2 text-sm">
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">学名</span>
+                                            <span class="font-medium">Mosasaurus</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">生存年代</span>
+                                            <span class="font-medium">晚白垩世（约8200-6600万年前）</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">分布区域</span>
+                                            <span class="font-medium">全球海洋</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">体长</span>
+                                            <span class="font-medium">可达17米以上</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">食性</span>
+                                            <span class="font-medium">肉食性</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-lg text-secondary mb-3">简介</h4>
+                                <p class="text-gray-700">
+                                    沧龙（Mosasaurus）是白垩纪晚期海洋中的顶级掠食者，属于沧龙科。尽管常被误认为是恐龙，但沧龙实际上是一种巨大的海生蜥蜴，与现代的巨蜥和蛇有亲缘关系。
+                                </p>
+                                <p class="text-gray-700">
+                                    沧龙的身体呈流线型，四肢演化成鳍状肢，尾巴强壮，呈半月形，适合快速游泳。它的头部巨大， jaws powerful, 牙齿锋利且向内弯曲，适合捕捉和撕裂猎物。
+                                </p>
+                                <p class="text-gray-700">
+                                    沧龙的眼睛很大，可能具有良好的视力，帮助它在海洋中寻找猎物。它的鼻孔位于头顶，便于在水面呼吸。
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-lg text-secondary mb-3">食性与生态</h4>
+                                <p class="text-gray-700">
+                                    沧龙是顶级掠食者，食谱广泛，包括鱼类、鲨鱼、头足类动物（如菊石和箭石）、其他海洋爬行动物（如蛇颈龙和海龟）。甚至有证据表明，沧龙可能会同类相食。
+                                </p>
+                                <p class="text-gray-700">
+                                    沧龙的颌骨结构特殊，具有双关节，可以张开很大的角度，吞下较大的猎物。它的牙齿不仅锋利，而且能够不断替换，确保在捕猎过程中始终保持有效。
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-lg text-secondary mb-3">演化与灭绝</h4>
+                                <p class="text-gray-700">
+                                    沧龙的祖先是生活在陆地上的小型蜥蜴，大约在9500万年前进入海洋，逐渐演化成巨大的海洋掠食者。在白垩纪末期，沧龙已经成为海洋中的优势物种。
+                                </p>
+                                <p class="text-gray-700">
+                                    沧龙在白垩纪-古近纪灭绝事件中灭绝，与非鸟恐龙、菊石等一起消失。这次灭绝事件被认为是由小行星撞击和火山活动等多重因素导致的全球生态系统崩溃。
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'quetzalcoatlus':
+                    title = '风神翼龙';
+                    content = `
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="md:col-span-2">
+                                    <img src="风神翼龙.jpg" alt="风神翼龙" class="w-full h-auto rounded-lg">
+                                </div>
+                                <div class="bg-gray-100 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-secondary mb-3">基本信息</h4>
+                                    <ul class="space-y-2 text-sm">
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">学名</span>
+                                            <span class="font-medium">Quetzalcoatlus</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">生存年代</span>
+                                            <span class="font-medium">晚白垩世（约7000-6600万年前）</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">分布区域</span>
+                                            <span class="font-medium">北美洲</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">翼展</span>
+                                            <span class="font-medium">约10-12米</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">体重</span>
+                                            <span class="font-medium">约250公斤</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">食性</span>
+                                            <span class="font-medium">肉食性或杂食性</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-lg text-secondary mb-3">简介</h4>
+                                <p class="text-gray-700">
+                                    风神翼龙（Quetzalcoatlus）是已知最大的飞行动物之一，属于翼龙目神龙翼龙科。它的名字来源于阿兹特克神话中的风神魁札尔科亚特尔。
+                                </p>
+                                <p class="text-gray-700">
+                                    风神翼龙的化石首次发现于1971年的美国德克萨斯州。它的翼展可达10-12米，站立时高度约为长颈鹿的高度，是地球上曾经存在过的最大的飞行动物之一。
+                                </p>
+                                <p class="text-gray-700">
+                                    风神翼龙的骨骼轻盈而坚固，主要由中空的骨头组成，内部有支柱结构支撑。它的头骨很长，约2.5米，喙部尖锐，没有牙齿。
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-lg text-secondary mb-3">飞行与生活方式</h4>
+                                <p class="text-gray-700">
+                                    风神翼龙如何飞行一直是古生物学界的热门话题。由于体型巨大，它可能无法像小型翼龙那样频繁起飞和降落。目前的主流观点认为，风神翼龙主要依靠热气流进行翱翔，类似于现代的秃鹫和信天翁。
+                                </p>
+                                <p class="text-gray-700">
+                                    关于风神翼龙的食性也存在争议。一些科学家认为它可能像现代的鹈鹕一样捕鱼，另一些则认为它可能是陆地上的掠食者，以小型恐龙或其他动物为食。最新的研究表明，风神翼龙可能是机会主义者，食物包括鱼类、腐肉和小型动物。
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-lg text-secondary mb-3">演化与灭绝</h4>
+                                <p class="text-gray-700">
+                                    风神翼龙是翼龙演化的晚期成员，属于神龙翼龙科。这个科的翼龙在晚白垩世非常成功，分布广泛，体型巨大。
+                                </p>
+                                <p class="text-gray-700">
+                                    风神翼龙在白垩纪-古近纪灭绝事件中灭绝，与非鸟恐龙和大多数海洋爬行动物一起消失。这次灭绝事件标志着中生代的结束和新生代的开始。
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'eomaia':
+                    title = '始祖兽';
+                    content = `
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="md:col-span-2">
+                                    <img src="始祖兽.jpg" alt="始祖兽" class="w-full h-auto rounded-lg">
+                                </div>
+                                <div class="bg-gray-100 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-secondary mb-3">基本信息</h4>
+                                    <ul class="space-y-2 text-sm">
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">学名</span>
+                                            <span class="font-medium">Eomaia scansoria</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">生存年代</span>
+                                            <span class="font-medium">早白垩世（约1.25亿年前）</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">分布区域</span>
+                                            <span class="font-medium">亚洲（中国辽宁省）</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">体长</span>
+                                            <span class="font-medium">约10-12厘米</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">体重</span>
+                                            <span class="font-medium">约20-25克</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">食性</span>
+                                            <span class="font-medium">肉食性（昆虫为主）</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-lg text-secondary mb-3">简介</h4>
+                                <p class="text-gray-700">
+                                    始祖兽（Eomaia scansoria）是一种生活在早白垩世的小型哺乳动物，属于真兽类（有胎盘类哺乳动物）。它的化石于2002年在中国辽宁省的义县组地层中发现，是目前已知最早的真兽类化石之一。
+                                </p>
+                                <p class="text-gray-700">
+                                    始祖兽的化石保存极为完整，包括骨骼和毛发痕迹。这使得科学家能够详细研究其解剖结构，了解早期哺乳动物的演化。
+                                </p>
+                                <p class="text-gray-700">
+                                    始祖兽的体型很小，大约只有现代家鼠的大小。它的身体结构表明它是树栖动物，适合在树枝间攀爬和移动。
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-lg text-secondary mb-3">解剖特征</h4>
+                                <p class="text-gray-700">
+                                    始祖兽的骨骼结构显示了许多与现代有胎盘哺乳动物相似的特征。例如，它的四肢骨骼比例和关节结构表明它能够灵活地在树枝间移动。
+                                </p>
+                                <p class="text-gray-700">
+                                    始祖兽的牙齿结构表明它是肉食性动物，主要以昆虫为食。它有锋利的门齿和犬齿，适合捕捉和咬碎猎物。
+                                </p>
+                                <p class="text-gray-700">
+                                    最引人注目的是，始祖兽的骨盆结构表明它可能是胎生的，这是有胎盘哺乳动物的关键特征。这一发现将有胎盘哺乳动物的化石记录向前推进了约3500万年。
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-lg text-secondary mb-3">演化意义</h4>
+                                <p class="text-gray-700">
+                                    始祖兽的发现对于理解哺乳动物的演化具有重要意义。它是真兽类和后兽类（有袋类）分化后的早期代表，为研究胎盘类哺乳动物的起源提供了重要线索。
+                                </p>
+                                <p class="text-gray-700">
+                                    在恐龙统治的中生代，哺乳动物通常体型较小，生活在恐龙的阴影下。始祖兽的树栖生活方式可能帮助它避开了地面上的掠食者，为哺乳动物在白垩纪末期的大灭绝事件后的辐射演化奠定了基础。
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'angiosperms':
+                    title = '早期被子植物';
+                    content = `
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="md:col-span-2">
+                                    <img src="被子植物.jpg" alt="早期被子植物" class="w-full h-auto rounded-lg">
+                                </div>
+                                <div class="bg-gray-100 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-secondary mb-3">基本信息</h4>
+                                    <ul class="space-y-2 text-sm">
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">出现时间</span>
+                                            <span class="font-medium">早白垩世（约1.3亿年前）</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">快速多样化时期</span>
+                                            <span class="font-medium">早白垩世-晚白垩世（1.3-0.66亿年前）</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">主要特征</span>
+                                            <span class="font-medium">花、果实、双受精现象、导管</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">代表化石</span>
+                                            <span class="font-medium">中华古果、辽宁古果、互叶梅</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-lg text-secondary mb-3">简介</h4>
+                                <p class="text-gray-700">
+                                    被子植物（Angiosperms）是植物界中最进化、种类最多的类群。它们在白垩纪时期出现并迅速多样化，逐渐取代了裸子植物成为陆地生态系统的优势植物。
+                                </p>
+                                <p class="text-gray-700">
+                                    被子植物的主要特征包括花、果实、双受精现象和导管。这些特征使它们在繁殖效率和资源利用上具有优势，从而适应了各种环境。
+                                </p>
+                                <p class="text-gray-700">
+                                    最早的被子植物化石发现于早白垩世的地层中，如中国辽宁省的义县组。这些早期被子植物多为小型草本或灌木，花朵结构相对简单。
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-lg text-secondary mb-3">关键特征</h4>
+                                <p class="text-gray-700">
+                                    <strong>花：</strong> 花是被子植物特有的生殖结构，由花萼、花瓣、雄蕊和雌蕊组成。花的出现提高了植物的传粉效率，促进了植物的繁殖和多样化。
+                                </p>
+                                <p class="text-gray-700">
+                                    <strong>果实：</strong> 果实是由子房发育而来的结构，包裹着种子。果实不仅保护种子，还能帮助种子传播，例如通过动物食用或风力散布。
+                                </p>
+                                <p class="text-gray-700">
+                                    <strong>双受精现象：</strong> 被子植物特有的受精方式，花粉管中的两个精子分别与卵细胞和极核结合，形成受精卵和胚乳。这种方式为胚提供了充足的营养，提高了后代的生存能力。
+                                </p>
+                                <p class="text-gray-700">
+                                    <strong>导管：</strong> 被子植物的木质部中具有导管，这是一种比裸子植物的管胞更高效的水分运输结构，使植物能够更好地适应陆地环境。
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-lg text-secondary mb-3">早期被子植物化石</h4>
+                                <p class="text-gray-700">
+                                    <strong>中华古果（Archaefructus sinensis）：</strong> 发现于中国辽宁省的早白垩世地层，约1.25亿年前。它是已知最早的被子植物化石之一，具有类似现代睡莲的特征，但没有明显的花瓣和花萼。
+                                </p>
+                                <p class="text-gray-700">
+                                    <strong>辽宁古果（Archaefructus liaoningensis）：</strong> 同样发现于中国辽宁省，与中华古果时代相近。它的化石保存了完整的植株，包括根、茎、叶和果实，显示出水生植物的特征。
+                                </p>
+                                <p class="text-gray-700">
+                                    <strong>互叶梅（Amborella trichopoda）：</strong> 虽然不是化石，但被认为是现存最原始的被子植物之一。它仅分布于新喀里多尼亚，具有许多原始特征，如木质部只有管胞而无导管，花结构简单。
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-lg text-secondary mb-3">演化与生态影响</h4>
+                                <p class="text-gray-700">
+                                    被子植物在白垩纪时期的快速多样化被称为"被子植物大辐射"。这一事件对地球生态系统产生了深远影响，包括：
+                                </p>
+                                <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                                    <li>改变了陆地植被景观，从以裸子植物为主转变为以被子植物为主</li>
+                                    <li>为昆虫（如蜜蜂、蝴蝶）提供了新的食物来源，促进了昆虫的多样化</li>
+                                    <li>为草食性动物提供了更丰富的食物资源，推动了动物的演化</li>
+                                    <li>改变了土壤结构和水文循环，影响了地球的气候系统</li>
+                                </ul>
+                                <p class="text-gray-700">
+                                    被子植物的成功可能与其适应环境的能力和繁殖策略有关。它们能够快速适应不同的生态位，并通过与动物的互利共生关系（如传粉和种子传播）扩大分布范围。
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            modalTitle.textContent = title;
+            modalContent.innerHTML = content;
+            
+            // 显示模态框
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.remove('scale-95');
+            modal.querySelector('div').classList.add('scale-100');
+            
+            // 禁止背景滚动
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeCreatureModal() {
+            const modal = document.getElementById('creature-modal');
+            
+            // 隐藏模态框
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.remove('scale-100');
+            modal.querySelector('div').classList.add('scale-95');
+            
+            // 恢复背景滚动
+            document.body.style.overflow = '';
+        }
+        
+        // 初始化页面
+        function init() {
+            // 添加滚动监听
+            window.addEventListener('scroll', handleScroll);
+            
+            // 初始化导航栏
+            initNavbar();
+            
+            // 初始化地质年代滑块
+            initTimelineSlider();
+            
+            // 初始化视差效果
+            initParallax();
+            
+            // 初始化生物卡片悬停效果
+            initCreatureCards();
+            
+            // 初始化模态框关闭按钮
+            document.getElementById('geology-modal-close').addEventListener('click', closeGeologyModal);
+            document.getElementById('creature-modal-close').addEventListener('click', closeCreatureModal);
+            
+            // 初始化地图交互
+            initMap();
+            
+            // 初始化图片懒加载
+            initLazyLoading();
+            
+            // 初始化平滑滚动
+            initSmoothScroll();
+            
+            // 初始化季节切换
+            initSeasonToggle();
+            
+            // 初始化3D模型查看器
+            init3DViewer();
+            
+            // 初始化恐龙声音播放器
+            initDinoSounds();
+            
+            // 初始化交互式时间表
+            initInteractiveTimeline();
+            
+            // 初始化化石发现地图
+            initFossilMap();
+            
+            // 初始化动态图表
+            initCharts();
+            
+            // 初始化生物演化树
+            initEvolutionTree();
+            
+            // 初始化探索游戏
+            initExploreGame();
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

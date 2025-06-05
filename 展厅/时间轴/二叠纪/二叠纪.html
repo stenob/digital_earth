@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>二叠纪地质知识探索</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3B5360',
+            secondary: '#D4A017',
+            accent: '#8B0000',
+            neutral: '#F5F5DC',
+            dark: '#1A1A1A',
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+      .hover-scale {
+        transition: transform 0.3s ease;
+      }
+      .hover-scale:hover {
+        transform: scale(1.03);
+      }
+      .timeline-item {
+        transition: all 0.5s ease;
+      }
+      .timeline-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      }
+      .scroll-reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+      }
+      .scroll-reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body class="font-inter bg-neutral text-dark">
+  <!-- 导航栏 -->
+  <nav id="main-nav" class="fixed w-full bg-primary/90 text-white z-50 transition-all duration-300">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="#" class="text-2xl font-bold flex items-center">
+        <i class="fa fa-globe mr-2"></i>
+        <span>二叠纪探索</span>
+      </a>
+      
+      <div class="hidden md:flex space-x-8">
+        <a href="#geological" class="hover:text-secondary transition-colors duration-300">地质事件</a>
+        <a href="#biological" class="hover:text-secondary transition-colors duration-300">生物演化</a>
+        <a href="#extinction" class="hover:text-secondary transition-colors duration-300">灭绝事件</a>
+        <a href="#timeline" class="hover:text-secondary transition-colors duration-300">时间线</a>
+        <a href="#interactive" class="hover:text-secondary transition-colors duration-300">互动体验</a>
+        <a href="#fossil" class="hover:text-secondary transition-colors duration-300">化石发现</a>
+      </div>
+      
+      <button id="menu-toggle" class="md:hidden text-2xl">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+    
+    <!-- 移动端菜单 -->
+    <div id="mobile-menu" class="md:hidden bg-primary/95 hidden">
+      <div class="container mx-auto px-4 py-3 flex flex-col space-y-4">
+        <a href="#geological" class="hover:text-secondary transition-colors duration-300 py-2">地质事件</a>
+        <a href="#biological" class="hover:text-secondary transition-colors duration-300 py-2">生物演化</a>
+        <a href="#extinction" class="hover:text-secondary transition-colors duration-300 py-2">灭绝事件</a>
+        <a href="#timeline" class="hover:text-secondary transition-colors duration-300 py-2">时间线</a>
+        <a href="#interactive" class="hover:text-secondary transition-colors duration-300 py-2">互动体验</a>
+        <a href="#fossil" class="hover:text-secondary transition-colors duration-300 py-2">化石发现</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 英雄区域 -->
+  <header class="relative h-screen flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <div class="absolute inset-0 bg-gradient-to-b from-dark/70 to-primary/80 z-10"></div>
+      <img src="https://picsum.photos/id/1024/1920/1080" alt="二叠纪景观" class="w-full h-full object-cover">
+    </div>
+    
+    <div class="container mx-auto px-4 z-20 text-center">
+      <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-bold text-white mb-6 text-shadow animate-fade-in">
+        探索二叠纪 <span class="text-secondary">地质时代</span>
+      </h1>
+      <p class="text-[clamp(1rem,3vw,1.5rem)] text-white/90 max-w-3xl mx-auto mb-10">
+        穿越时空，探索地球历史上最具变革性的时期之一，见证超级大陆的形成与生物的繁荣。
+      </p>
+      <a href="#geological" class="inline-block bg-secondary hover:bg-secondary/90 text-dark font-bold py-3 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
+        开始探索 <i class="fa fa-arrow-down ml-2"></i>
+      </a>
+    </div>
+    
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <a href="#geological" class="text-white/80 hover:text-white text-3xl">
+        <i class="fa fa-angle-down"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- 地质重大事件 -->
+  <section id="geological" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16 scroll-reveal">
+        <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-primary mb-4">地质重大事件</h2>
+        <div class="w-24 h-1 bg-secondary mx-auto mb-6"></div>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">二叠纪时期地球经历了剧烈的地质变革，塑造了我们今天所知的世界。</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- 盘古大陆形成 -->
+        <div class="bg-neutral rounded-xl overflow-hidden shadow-lg hover-scale scroll-reveal">
+          <div class="relative h-60">
+            <img src="盘古大陆.jpg" alt="盘古大陆" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-primary/50 flex items-center justify-center">
+              <h3 class="text-white text-2xl font-bold text-shadow">盘古大陆形成</h3>
+            </div>
+          </div>
+          <div class="p-6">
+            <p class="text-gray-700 mb-4">二叠纪时期，所有主要大陆板块汇聚形成了超级大陆盘古大陆，这一过程深刻改变了地球的气候和海洋环流。</p>
+            <button class="read-more text-primary hover:text-secondary transition-colors duration-300 flex items-center">
+              了解更多 <i class="fa fa-arrow-right ml-2"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- 火山活动 -->
+        <div class="bg-neutral rounded-xl overflow-hidden shadow-lg hover-scale scroll-reveal" style="transition-delay: 0.2s">
+          <div class="relative h-60">
+            <img src="火山活动.jpg" alt="火山活动" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-primary/50 flex items-center justify-center">
+              <h3 class="text-white text-2xl font-bold text-shadow">火山活动</h3>
+            </div>
+          </div>
+          <div class="p-6">
+            <p class="text-gray-700 mb-4">大规模火山喷发释放出巨量二氧化碳和甲烷，导致全球气候变暖和海洋酸化，对生态系统造成巨大压力。</p>
+            <button class="read-more text-primary hover:text-secondary transition-colors duration-300 flex items-center">
+              了解更多 <i class="fa fa-arrow-right ml-2"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- 海平面变化 -->
+        <div class="bg-neutral rounded-xl overflow-hidden shadow-lg hover-scale scroll-reveal" style="transition-delay: 0.4s">
+          <div class="relative h-60">
+            <img src="海平面.jpg" alt="海平面变化" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-primary/50 flex items-center justify-center">
+              <h3 class="text-white text-2xl font-bold text-shadow">海平面变化</h3>
+            </div>
+          </div>
+          <div class="p-6">
+            <p class="text-gray-700 mb-4">二叠纪期间海平面波动剧烈，影响了海洋生态系统的分布，并形成了广泛的沉积岩地层。</p>
+            <button class="read-more text-primary hover:text-secondary transition-colors duration-300 flex items-center">
+              了解更多 <i class="fa fa-arrow-right ml-2"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 生物发展情况 -->
+  <section id="biological" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16 scroll-reveal">
+        <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-primary mb-4">生物演化历程</h2>
+        <div class="w-24 h-1 bg-secondary mx-auto mb-6"></div>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">二叠纪是生物多样性发展的关键时期，见证了许多重要生物类群的兴衰。</p>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <!-- 海洋生物 -->
+        <div class="scroll-reveal">
+          <div class="relative">
+            <div class="absolute -top-4 -left-4 w-20 h-20 bg-secondary/20 rounded-lg z-0"></div>
+            <div class="absolute -bottom-4 -right-4 w-20 h-20 bg-secondary/20 rounded-lg z-0"></div>
+            <img src="https://picsum.photos/id/1041/800/600" alt="二叠纪海洋生物" class="w-full h-auto rounded-lg shadow-xl relative z-10">
+          </div>
+        </div>
+        
+        <div class="scroll-reveal" style="transition-delay: 0.3s">
+          <h3 class="text-2xl font-bold text-primary mb-6">海洋生物的繁荣</h3>
+          <p class="text-gray-700 mb-6">二叠纪海洋生物达到了空前的多样性，珊瑚礁生态系统广泛分布，腕足动物、菊石和三叶虫占据主导地位。</p>
+          
+          <div class="space-y-4">
+            <div class="flex items-start">
+              <div class="bg-secondary/20 rounded-full p-2 mr-4">
+                <i class="fa fa-tint text-secondary"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-primary">珊瑚礁</h4>
+                <p class="text-gray-600">形成了复杂的生态系统，为众多海洋生物提供栖息地。</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="bg-secondary/20 rounded-full p-2 mr-4">
+                <i class="fa fa-shield text-secondary"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-primary">腕足动物</h4>
+                <p class="text-gray-600">成为海洋中最丰富的生物类群之一，占据各种生态位。</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="bg-secondary/20 rounded-full p-2 mr-4">
+                <i class="fa fa-diamond text-secondary"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-primary">菊石</h4>
+                <p class="text-gray-600">快速演化并多样化，成为重要的海洋掠食者。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-16">
+        <div class="order-2 lg:order-1 scroll-reveal" style="transition-delay: 0.3s">
+          <h3 class="text-2xl font-bold text-primary mb-6">陆地生物的崛起</h3>
+          <p class="text-gray-700 mb-6">二叠纪见证了爬行动物的崛起和早期哺乳动物祖先的出现，同时裸子植物成为陆地植被的主导。</p>
+          
+          <div class="space-y-4">
+            <div class="flex items-start">
+              <div class="bg-secondary/20 rounded-full p-2 mr-4">
+                <i class="fa fa-paw text-secondary"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-primary">爬行类</h4>
+                <p class="text-gray-600">逐渐适应陆地生活，演化出多样化的形态和生态类型。</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="bg-secondary/20 rounded-full p-2 mr-4">
+                <i class="fa fa-leaf text-secondary"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-primary">裸子植物</h4>
+                <p class="text-gray-600">取代蕨类植物成为主要植被，适应了更加干燥的气候条件。</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="bg-secondary/20 rounded-full p-2 mr-4">
+                <i class="fa fa-bug text-secondary"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-primary">昆虫</h4>
+                <p class="text-gray-600">开始多样化，出现了许多现代昆虫类群的祖先。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="order-1 lg:order-2 scroll-reveal">
+          <div class="relative">
+            <div class="absolute -top-4 -left-4 w-20 h-20 bg-secondary/20 rounded-lg z-0"></div>
+            <div class="absolute -bottom-4 -right-4 w-20 h-20 bg-secondary/20 rounded-lg z-0"></div>
+            <img src="https://picsum.photos/id/1043/800/600" alt="二叠纪陆地生物" class="w-full h-auto rounded-lg shadow-xl relative z-10">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 灭绝事件 -->
+  <section id="extinction" class="py-20 bg-primary text-white relative overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <div class="absolute inset-0 bg-primary/80 z-10"></div>
+      <img src="https://picsum.photos/id/1045/1920/1080" alt="二叠纪末灭绝事件" class="w-full h-full object-cover">
+    </div>
+    
+    <div class="container mx-auto px-4 relative z-20">
+      <div class="text-center mb-16 scroll-reveal">
+        <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold mb-4">二叠纪末生物大灭绝</h2>
+        <div class="w-24 h-1 bg-secondary mx-auto mb-6"></div>
+        <p class="text-lg text-white/80 max-w-3xl mx-auto">地球历史上最严重的灭绝事件，导致超过90%的海洋物种和70%的陆地物种灭绝。</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div class="bg-white/10 backdrop-blur-sm p-8 rounded-xl scroll-reveal">
+          <h3 class="text-2xl font-bold mb-6 flex items-center">
+            <i class="fa fa-exclamation-triangle text-secondary mr-3"></i>
+            事件影响
+          </h3>
+          <ul class="space-y-4">
+            <li class="flex items-start">
+              <i class="fa fa-check-circle text-secondary mt-1 mr-3"></i>
+              <span>超过95%的海洋物种灭绝，包括三叶虫、古珊瑚等标志性类群</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa fa-check-circle text-secondary mt-1 mr-3"></i>
+              <span>约70%的陆地脊椎动物消失，为恐龙的崛起铺平了道路</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa fa-check-circle text-secondary mt-1 mr-3"></i>
+              <span>全球生态系统重构，花了数百万年才恢复到灭绝前的多样性水平</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa fa-check-circle text-secondary mt-1 mr-3"></i>
+              <span>海洋酸化、全球变暖和氧气耗尽是导致灭绝的主要环境压力</span>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="bg-white/10 backdrop-blur-sm p-8 rounded-xl scroll-reveal" style="transition-delay: 0.3s">
+          <h3 class="text-2xl font-bold mb-6 flex items-center">
+            <i class="fa fa-search text-secondary mr-3"></i>
+            可能原因
+          </h3>
+          <ul class="space-y-4">
+            <li class="flex items-start">
+              <i class="fa fa-volcano text-secondary mt-1 mr-3"></i>
+              <span>西伯利亚暗色岩火山活动释放大量温室气体，导致全球气候剧变</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa fa-meteor text-secondary mt-1 mr-3"></i>
+              <span>小行星或彗星撞击地球，造成尘埃遮蔽阳光，破坏食物链</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa fa-tint text-secondary mt-1 mr-3"></i>
+              <span>海洋酸化和缺氧事件，导致海洋生物大量死亡</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa fa-globe text-secondary mt-1 mr-3"></i>
+              <span>盘古大陆形成导致的大陆架减少和气候变化</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- 灭绝事件影响图表 -->
+      <div class="mt-16 bg-white/10 backdrop-blur-sm p-8 rounded-xl scroll-reveal">
+        <h3 class="text-2xl font-bold mb-6 text-center">灭绝事件对不同生物类群的影响</h3>
+        <div class="h-80">
+          <canvas id="extinctionChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 时间线 -->
+  <section id="timeline" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16 scroll-reveal">
+        <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-primary mb-4">二叠纪时间线</h2>
+        <div class="w-24 h-1 bg-secondary mx-auto mb-6"></div>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">探索二叠纪时期的关键事件和演化阶段。</p>
+      </div>
+      
+      <div class="relative">
+        <!-- 时间线中线 -->
+        <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-secondary/30 z-0"></div>
+        
+        <!-- 时间点1 -->
+        <div class="timeline-item relative z-10 flex flex-col md:flex-row items-center mb-16 scroll-reveal">
+          <div class="order-2 md:order-1 w-full md:w-1/2 md:pr-12 text-right">
+            <h3 class="text-xl font-bold text-primary mb-2">二叠纪开始 (2.99亿年前)</h3>
+            <p class="text-gray-700">二叠纪开始于盘古大陆形成的早期阶段，气候寒冷干燥，冰川广泛分布。</p>
+          </div>
+          <div class="order-1 md:order-2 flex items-center justify-center mb-6 md:mb-0">
+            <div class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-white text-xl font-bold">
+              1
+            </div>
+          </div>
+          <div class="order-3 w-full md:w-1/2 md:pl-12 hidden md:block">
+            <img src="https://picsum.photos/id/1049/600/400" alt="二叠纪早期" class="rounded-lg shadow-lg hover-scale">
+          </div>
+        </div>
+        
+        <!-- 时间点2 -->
+        <div class="timeline-item relative z-10 flex flex-col md:flex-row items-center mb-16 scroll-reveal" style="transition-delay: 0.1s">
+          <div class="order-2 md:order-1 w-full md:w-1/2 md:pr-12 hidden md:block">
+            <img src="https://picsum.photos/id/1051/600/400" alt="二叠纪中期" class="rounded-lg shadow-lg hover-scale">
+          </div>
+          <div class="order-1 md:order-2 flex items-center justify-center mb-6 md:mb-0">
+            <div class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-white text-xl font-bold">
+              2
+            </div>
+          </div>
+          <div class="order-3 w-full md:w-1/2 md:pl-12 text-left">
+            <h3 class="text-xl font-bold text-primary mb-2">二叠纪中期 (2.7亿年前)</h3>
+            <p class="text-gray-700">气候逐渐变暖，盘古大陆内部变得更加干旱，爬行动物开始多样化。</p>
+          </div>
+        </div>
+        
+        <!-- 时间点3 -->
+        <div class="timeline-item relative z-10 flex flex-col md:flex-row items-center mb-16 scroll-reveal" style="transition-delay: 0.2s">
+          <div class="order-2 md:order-1 w-full md:w-1/2 md:pr-12 text-right">
+            <h3 class="text-xl font-bold text-primary mb-2">二叠纪晚期 (2.59亿年前)</h3>
+            <p class="text-gray-700">盘古大陆完全形成，全球气候持续变暖，海洋生物多样性达到顶峰。</p>
+          </div>
+          <div class="order-1 md:order-2 flex items-center justify-center mb-6 md:mb-0">
+            <div class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-white text-xl font-bold">
+              3
+            </div>
+          </div>
+          <div class="order-3 w-full md:w-1/2 md:pl-12 hidden md:block">
+            <img src="https://picsum.photos/id/1053/600/400" alt="二叠纪晚期" class="rounded-lg shadow-lg hover-scale">
+          </div>
+        </div>
+        
+        <!-- 时间点4 -->
+        <div class="timeline-item relative z-10 flex flex-col md:flex-row items-center scroll-reveal" style="transition-delay: 0.3s">
+          <div class="order-2 md:order-1 w-full md:w-1/2 md:pr-12 hidden md:block">
+            <img src="https://picsum.photos/id/1055/600/400" alt="二叠纪末" class="rounded-lg shadow-lg hover-scale">
+          </div>
+          <div class="order-1 md:order-2 flex items-center justify-center mb-6 md:mb-0">
+            <div class="w-12 h-12 rounded-full bg-accent flex items-center justify-center text-white text-xl font-bold">
+              4
+            </div>
+          </div>
+          <div class="order-3 w-full md:w-1/2 md:pl-12 text-left">
+            <h3 class="text-xl font-bold text-primary mb-2">二叠纪末大灭绝 (2.52亿年前)</h3>
+            <p class="text-gray-700">地球历史上最严重的灭绝事件，超过90%的物种消失，标志着二叠纪的结束和三叠纪的开始。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 互动体验 -->
+  <section id="interactive" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16 scroll-reveal">
+        <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-primary mb-4">互动体验</h2>
+        <div class="w-24 h-1 bg-secondary mx-auto mb-6"></div>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">通过这些互动元素，更直观地了解二叠纪的世界。</p>
+      </div>
+      
+    
+       
+    
+        
+        <!-- 气候模拟器 -->
+        <div class="bg-white rounded-xl shadow-lg p-6 scroll-reveal" style="transition-delay: 0.3s">
+          <h3 class="text-xl font-bold text-primary mb-6">二叠纪气候模拟器</h3>
+          <p class="text-gray-700 mb-6">调整以下参数，探索二叠纪不同地区的气候条件及其对生物的影响。</p>
+          
+          <div class="space-y-6">
+            <div>
+              <label class="block text-gray-700 font-medium mb-2">纬度位置</label>
+              <input type="range" id="latitudeSlider" min="0" max="90" value="30" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-secondary">
+              <div class="flex justify-between text-sm text-gray-500 mt-1">
+                <span>赤道</span>
+                <span id="latitudeValue">30°</span>
+                <span>极地</span>
+              </div>
+            </div>
+            
+            <div>
+              <label class="block text-gray-700 font-medium mb-2">距海岸距离</label>
+              <input type="range" id="distanceSlider" min="0" max="1000" value="500" step="100" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-secondary">
+              <div class="flex justify-between text-sm text-gray-500 mt-1">
+                <span>沿海</span>
+                <span id="distanceValue">500公里</span>
+                <span>内陆</span>
+              </div>
+            </div>
+            
+            <div>
+              <label class="block text-gray-700 font-medium mb-2">二叠纪时期</label>
+              <select id="periodSelect" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent">
+                <option value="early">早期 (2.99-2.7亿年前)</option>
+                <option value="middle" selected>中期 (2.7-2.59亿年前)</option>
+                <option value="late">晚期 (2.59-2.52亿年前)</option>
+              </select>
+            </div>
+            
+            <div class="bg-gray-100 p-4 rounded-lg mt-6">
+              <h4 class="font-bold text-primary mb-2">模拟结果</h4>
+              <div id="climateResult" class="text-gray-700">
+                <p><strong>气候类型:</strong> 温带大陆性气候</p>
+                <p><strong>年平均温度:</strong> 18°C</p>
+                <p><strong>年降水量:</strong> 600毫米</p>
+                <p><strong>典型植被:</strong> 裸子植物森林</p>
+                <p><strong>代表性动物:</strong> 盘龙目、兽孔目爬行动物</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 化石发现 -->
+  <section id="fossil"  class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16 scroll-reveal">
+        <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-primary mb-4">重要化石发现</h2>
+        <div class="w-24 h-1 bg-secondary mx-auto mb-6"></div>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">探索二叠纪时期的重要化石发现，这些发现帮助我们了解古代生态系统。</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- 化石1 -->
+        <div class="bg-neutral rounded-xl overflow-hidden shadow-lg hover-scale scroll-reveal">
+          <div class="relative h-60">
+            <img src="水龙类.jpg" alt="水龙兽化石" class="w-full h-full object-cover">
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-primary mb-3">水龙兽 (Lystrosaurus)</h3>
+            <p class="text-gray-700 mb-4">水龙兽是二叠纪末大灭绝事件后幸存的少数陆地脊椎动物之一，其化石广泛分布于南半球各大陆，为大陆漂移学说提供了重要证据。</p>
+            <button class="fossil-details text-primary hover:text-secondary transition-colors duration-300 flex items-center">
+              查看详情 <i class="fa fa-arrow-right ml-2"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- 化石2 -->
+        <div class="bg-neutral rounded-xl overflow-hidden shadow-lg hover-scale scroll-reveal" style="transition-delay: 0.2s">
+          <div class="relative h-60">
+            <img src="杯龙类.jpg" alt="杯龙类化石" class="w-full h-full object-cover">
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-primary mb-3">杯龙类 (Captorhinids)</h3>
+            <p class="text-gray-700 mb-4">杯龙类是早期爬行动物的代表，身体结构原始，是研究爬行动物演化的重要化石记录。它们在二叠纪时期分布广泛，适应了多种生态环境。</p>
+            <button class="fossil-details text-primary hover:text-secondary transition-colors duration-300 flex items-center">
+              查看详情 <i class="fa fa-arrow-right ml-2"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- 化石3 -->
+        <div class="bg-neutral rounded-xl overflow-hidden shadow-lg hover-scale scroll-reveal" style="transition-delay: 0.4s">
+          <div class="relative h-60">
+            <img src="二齿类.jpg" alt="二齿兽化石" class="w-full h-full object-cover">
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-primary mb-3">二齿兽 (Dicynodonts)</h3>
+            <p class="text-gray-700 mb-4">二齿兽是兽孔目的一支，是二叠纪晚期最成功的陆地脊椎动物之一。它们具有独特的牙齿结构，可能是草食性动物，在生态系统中占据重要地位。</p>
+            <button class="fossil-details text-primary hover:text-secondary transition-colors duration-300 flex items-center">
+              查看详情 <i class="fa fa-arrow-right ml-2"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="bg-primary text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-xl font-bold mb-6 flex items-center">
+            <i class="fa fa-globe mr-2"></i>
+            二叠纪探索
+          </h3>
+          <p class="text-white/80 mb-6">探索地球历史上最具变革性的时期之一，了解二叠纪的地质演化和生物多样性。</p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-white hover:text-secondary transition-colors duration-300 text-xl">
+              <i class="fa fa-facebook"></i>
+            </a>
+            <a href="#" class="text-white hover:text-secondary transition-colors duration-300 text-xl">
+              <i class="fa fa-twitter"></i>
+            </a>
+            <a href="#" class="text-white hover:text-secondary transition-colors duration-300 text-xl">
+              <i class="fa fa-instagram"></i>
+            </a>
+            <a href="#" class="text-white hover:text-secondary transition-colors duration-300 text-xl">
+              <i class="fa fa-youtube"></i>
+            </a>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-bold mb-6">快速链接</h3>
+          <ul class="space-y-3">
+            <li><a href="#geological" class="text-white/80 hover:text-secondary transition-colors duration-300">地质事件</a></li>
+            <li><a href="#biological" class="text-white/80 hover:text-secondary transition-colors duration-300">生物演化</a></li>
+            <li><a href="#extinction" class="text-white/80 hover:text-secondary transition-colors duration-300">灭绝事件</a></li>
+            <li><a href="#timeline" class="text-white/80 hover:text-secondary transition-colors duration-300">时间线</a></li>
+            <li><a href="#interactive" class="text-white/80 hover:text-secondary transition-colors duration-300">互动体验</a></li>
+            <li><a href="#fossil" class="text-white/80 hover:text-secondary transition-colors duration-300">化石发现</a></li>
+          </ul>
+        </div>
+        
+    <!--<div>
+          <h3 class="text-xl font-bold mb-6">联系我们</h3>
+          <ul class="space-y-3">
+            <li class="flex items-start">
+              <i class="fa fa-map-marker mt-1 mr-3 text-secondary"></i>
+              <span>北京市海淀区中关村南大街5号</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa fa-envelope mt-1 mr-3 text-secondary"></i>
+              <span>permian@example.com</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa fa-phone mt-1 mr-3 text-secondary"></i>
+              <span>+86 10 1234 5678</span>
+            </li>
+          </ul>
+        </div>-->
+      </div>
+      
+    <!--<div class="border-t border-white/20 mt-12 pt-8 text-center text-white/60">
+        <p>&copy; 2025 二叠纪地质知识探索网站. 保留所有权利.</p>
+      </div>-->
+    </div>
+  </footer>
+
+  <!-- 模态框 -->
+  <div id="infoModal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+    <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+      <button id="closeModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl">
+        <i class="fa fa-times"></i>
+      </button>
+      <div id="modalContent" class="p-8">
+        <!-- 内容将通过JavaScript动态加载 -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 导航栏滚动效果
+    window.addEventListener('scroll', function() {
+      const nav = document.getElementById('main-nav');
+      if (window.scrollY > 100) {
+        nav.classList.add('py-2', 'shadow-md');
+        nav.classList.remove('py-3');
+      } else {
+        nav.classList.add('py-3');
+        nav.classList.remove('py-2', 'shadow-md');
+      }
+    });
+
+    // 移动端菜单切换
+    document.getElementById('menu-toggle').addEventListener('click', function() {
+      const mobileMenu = document.getElementById('mobile-menu');
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+          
+          // 关闭移动菜单（如果打开）
+          document.getElementById('mobile-menu').classList.add('hidden');
+        }
+      });
+    });
+
+    // 滚动显示动画
+    function checkScroll() {
+      const elements = document.querySelectorAll('.scroll-reveal');
+      
+      elements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+        
+        if (elementTop < windowHeight * 0.9) {
+          element.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', checkScroll);
+    window.addEventListener('load', checkScroll);
+
+    // 灭绝事件图表
+    window.addEventListener('load', function() {
+      const ctx = document.getElementById('extinctionChart').getContext('2d');
+      const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['海洋无脊椎动物', '海洋脊椎动物', '陆地植物', '陆地脊椎动物', '昆虫'],
+          datasets: [{
+            label: '灭绝比例 (%)',
+            data: [96, 70, 65, 70, 50],
+            backgroundColor: [
+              'rgba(212, 160, 23, 0.7)',
+              'rgba(212, 160, 23, 0.7)',
+              'rgba(212, 160, 23, 0.7)',
+              'rgba(212, 160, 23, 0.7)',
+              'rgba(212, 160, 23, 0.7)'
+            ],
+            borderColor: [
+              'rgb(212, 160, 23)',
+              'rgb(212, 160, 23)',
+              'rgb(212, 160, 23)',
+              'rgb(212, 160, 23)',
+              'rgb(212, 160, 23)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              ticks: {
+                callback: function(value) {
+                  return value + '%';
+                }
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }
+      });
+    });
+
+    
+
+
+    // 气候模拟器
+    const latitudeSlider = document.getElementById('latitudeSlider');
+    const latitudeValue = document.getElementById('latitudeValue');
+    const distanceSlider = document.getElementById('distanceSlider');
+    const distanceValue = document.getElementById('distanceValue');
+    const periodSelect = document.getElementById('periodSelect');
+    const climateResult = document.getElementById('climateResult');
+    
+    // 更新滑块显示值
+    latitudeSlider.addEventListener('input', function() {
+      latitudeValue.textContent = `${this.value}°`;
+      updateClimateResult();
+    });
+    
+    distanceSlider.addEventListener('input', function() {
+      distanceValue.textContent = `${this.value}公里`;
+      updateClimateResult();
+    });
+    
+    periodSelect.addEventListener('change', updateClimateResult);
+    
+    // 更新气候模拟结果
+    function updateClimateResult() {
+      const latitude = parseInt(latitudeSlider.value);
+      const distance = parseInt(distanceSlider.value);
+      const period = periodSelect.value;
+      
+      let climateType, avgTemp, precipitation, vegetation, animals;
+      
+      // 根据纬度和距离海岸的距离确定气候类型
+      if (latitude < 23.5) {
+        // 热带
+        if (distance < 300) {
+          climateType = "热带雨林气候";
+          avgTemp = 26;
+          precipitation = 2000;
+          vegetation = "热带雨林";
+          animals = "两栖动物、早期爬行动物";
+        } else {
+          climateType = "热带草原气候";
+          avgTemp = 24;
+          precipitation = 1000;
+          vegetation = "热带草原";
+          animals = "草食性爬行动物、早期兽孔目";
+        }
+      } else if (latitude < 66.5) {
+        // 温带
+        if (distance < 300) {
+          climateType = "温带海洋性气候";
+          avgTemp = 15;
+          precipitation = 1200;
+          vegetation = "针叶林";
+          animals = "盘龙目、早期哺乳动物祖先";
+        } else {
+          climateType = "温带大陆性气候";
+          avgTemp = 18;
+          precipitation = 600;
+          vegetation = "裸子植物森林";
+          animals = "盘龙目、兽孔目爬行动物";
+        }
+      } else {
+        // 极地
+        if (distance < 300) {
+          climateType = "极地海洋性气候";
+          avgTemp = 0;
+          precipitation = 400;
+          vegetation = "苔原";
+          animals = "适应寒冷的爬行动物";
+        } else {
+          climateType = "极地大陆性气候";
+          avgTemp = -5;
+          precipitation = 200;
+          vegetation = "稀疏植被";
+          animals = "少数耐寒脊椎动物";
+        }
+      }
+      
+      // 根据时期微调
+      if (period === 'early') {
+        avgTemp -= 2;
+        precipitation += 100;
+      } else if (period === 'late') {
+        avgTemp += 3;
+        precipitation -= 200;
+      }
+      
+      // 更新结果显示
+      climateResult.innerHTML = `
+        <p><strong>气候类型:</strong> ${climateType}</p>
+        <p><strong>年平均温度:</strong> ${avgTemp}°C</p>
+        <p><strong>年降水量:</strong> ${precipitation}毫米</p>
+        <p><strong>典型植被:</strong> ${vegetation}</p>
+        <p><strong>代表性动物:</strong> ${animals}</p>
+      `;
+    }
+
+    // 初始化气候模拟结果
+    updateClimateResult();
+
+    // 模态框处理
+    const infoModal = document.getElementById('infoModal');
+    const modalContent = document.getElementById('modalContent');
+    const closeModal = document.getElementById('closeModal');
+    
+    // 关闭模态框
+    closeModal.addEventListener('click', function() {
+      infoModal.classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    });
+    
+    // 点击模态框外部关闭
+    infoModal.addEventListener('click', function(e) {
+      if (e.target === infoModal) {
+        infoModal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+      }
+    });
+    
+    // 化石详情按钮
+    document.querySelectorAll('.fossil-details').forEach(button => {
+      button.addEventListener('click', function() {
+        const fossilCard = this.closest('.bg-neutral');
+        const fossilName = fossilCard.querySelector('h3').textContent;
+        let fossilDetails = '';
+        
+        // 根据不同化石设置不同详情
+        if (fossilName.includes('水龙兽')) {
+          fossilDetails = `
+            <h3 class="text-2xl font-bold text-primary mb-4">水龙兽 (Lystrosaurus)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <img src="水龙类.jpg" alt="水龙兽化石" class="w-full h-auto rounded-lg shadow-lg">
+              </div>
+              <div>
+                <h4 class="font-bold text-lg mb-2">基本信息</h4>
+                <p class="text-gray-700 mb-3">水龙兽是一种已灭绝的似哺乳爬行动物，生活在二叠纪晚期至三叠纪早期，约2.55-2.45亿年前。</p>
+                <p class="text-gray-700 mb-3">它们体型中等，体长约1米，具有短而宽的头骨，上颌有一对长牙，类似现代麝牛。</p>
+                <h4 class="font-bold text-lg mb-2">生存环境</h4>
+                <p class="text-gray-700 mb-3">水龙兽是二叠纪末大灭绝事件后的幸存者，可能适应了当时恶劣的环境条件，如气候变化和资源匮乏。</p>
+                <p class="text-gray-700">它们的化石在南非、印度、中国和南极洲等地均有发现，为大陆漂移学说提供了重要证据。</p>
+              </div>
+            </div>
+            <h4 class="font-bold text-lg mb-2">科学意义</h4>
+            <p class="text-gray-700 mb-3">水龙兽是研究二叠纪末大灭绝事件后生态系统恢复的关键物种，它们在三叠纪早期成为陆地生态系统的优势物种。</p>
+            <p class="text-gray-700">其广泛分布表明，在二叠纪末大灭绝之后，少数幸存物种能够迅速扩散并占据空缺的生态位。</p>
+          `;
+        } else if (fossilName.includes('杯龙类')) {
+          fossilDetails = `
+            <h3 class="text-2xl font-bold text-primary mb-4">杯龙类 (Captorhinids)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <img src="杯龙类.jpg" alt="杯龙类化石" class="w-full h-auto rounded-lg shadow-lg">
+              </div>
+              <div>
+                <h4 class="font-bold text-lg mb-2">基本信息</h4>
+                <p class="text-gray-700 mb-3">杯龙类是最早的爬行动物之一，生活在石炭纪晚期至二叠纪末期，约3.06-2.52亿年前。</p>
+                <p class="text-gray-700 mb-3">它们体型较小，通常不超过1米，具有原始的爬行动物特征，如坚实的头骨和四肢结构。</p>
+                <h4 class="font-bold text-lg mb-2">分类与演化</h4>
+                <p class="text-gray-700 mb-3">杯龙类属于无孔亚纲，是爬行动物演化的基干类群，可能是所有后来爬行动物的祖先。</p>
+                <p class="text-gray-700">它们在二叠纪时期多样化，演化出多种生态类型，包括陆生、树栖和可能的水生种类。</p>
+              </div>
+            </div>
+            <h4 class="font-bold text-lg mb-2">生态与行为</h4>
+            <p class="text-gray-700 mb-3">杯龙类主要是肉食性或杂食性动物，以昆虫、小型无脊椎动物和植物为食。</p>
+            <p class="text-gray-700">它们的化石在北美、欧洲和亚洲等地均有发现，表明它们在古生代晚期广泛分布。</p>
+          `;
+        } else if (fossilName.includes('二齿兽')) {
+          fossilDetails = `
+            <h3 class="text-2xl font-bold text-primary mb-4">二齿兽 (Dicynodonts)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <img src="二齿类.jpg" alt="二齿兽化石" class="w-full h-auto rounded-lg shadow-lg">
+              </div>
+              <div>
+                <h4 class="font-bold text-lg mb-2">基本信息</h4>
+                <p class="text-gray-700 mb-3">二齿兽是兽孔目的一个分支，生活在二叠纪中期至三叠纪晚期，约2.6-2.01亿年前。</p>
+                <p class="text-gray-700 mb-3">它们的名字来源于其独特的牙齿结构，大多数种类只有上颌的一对长牙，其余牙齿退化。</p>
+                <h4 class="font-bold text-lg mb-2">形态与多样性</h4>
+                <p class="text-gray-700 mb-3">二齿兽体型差异很大，从小型的如老鼠大小到大型的如牛大小不等。</p>
+                <p class="text-gray-700">它们的头骨结构特殊，可能具有角质喙，用于切割植物。一些种类可能具有类似现代哺乳动物的咀嚼方式。</p>
+              </div>
+            </div>
+            <h4 class="font-bold text-lg mb-2">生态与演化</h4>
+            <p class="text-gray-700 mb-3">二齿兽是二叠纪晚期和三叠纪早期最重要的草食性动物，在生态系统中占据关键地位。</p>
+            <p class="text-gray-700">它们在二叠纪末大灭绝事件中幸存下来，并在三叠纪早期迅速辐射演化，但最终在三叠纪末期灭绝。</p>
+          `;
+        }
+        
+        // 填充模态框内容并显示
+        modalContent.innerHTML = fossilDetails;
+        infoModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    // 地质事件详情按钮
+    document.querySelectorAll('.read-more').forEach(button => {
+      button.addEventListener('click', function() {
+        const eventCard = this.closest('.bg-neutral');
+        const eventTitle = eventCard.querySelector('h3').textContent;
+        let eventDetails = '';
+        
+        // 根据不同事件设置不同详情
+        if (eventTitle.includes('盘古大陆形成')) {
+          eventDetails = `
+            <h3 class="text-2xl font-bold text-primary mb-4">盘古大陆形成</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <img src="盘古大陆.jpg" alt="盘古大陆形成示意图" class="w-full h-auto rounded-lg shadow-lg">
+              </div>
+              <div>
+                <h4 class="font-bold text-lg mb-2">形成过程</h4>
+                <p class="text-gray-700 mb-3">盘古大陆的形成是一个漫长的过程，始于石炭纪晚期（约3亿年前），终于二叠纪末期（约2.5亿年前）。</p>
+                <p class="text-gray-700 mb-3">这一过程是通过大陆板块的持续碰撞和聚合完成的，包括劳亚大陆（北半球）和冈瓦纳大陆（南半球）的合并。</p>
+                <h4 class="font-bold text-lg mb-2">地质证据</h4>
+                <p class="text-gray-700 mb-3">盘古大陆的存在由多种地质证据支持，包括大陆边缘的吻合、古生物化石的分布、岩石层序的相似性以及古地磁数据。</p>
+                <p class="text-gray-700">例如，南美洲东海岸和非洲西海岸的岩石结构和化石记录高度匹配，支持这两个大陆曾经相连的观点。</p>
+              </div>
+            </div>
+            <h4 class="font-bold text-lg mb-2">环境影响</h4>
+            <p class="text-gray-700 mb-3">盘古大陆的形成对全球气候、海洋环流和生物演化产生了深远影响。大陆内部远离海洋，导致气候变得更加干燥和极端。</p>
+            <p class="text-gray-700 mb-3">超级大陆的形成还导致海洋盆地扩大，海平面下降，影响了海洋生态系统的分布和多样性。</p>
+            <h4 class="font-bold text-lg mb-2">生物演化</h4>
+            <p class="text-gray-700">盘古大陆的形成促进了陆生生物的交流和扩散，同时也导致了一些物种因环境变化而灭绝。二叠纪时期见证了爬行动物的崛起和多样化，为后来恐龙和哺乳动物的演化奠定了基础。</p>
+          `;
+        } else if (eventTitle.includes('火山活动')) {
+          eventDetails = `
+            <h3 class="text-2xl font-bold text-primary mb-4">二叠纪火山活动</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <img src="火山活动.jpg" alt="火山活动示意图" class="w-full h-auto rounded-lg shadow-lg">
+              </div>
+              <div>
+                <h4 class="font-bold text-lg mb-2">主要火山事件</h4>
+                <p class="text-gray-700 mb-3">二叠纪时期发生了多次大规模火山活动，其中最著名的是西伯利亚暗色岩火山活动，发生在二叠纪末期（约2.52亿年前）。</p>
+                <p class="text-gray-700 mb-3">这次火山活动持续了约100万年，喷出的岩浆覆盖了约250万平方公里的面积，形成了现今西伯利亚的暗色岩地层。</p>
+                <h4 class="font-bold text-lg mb-2">环境影响</h4>
+                <p class="text-gray-700 mb-3">火山活动释放了大量的二氧化碳、甲烷和二氧化硫等气体，导致全球气候变暖和酸雨现象。</p>
+                <p class="text-gray-700">二氧化硫在大气中形成气溶胶，反射阳光，导致短期降温，但长期来看，温室气体的积累导致全球气温升高约6-8°C。</p>
+              </div>
+            </div>
+            <h4 class="font-bold text-lg mb-2">对生物的影响</h4>
+            <p class="text-gray-700 mb-3">火山活动引发的气候变化对生物造成了巨大压力。海洋酸化和缺氧导致海洋生物大量灭绝，超过90%的海洋物种消失。</p>
+            <p class="text-gray-700 mb-3">陆地上，气候变暖和干旱导致植被减少，草食性动物失去食物来源，进而影响整个食物链。</p>
+            <h4 class="font-bold text-lg mb-2">与大灭绝的关系</h4>
+            <p class="text-gray-700">虽然火山活动被认为是二叠纪末大灭绝的主要原因之一，但具体机制仍存在争议。一些研究认为，火山活动触发了一系列环境连锁反应，最终导致了地球历史上最严重的生物灭绝事件。</p>
+          `;
+        } else if (eventTitle.includes('海平面变化')) {
+          eventDetails = `
+            <h3 class="text-2xl font-bold text-primary mb-4">二叠纪海平面变化</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <img src="海平面.jpg" alt="海平面变化示意图" class="w-full h-auto rounded-lg shadow-lg">
+              </div>
+              <div>
+                <h4 class="font-bold text-lg mb-2">变化过程</h4>
+                <p class="text-gray-700 mb-3">二叠纪期间，海平面经历了显著的波动。在早期和中期，海平面相对较高，但在二叠纪末期，海平面急剧下降。</p>
+                <p class="text-gray-700 mb-3">海平面变化的主要原因包括构造活动、冰川作用和火山活动等。盘古大陆的形成导致大陆架面积减少，也对海平面产生了影响。</p>
+                <h4 class="font-bold text-lg mb-2">冰川作用</h4>
+                <p class="text-gray-700 mb-3">二叠纪早期，南半球存在广泛的冰川作用，这是导致海平面下降的主要原因之一。</p>
+                <p class="text-gray-700">随着盘古大陆的形成和气候变暖和，冰川逐渐消退，海平面回升。但在二叠纪末期，又一次短暂的冰川作用导致海平面再次下降。</p>
+              </div>
+            </div>
+            <h4 class="font-bold text-lg mb-2">对生态系统的影响</h4>
+            <p class="text-gray-700 mb-3">海平面变化对海洋和陆地生态系统都产生了重大影响。海平面下降导致浅海栖息地减少，许多海洋生物失去了生存环境。</p>
+            <p class="text-gray-700 mb-3">陆地上，海平面下降可能导致气候变干，影响植被分布和动物生存。此外，海平面变化还可能导致海洋环流改变，影响全球气候。</p>
+            <h4 class="font-bold text-lg mb-2">与沉积岩的关系</h4>
+            <p class="text-gray-700">二叠纪的海平面变化在地质记录中留下了明显的印记，形成了广泛的沉积岩地层。这些沉积岩包含了丰富的化石和环境信息，帮助科学家了解二叠纪时期的环境变化和生物演化。</p>
+          `;
+        }
+        
+        // 填充模态框内容并显示
+        modalContent.innerHTML = eventDetails;
+        infoModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+  </script>
+</body>
+</html>
+    

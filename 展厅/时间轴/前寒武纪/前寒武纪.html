@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前寒武纪 - 地球生命的黎明</title>
+    <link rel="stylesheet" href="前寒武纪.css">
+</head>
+<body>
+    <header>
+        <div class="particles" id="particles"></div>
+        <div class="container">
+            <h1 class="hero-title">前寒武纪</h1>
+            <p class="hero-subtitle">探索地球生命最神秘的黎明时代 - 占据地球历史88%的漫长岁月</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="4600">0</span>
+                    <span class="stat-label">百万年前开始</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="540">0</span>
+                    <span class="stat-label">百万年前结束</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="88">0</span>
+                    <span class="stat-label">%地球历史</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- 3D Timeline Section -->
+        <section class="timeline-section">
+            <div class="container">
+                <h2 class="section-title">时间长河探索</h2>
+                <div class="timeline-controls">
+                    <button class="timeline-btn active" data-era="hadean">冥古宙</button>
+                    <button class="timeline-btn" data-era="archean">太古宙</button>
+                    <button class="timeline-btn" data-era="proterozoic">元古宙</button>
+                </div>
+                <div class="timeline-content">
+                    <div class="era-display active" id="hadean">
+                        <div class="era-info">
+                            <h3>🌋 冥古宙 (46-40亿年前)</h3>
+                            <div class="era-details">
+                                <div class="detail-card">
+                                    <h4>地球诞生</h4>
+                                    <p>约46亿年前，地球从原始太阳星云中凝聚形成。初期的地球是一个熔融的岩浆球，表面温度超过1200°C。</p>
+                                </div>
+                                <div class="detail-card">
+                                    <h4>月球形成</h4>
+                                    <p>约45亿年前，一颗火星大小的天体撞击地球，产生的碎片最终形成了月球。这次撞击也导致地球自转轴倾斜23.5度。</p>
+                                </div>
+                                <div class="detail-card">
+                                    <h4>地壳冷却</h4>
+                                    <p>约44亿年前，地球表面开始冷却，形成最早的固体地壳。水蒸气开始凝结，形成原始海洋。</p>
+                                </div>
+                                <div class="detail-card">
+                                    <h4>晚期重轰炸</h4>
+                                    <p>约41-38亿年前，太阳系内大量小行星和彗星撞击地球，为地球带来水和有机化合物。</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="era-visual">
+                            <div class="planet-simulation" id="hadean-planet">
+                                <div class="lava-surface"></div>
+                                <div class="impact-effects"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="era-display" id="archean">
+                        <div class="era-info">
+                            <h3>🦠 太古宙 (40-25亿年前)</h3>
+                            <div class="era-details">
+                                <div class="detail-card">
+                                    <h4>稳定地壳</h4>
+                                    <p>地壳进一步冷却稳定，形成了最早的大陆核心。大气主要由甲烷、氨气和氢气组成，几乎没有氧气。</p>
+                                </div>
+                                <div class="detail-card">
+                                    <h4>原始生命</h4>
+                                    <p>约38亿年前，地球上出现了最早的生命形式——原核细胞。这些微生物生活在无氧环境中，通过化学合成获取能量。</p>
+                                </div>
+                                <div class="detail-card">
+                                    <h4>蓝绿藻出现</h4>
+                                    <p>约35亿年前，蓝绿藻(蓝细菌)进化出光合作用能力，开始利用阳光和二氧化碳制造食物，同时释放氧气。</p>
+                                </div>
+                                <div class="detail-card">
+                                    <h4>叠层石</h4>
+                                    <p>蓝绿藻群落形成了叠层石结构，这些是地球上最早的生物化石证据，至今在澳大利亚等地仍可见到。</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="era-visual">
+                            <div class="planet-simulation" id="archean-planet">
+                                <div class="ocean-surface"></div>
+                                <div class="microbial-mats"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="era-display" id="proterozoic">
+                        <div class="era-info">
+                            <h3>🌍 元古宙 (25-5.4亿年前)</h3>
+                            <div class="era-details">
+                                <div class="detail-card">
+                                    <h4>大氧化事件</h4>
+                                    <p>约24亿年前，大气中氧气浓度急剧上升，导致厌氧生物大量灭绝，这是地球历史上第一次生物大灭绝事件。</p>
+                                </div>
+                                <div class="detail-card">
+                                    <h4>真核细胞进化</h4>
+                                    <p>约20亿年前，真核细胞出现。它们具有细胞核和复杂的细胞器，为复杂生命的进化奠定了基础。</p>
+                                </div>
+                                <div class="detail-card">
+                                    <h4>雪球地球</h4>
+                                    <p>约7.5-5.8亿年前，地球经历了几次全球性冰期，整个星球几乎被冰雪覆盖，被称为"雪球地球"时期。</p>
+                                </div>
+                                <div class="detail-card">
+                                    <h4>埃迪卡拉生物群</h4>
+                                    <p>约6亿年前，出现了最早的多细胞复杂生物——埃迪卡拉生物群，为寒武纪生命大爆发做准备。</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="era-visual">
+                            <div class="planet-simulation" id="proterozoic-planet">
+                                <div class="oxygenated-atmosphere"></div>
+                                <div class="complex-life"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Evolution Tree -->
+        <section class="evolution-section">
+            <div class="container">
+                <h2 class="section-title">生命演化树</h2>
+                <div class="evolution-tree">
+                    <div class="tree-node root" data-info="最后共同祖先 - 约38亿年前">
+                        <div class="node-content">🧬</div>
+                        <div class="node-label">LUCA</div>
+                    </div>
+                    <div class="tree-branch">
+                        <div class="tree-node bacteria" data-info="细菌 - 单细胞原核生物，没有细胞核">
+                            <div class="node-content">🦠</div>
+                            <div class="node-label">细菌</div>
+                        </div>
+                        <div class="tree-node archaea" data-info="古菌 - 极端环境中的原核生物">
+                            <div class="node-content">🔥</div>
+                            <div class="node-label">古菌</div>
+                        </div>
+                        <div class="tree-node eukaryote" data-info="真核生物 - 具有细胞核的复杂细胞">
+                            <div class="node-content">🌿</div>
+                            <div class="node-label">真核生物</div>
+                            <div class="sub-branches">
+                                <div class="tree-node plant" data-info="植物 - 进行光合作用的生物">
+                                    <div class="node-content">🌱</div>
+                                    <div class="node-label">植物</div>
+                                </div>
+                                <div class="tree-node fungi" data-info="真菌 - 分解有机物的生物">
+                                    <div class="node-content">🍄</div>
+                                    <div class="node-label">真菌</div>
+                                </div>
+                                <div class="tree-node animal" data-info="动物 - 多细胞异养生物">
+                                    <div class="node-content">🐛</div>
+                                    <div class="node-label">动物</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="evolution-info" id="evolution-info">
+                    <p>点击演化树上的节点了解更多信息</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Atmospheric Composition Simulator -->
+        <section class="atmosphere-section">
+            <div class="container">
+                <h2 class="section-title">大气成分演化模拟器</h2>
+                <div class="atmosphere-simulator">
+                    <div class="time-slider-container">
+                        <label for="time-slider">时间 (亿年前):</label>
+                        <input type="range" id="time-slider" min="0" max="46" value="46" step="1">
+                        <span id="time-display">46亿年前</span>
+                    </div>
+                    <div class="atmosphere-viz">
+                        <div class="gas-composition">
+                            <div class="gas-bar">
+                                <div class="gas-fill nitrogen" id="nitrogen-bar"></div>
+                                <label>氮气 (N₂)</label>
+                                <span class="percentage" id="nitrogen-percent">5%</span>
+                            </div>
+                            <div class="gas-bar">
+                                <div class="gas-fill oxygen" id="oxygen-bar"></div>
+                                <label>氧气 (O₂)</label>
+                                <span class="percentage" id="oxygen-percent">0%</span>
+                            </div>
+                            <div class="gas-bar">
+                                <div class="gas-fill co2" id="co2-bar"></div>
+                                <label>二氧化碳 (CO₂)</label>
+                                <span class="percentage" id="co2-percent">15%</span>
+                            </div>
+                            <div class="gas-bar">
+                                <div class="gas-fill methane" id="methane-bar"></div>
+                                <label>甲烷 (CH₄)</label>
+                                <span class="percentage" id="methane-percent">20%</span>
+                            </div>
+                            <div class="gas-bar">
+                                <div class="gas-fill water-vapor" id="water-bar"></div>
+                                <label>水蒸气 (H₂O)</label>
+                                <span class="percentage" id="water-percent">60%</span>
+                            </div>
+                        </div>
+                        <div class="atmosphere-description" id="atmosphere-description">
+                            <h4>原始大气 (46亿年前)</h4>
+                            <p>地球刚形成时的大气主要由水蒸气、甲烷、氨气等组成，几乎没有氧气。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fossil Interactive Gallery -->
+        <section class="fossil-section">
+            <div class="container">
+                <h2 class="section-title">前寒武纪化石画廊</h2>
+                <div class="fossil-gallery">
+                    <div class="fossil-item" data-fossil="stromatolite">
+                        <div class="fossil-image">🪨</div>
+                        <h3>叠层石</h3>
+                        <p>蓝绿藻形成的层状结构</p>
+                    </div>
+                    <div class="fossil-item" data-fossil="acritarch">
+                        <div class="fossil-image">⭕</div>
+                        <h3>疑源类</h3>
+                        <p>早期真核生物化石</p>
+                    </div>
+                    <div class="fossil-item" data-fossil="bif">
+                        <div class="fossil-image">🔴</div>
+                        <h3>条带状铁建造</h3>
+                        <p>早期氧气活动的证据</p>
+                    </div>
+                    <div class="fossil-item" data-fossil="ediacaran">
+                        <div class="fossil-image">🐙</div>
+                        <h3>埃迪卡拉生物</h3>
+                        <p>最早的复杂多细胞生物</p>
+                    </div>
+                </div>
+                <div class="fossil-detail" id="fossil-detail">
+                    <h3>选择一个化石了解详情</h3>
+                    <p>点击上方的化石图标查看详细信息</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Temperature Graph -->
+        <section class="climate-section">
+            <div class="container">
+                <h2 class="section-title">古气候变化</h2>
+                <div class="climate-graph">
+                    <canvas id="temperature-chart" width="800" height="400"></canvas>
+                    <div class="climate-controls">
+                        <button class="climate-btn active" data-type="temperature">温度变化</button>
+                        <button class="climate-btn" data-type="sea-level">海平面变化</button>
+                        <button class="climate-btn" data-type="oxygen">氧气浓度</button>
+                    </div>
+                </div>
+                <div class="climate-events" id="climate-events">
+                    <h4>重要气候事件</h4>
+                    <div class="event-list"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+
+    <script src="前寒武纪.js"></script>
+</body>
+</html>
